@@ -108,22 +108,33 @@ async def test_rls_isolates_tenants():
             await s.commit()
 
         async with sm() as s:
+            # SET ROLE drops superuser privileges for this session — without it,
+            # the praesidio role (which is a superuser in the test container)
+            # bypasses RLS regardless of FORCE. The praesidio_app_test role is
+            # provisioned by .github/workflows/rls.yml.
+            await s.execute(text("SET ROLE praesidio_app_test"))
             await s.execute(text("SET praesidio.tenant_id = 'A'"))
             res = await s.execute(text("SELECT tenant_id FROM audit_events"))
             assert [r[0] for r in res.fetchall()] == ["A"]
 
         async with sm() as s:
+            await s.execute(text("SET ROLE praesidio_app_test"))
             await s.execute(text("SET praesidio.tenant_id = 'B'"))
             res = await s.execute(text("SELECT tenant_id FROM audit_events"))
             assert [r[0] for r in res.fetchall()] == ["B"]
 
         # The wildcard escape hatch sees everything (for the audit verifier).
         async with sm() as s:
+            await s.execute(text("SET ROLE praesidio_app_test"))
             await s.execute(text("SET praesidio.tenant_id = '*'"))
             res = await s.execute(
                 text("SELECT tenant_id FROM audit_events ORDER BY tenant_id")
             )
             assert [r[0] for r in res.fetchall()] == ["A", "B"]
+    except Exception as exc:
+        if "praesidio_app_test" in str(exc):
+            pytest.skip("praesidio_app_test role not provisioned; skip")
+        raise
     finally:
         await engine.dispose()
 
@@ -141,6 +152,7 @@ async def test_rls_blocks_cross_tenant_writes():
         sm = async_sessionmaker(engine, expire_on_commit=False)
 
         async with sm() as s:
+            await s.execute(text("SET ROLE praesidio_app_test"))
             await s.execute(text("SET praesidio.tenant_id = 'A'"))
             s.add(AuditEvent(**_row("B", None)))
             with pytest.raises(Exception) as exc_info:
@@ -149,6 +161,10 @@ async def test_rls_blocks_cross_tenant_writes():
             # mention RLS / policy violation.
             assert "row-level security" in str(exc_info.value).lower() or \
                    "policy" in str(exc_info.value).lower()
+    except Exception as exc:
+        if "praesidio_app_test" in str(exc):
+            pytest.skip("praesidio_app_test role not provisioned; skip")
+        raise
     finally:
         await engine.dispose()
 
@@ -176,9 +192,14 @@ async def test_rls_lineage_table_also_isolated():
             )
         sm = async_sessionmaker(engine, expire_on_commit=False)
         async with sm() as s:
+            await s.execute(text("SET ROLE praesidio_app_test"))
             await s.execute(text("SET praesidio.tenant_id = 'A'"))
             res = await s.execute(text("SELECT tenant_id FROM lineage_nodes"))
             assert [r[0] for r in res.fetchall()] == ["A"]
+    except Exception as exc:
+        if "praesidio_app_test" in str(exc):
+            pytest.skip("praesidio_app_test role not provisioned; skip")
+        raise
     finally:
         await engine.dispose()
 

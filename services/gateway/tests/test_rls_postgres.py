@@ -75,6 +75,7 @@ async def _ensure_schema_and_policies(engine) -> None:
         await conn.run_sync(Base.metadata.create_all)
         for table in ("audit_events", "lineage_nodes"):
             await conn.execute(text(f"ALTER TABLE {table} ENABLE ROW LEVEL SECURITY"))
+            await conn.execute(text(f"ALTER TABLE {table} FORCE ROW LEVEL SECURITY"))
             await conn.execute(
                 text(f"DROP POLICY IF EXISTS praesidio_tenant_isolation ON {table}")
             )

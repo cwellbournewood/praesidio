@@ -52,6 +52,7 @@ CREATE INDEX IF NOT EXISTS idx_audit_decision
     ON audit_events (tenant_id, decision, occurred_at DESC);
 
 ALTER TABLE audit_events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE audit_events FORCE ROW LEVEL SECURITY;
 
 -- Default RLS policy: app role must SET praesidio.tenant_id per session.
 -- The bypass role (DB owner) is unrestricted.
@@ -89,6 +90,7 @@ CREATE INDEX IF NOT EXISTS idx_lineage_nodes_kind
     ON lineage_nodes (tenant_id, kind);
 
 ALTER TABLE lineage_nodes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE lineage_nodes FORCE ROW LEVEL SECURITY;
 
 DO $$
 BEGIN

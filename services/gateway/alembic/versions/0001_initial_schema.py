@@ -146,9 +146,15 @@ def upgrade() -> None:
     op.create_index("idx_lineage_edges_child", "lineage_edges", ["child_id"])
 
     # ---------------- RLS (Postgres only) ----------------
+    # FORCE is critical: the table owner (the role that ran this migration)
+    # bypasses ENABLE-only RLS, which silently breaks multi-tenant isolation
+    # when the application connects with that same role. FORCE applies the
+    # policy regardless of role, including the owner. Operators with the
+    # wildcard `praesidio.tenant_id = '*'` setting can still see everything.
     if pg:
         for table in ("audit_events", "lineage_nodes"):
             op.execute(f"ALTER TABLE {table} ENABLE ROW LEVEL SECURITY")
+            op.execute(f"ALTER TABLE {table} FORCE ROW LEVEL SECURITY")
             op.execute(
                 f"DROP POLICY IF EXISTS tenant_isolation ON {table}"
             )
@@ -156,6 +162,10 @@ def upgrade() -> None:
                 f"""
                 CREATE POLICY tenant_isolation ON {table}
                 USING (
+                    tenant_id = current_setting('praesidio.tenant_id', true)
+                    OR current_setting('praesidio.tenant_id', true) = '*'
+                )
+                WITH CHECK (
                     tenant_id = current_setting('praesidio.tenant_id', true)
                     OR current_setting('praesidio.tenant_id', true) = '*'
                 )

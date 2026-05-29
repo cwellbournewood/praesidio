@@ -61,3 +61,10 @@ pgdata/
 *.log
 coverage/
 .cache/
+
+# Marketing — author-only, not part of the product
+# Carousel HTML sources, rendered PNG/GIF/WEBP exports, and the gallery
+# exhibit page are kept locally for LinkedIn / blog publication, not
+# shipped to the public repo.
+/marketing/
+/services/ui/public/marketing/

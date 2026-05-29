@@ -1,5 +1,11 @@
 # Praesidio
 
+<p align="center">
+  <img src="docs/assets/login.png" alt="Praesidio — sign in" width="900" />
+  <br/>
+  <sub><i>The sign-in page. Bone, ink, vermillion. An instrument before it sounds.</i></sub>
+</p>
+
 **The AI Security Control Plane.** Semantic DLP, reversible anonymisation, and
 runtime governance for every prompt, response, embedding, and agent action.
 

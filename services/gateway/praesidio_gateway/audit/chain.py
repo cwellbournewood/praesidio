@@ -38,6 +38,19 @@ def _jsonable(o: Any) -> Any:
         return o.hex()
     if isinstance(o, (set, tuple, frozenset)):
         return list(o)
+    # Postgres INET columns round-trip as ipaddress.IPv4Address /
+    # IPv6Address — emit the dotted-string form so the hash is stable
+    # whether the row was just inserted (string) or just read back
+    # (IPv4Address).
+    import ipaddress
+    if isinstance(o, (ipaddress.IPv4Address, ipaddress.IPv6Address,
+                      ipaddress.IPv4Network, ipaddress.IPv6Network,
+                      ipaddress.IPv4Interface, ipaddress.IPv6Interface)):
+        return str(o)
+    # uuid.UUID for the Postgres UUID type, similar reasoning.
+    import uuid as _uuid
+    if isinstance(o, _uuid.UUID):
+        return str(o)
     raise TypeError(f"unserialisable type: {type(o).__name__}")
 
 

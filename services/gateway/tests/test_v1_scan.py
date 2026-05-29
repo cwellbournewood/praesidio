@@ -234,9 +234,12 @@ async def test_scan_writes_audit_with_edge_source_tag():
             request_id = resp.json()["request_id"]
 
             # Drain the audit queue + wait for the background writer to commit.
-            await app.state.praesidio.audit.flush()
+            # Re-flush inside the loop because the request handler may complete
+            # before its audit enqueue finishes — on a slow runner, the first
+            # flush sees an empty queue but a row appears moments later.
             import asyncio as _asyncio
-            for _ in range(50):  # up to 1s
+            for _ in range(300):  # up to ~6s; CI runners need the headroom
+                await app.state.praesidio.audit.flush()
                 events_resp = await client.get(
                     "/admin/events", headers={"x-api-key": "test-key"}
                 )

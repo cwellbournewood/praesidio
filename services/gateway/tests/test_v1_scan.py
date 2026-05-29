@@ -281,9 +281,10 @@ async def test_scan_normalises_unknown_client_value():
             assert resp.status_code == 200
             request_id = resp.json()["request_id"]
 
-            await app.state.praesidio.audit.flush()
+            # Re-flush inside the loop — see the sibling test's comment.
             import asyncio as _asyncio
-            for _ in range(50):
+            for _ in range(300):  # up to ~6s; CI runners need the headroom
+                await app.state.praesidio.audit.flush()
                 events_resp = await client.get(
                     "/admin/events", headers={"x-api-key": "test-key"}
                 )

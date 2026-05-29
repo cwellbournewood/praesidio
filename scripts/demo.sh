@@ -57,14 +57,26 @@ wait_healthy() {
   exit 2
 }
 
-# Extract the most recent /admin/events row's decision field using awk.
+# Extract the most recent /admin/events row's decision field.
+# Polls for ~5s because the gateway's audit writer batches every ~1s; a
+# single-shot fetch can race the writer and see an empty table.
 latest_decision() {
-  # /admin/events?limit=1 returns a JSON list; pull the first "decision":"..."
-  curl -fsS "${GATEWAY_URL}/admin/events?limit=1" \
-    -H "Authorization: Bearer ${API_KEY}" 2>/dev/null \
-    | tr -d '\n' \
-    | sed -n 's/.*"decision"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' \
-    | head -n 1
+  local out=""
+  local i=0
+  while [ $i -lt 50 ]; do
+    out=$(curl -fsS "${GATEWAY_URL}/admin/events?limit=1" \
+            -H "Authorization: Bearer ${API_KEY}" 2>/dev/null \
+            | tr -d '\n' \
+            | sed -n 's/.*"decision"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' \
+            | head -n 1)
+    if [ -n "$out" ]; then
+      printf '%s\n' "$out"
+      return 0
+    fi
+    sleep 0.1
+    i=$((i + 1))
+  done
+  return 1
 }
 
 # Send a chat-completions request. Captures HTTP status and the

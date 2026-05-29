@@ -1,9 +1,9 @@
 # Praesidio
 
 <p align="center">
-  <img src="docs/assets/login.png" alt="Praesidio — sign in" width="900" />
+  <img src="docs/assets/overview.png" alt="Praesidio operator console — Overview: KPIs, throughput, top detectors, live tape" width="900" />
   <br/>
-  <sub><i>The sign-in page. Bone, ink, vermillion. An instrument before it sounds.</i></sub>
+  <sub><i>The operator console. Every decision, every tenant, every model — printed afresh as data arrives.</i></sub>
 </p>
 
 **The AI Security Control Plane.** Semantic DLP, reversible anonymisation, and

@@ -25,6 +25,10 @@ function FirstRunGate() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     if (pathname !== '/') return;
+    // Escape hatch: `?bypass=onboarding` lets headless screenshots, e2e
+    // tests, and the README capture script land on the dashboard directly
+    // without polluting localStorage.
+    if (window.location.search.includes('bypass=onboarding')) return;
     const onboarded = window.localStorage.getItem('praesidio.onboarded');
     const redirected = window.sessionStorage.getItem('praesidio.firstRunRedirected');
     if (!onboarded && !redirected) {

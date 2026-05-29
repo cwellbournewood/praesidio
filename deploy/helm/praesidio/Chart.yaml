@@ -5,8 +5,8 @@ description: |
   anonymisation, policy-as-code, and full audit/lineage for every LLM
   request, embedding, and agent action.
 type: application
-version: 0.1.0
-appVersion: "0.1.0"
+version: 1.0.0
+appVersion: "1.0.0"
 kubeVersion: ">=1.26.0-0"
 home: https://github.com/cwellbournewood/praesidio
 sources:

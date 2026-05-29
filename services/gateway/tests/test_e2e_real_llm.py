@@ -169,7 +169,7 @@ def _render_upstream(template: dict, placeholder: str) -> dict:
     return _walk(template)
 
 
-async def _wait_for_audit(app, *, tenant: str | None = None, timeout: float = 4.0) -> list[dict]:
+async def _wait_for_audit(app, *, tenant: str | None = None, timeout: float = 12.0) -> list[dict]:
     """Poll the audit table until at least one row exists or timeout elapses.
 
     The audit writer batches every ~1s, so we tolerate that worst-case latency

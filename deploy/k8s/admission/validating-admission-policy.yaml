@@ -82,13 +82,10 @@ spec:
     - expression: |
         variables.hasBypass ||
         !(variables.mountsCloudCreds && variables.directLlmHost)
-      message: |
-        Pod mounts cloud credentials AND has an environment variable pointing
-        at a known LLM provider host. Route the workload through the
-        Praesidio gateway (set OPENAI_BASE_URL=http://praesidio-gateway:8080/v1
-        or equivalent) instead of contacting the provider directly. To bypass,
-        add annotation praesidio.dev/admission-bypass=true (requires
-        platform-admin RBAC on the namespace).
+      # k8s ValidatingAdmissionPolicy requires `message` to be a single
+      # line — no embedded newlines. Keep the prose short and direct the
+      # operator to the runbook for the full background.
+      message: "Pod mounts cloud credentials AND sets an env var targeting a known LLM provider host. Route through the Praesidio gateway (e.g. OPENAI_BASE_URL=http://praesidio-gateway:8080/v1) or annotate praesidio.dev/admission-bypass=true. See docs/operations/admission.md."
       reason: Forbidden
 ---
 apiVersion: admissionregistration.k8s.io/v1

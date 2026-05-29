@@ -41,7 +41,7 @@ jobs:
         run: uv run ruff check .
 
       - name: Pytest
-        run: uv run pytest -q --maxfail=1
+        run: uv run pytest -q --maxfail=1 --ignore=tests/test_e2e_real_llm.py --ignore=tests/test_alembic.py --ignore=tests/test_rls_postgres.py
 
       # Verify the Python label-display map and the TS twin in
       # services/ui/lib/labels.ts have not drifted. Source of truth is

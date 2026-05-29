@@ -102,6 +102,10 @@ jobs:
         env:
           PRAESIDIO_GATEWAY: http://localhost:8080
           PRAESIDIO_API_KEY: praesidio-demo-key
+          # praesidio-audit CLI talks to Postgres directly (not the gateway)
+          # to read + verify the hash chain. The dev compose stack maps
+          # postgres to localhost:5432 with the default praesidio creds.
+          DATABASE_URL: postgresql+psycopg://praesidio:praesidio@localhost:5432/praesidio
         run: uv run praesidio-audit verify --tenant default --since 1h
 
       - name: Upload artefacts

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Praesidio · audit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="carousel.css" rel="stylesheet">
+<style>
+  .stage { display: grid; grid-template-rows: auto 1fr auto; gap: 36px; padding-top: 56px; }
+  .head h1 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 76px; line-height: 0.96; letter-spacing: -0.02em; color: var(--ink); }
+  .head h1 em { font-style: italic; color: var(--vermillion); }
+  .head .sub { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 22px; color: var(--graphite); margin-top: 14px; max-width: 780px; line-height: 1.4; }
+
+  .chain { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--rule); }
+  .chain .node { padding: 22px 20px; border-right: 1px solid var(--rule); position: relative; }
+  .chain .node:last-child { border-right: 0; }
+  .chain .node .h { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--dust); letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 10px; }
+  .chain .node .num { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--vermillion); font-size: 18px; margin-right: 4px; }
+  .chain .node .hash { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink); letter-spacing: 0.05em; word-break: break-all; line-height: 1.5; }
+  .chain .node .meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--dust); margin-top: 12px; letter-spacing: 0.10em; text-transform: uppercase; line-height: 1.5; }
+  .chain .node .arr {
+    position: absolute; right: -8px; top: 50%; transform: translateY(-50%);
+    color: var(--vermillion); font-family: 'Instrument Serif', serif; font-style: italic; font-size: 22px; line-height: 1; z-index: 1;
+    background: var(--canvas); padding: 0 2px;
+  }
+
+  .events { border: 1px solid var(--rule); background: var(--canvas); margin-top: 8px; }
+  .events .ev-hd {
+    display: grid; grid-template-columns: 50px 86px 110px 1fr 90px 70px;
+    align-items: center; padding: 10px 18px; border-bottom: 1px solid var(--rule);
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--dust); letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .events .ev {
+    display: grid; grid-template-columns: 50px 86px 110px 1fr 90px 70px;
+    align-items: center; padding: 12px 18px; border-bottom: 1px dashed var(--rule);
+    font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--ink);
+    letter-spacing: 0.04em;
+  }
+  .events .ev:last-child { border-bottom: 0; }
+  .events .ev .dec {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .events .ev .dec.allow .dot { background: var(--moss); }
+  .events .ev .dec.transform .dot { background: var(--ink); }
+  .events .ev .dec.block .dot { background: var(--vermillion); }
+  .events .ev .dec .dot { width: 7px; height: 7px; }
+  .events .ev .principal { color: var(--graphite); }
+  .events .ev .reason { color: var(--dust); font-size: 11.5px; }
+  .events .ev .lat { color: var(--ink); text-align: right; font-variant-numeric: tabular-nums; }
+
+  .badge-row { display: grid; grid-template-columns: 1fr 1fr 1fr; border: 1px solid var(--rule); margin-top: 8px; }
+  .badge { padding: 18px 18px; border-right: 1px solid var(--rule); }
+  .badge:last-child { border-right: 0; }
+  .badge .h { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dust); margin-bottom: 6px; }
+  .badge .v { font-family: 'Instrument Serif', serif; font-size: 24px; color: var(--ink); letter-spacing: -0.01em; line-height: 1.1; }
+  .badge .v em { font-style: italic; color: var(--vermillion); }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="top-bar">
+    <div class="brand">Praesidio</div>
+    <div class="eyebrow ink"><span class="dot accent"></span>&nbsp;§ 5 · AUDIT &amp; LINEAGE</div>
+  </div>
+
+  <div class="stage">
+    <div class="head">
+      <h1>Every decision,<br/><em>hash-chained.</em></h1>
+      <p class="sub">SHA-256 over the canonical JSON of each row, linked to the previous. Verify the entire history with one CLI. SIEM tail in real time. Lineage shows you which retrieval, which tool call, which model.</p>
+    </div>
+
+    <div class="chain">
+      <div class="node">
+        <div class="h">§ event 7,142</div>
+        <div class="hash"><span class="num">i.</span>e8a4c9b3<br/>71d62f0a<br/>1c4b8e95</div>
+        <div class="meta">22:41:38Z<br/>BLOCK · secrets.aws</div>
+        <div class="arr">→</div>
+      </div>
+      <div class="node">
+        <div class="h">§ event 7,143</div>
+        <div class="hash"><span class="num">ii.</span>4f291ba7<br/>e3c5d8f2<br/>9b7164a1</div>
+        <div class="meta">22:41:39Z<br/>TRANSFORM · pii.email</div>
+        <div class="arr">→</div>
+      </div>
+      <div class="node">
+        <div class="h">§ event 7,144</div>
+        <div class="hash"><span class="num">iii.</span>aa83c14d<br/>2e6f95b8<br/>518429cf</div>
+        <div class="meta">22:41:39Z<br/>ALLOW · default</div>
+        <div class="arr">→</div>
+      </div>
+      <div class="node">
+        <div class="h">§ event 7,145</div>
+        <div class="hash"><span class="num">iv.</span>5d7e1f04<br/>c8a26b91<br/>3f4082ce</div>
+        <div class="meta">22:41:40Z<br/>TRANSFORM · pii.phone</div>
+      </div>
+    </div>
+
+    <div class="events">
+      <div class="ev-hd">
+        <span>§</span>
+        <span>Decision</span>
+        <span>Principal</span>
+        <span>Reason · detector</span>
+        <span style="text-align:right">Model</span>
+        <span style="text-align:right">Latency</span>
+      </div>
+      <div class="ev">
+        <span style="color:var(--dust)">7,142</span>
+        <span class="dec block"><span class="dot"></span>block</span>
+        <span class="principal">apikey:8c4f_b71e</span>
+        <span class="reason">secrets.aws · AKIAIOSFODNN7…</span>
+        <span style="text-align:right;color:var(--graphite)">gpt-4o</span>
+        <span class="lat">8 ms</span>
+      </div>
+      <div class="ev">
+        <span style="color:var(--dust)">7,143</span>
+        <span class="dec transform"><span class="dot"></span>transform</span>
+        <span class="principal">user:c.tanner</span>
+        <span class="reason">pii.email · pii.phone</span>
+        <span style="text-align:right;color:var(--graphite)">claude-3-opus</span>
+        <span class="lat">12 ms</span>
+      </div>
+      <div class="ev">
+        <span style="color:var(--dust)">7,144</span>
+        <span class="dec allow"><span class="dot"></span>allow</span>
+        <span class="principal">user:p.lukic</span>
+        <span class="reason">— no findings</span>
+        <span style="text-align:right;color:var(--graphite)">gpt-4o-eu</span>
+        <span class="lat">6 ms</span>
+      </div>
+      <div class="ev">
+        <span style="color:var(--dust)">7,145</span>
+        <span class="dec transform"><span class="dot"></span>transform</span>
+        <span class="principal">user:j.huang</span>
+        <span class="reason">pii.person · pii.phone</span>
+        <span style="text-align:right;color:var(--graphite)">bedrock/claude</span>
+        <span class="lat">14 ms</span>
+      </div>
+    </div>
+
+    <div class="badge-row">
+      <div class="badge">
+        <div class="h">Verify the chain</div>
+        <div class="v"><em>$ praesidio-audit verify</em></div>
+      </div>
+      <div class="badge">
+        <div class="h">SIEM tail</div>
+        <div class="v">Splunk · Sumo · webhook</div>
+      </div>
+      <div class="badge">
+        <div class="h">Retention</div>
+        <div class="v">per-tenant · per-detector</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span><span class="swatch"></span>HASH CHAIN · TAMPER-EVIDENT · WORM-COMPATIBLE</span>
+    <span class="ink">AUDIT</span>
+    <span class="accent">/ swipe →</span>
+  </div>
+</div>
+</body>
+</html>

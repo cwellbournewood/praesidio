@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Praesidio — Hero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --canvas: #EFEAE0;
+    --surface: #F4F0E6;
+    --sunken:  #E1DACB;
+    --rule:    #C9C3B5;
+    --rule-strong: #A8A292;
+    --ink:     #0F0F0E;
+    --graphite:#3A352E;
+    --dust:    #7A7367;
+    --vermillion: #D14B2C;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--canvas); color: var(--ink); }
+  body {
+    width: 1200px; height: 627px;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .frame {
+    position: relative;
+    width: 100%; height: 100%;
+    padding: 40px 56px;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    background: var(--canvas);
+  }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+  .serif { font-family: 'Instrument Serif', Georgia, serif; }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--dust);
+  }
+  /* TOP BAR */
+  .top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-bottom: 18px; border-bottom: 1px solid var(--rule);
+  }
+  .brand {
+    display: flex; align-items: baseline; gap: 10px;
+  }
+  .brand .word {
+    font-family: 'Instrument Serif', serif;
+    font-size: 30px; letter-spacing: -0.01em; color: var(--ink); line-height: 1;
+  }
+  .brand .ver {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.16em; color: var(--dust); text-transform: uppercase;
+  }
+  .meta {
+    display: flex; align-items: center; gap: 18px;
+  }
+  .meta .item { display: inline-flex; align-items: center; gap: 6px; }
+  .meta .dot { width: 6px; height: 6px; background: var(--ink); display: inline-block; }
+  .meta .dot.accent { background: var(--vermillion); }
+
+  /* CENTER */
+  .center {
+    display: grid; grid-template-columns: 1.05fr 0.95fr;
+    align-items: center; gap: 56px; padding: 28px 0 24px;
+  }
+  .left h1 {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: 96px; line-height: 0.92; letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .left h1 em {
+    font-style: italic;
+  }
+  .left .sect {
+    display: inline-block;
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: 24px; color: var(--vermillion); margin-right: 14px; vertical-align: top;
+    line-height: 1;
+  }
+  .left .lede {
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: 22px; color: var(--graphite); line-height: 1.35;
+    margin-top: 22px; max-width: 520px;
+  }
+  .left .lede .accent { color: var(--vermillion); font-style: normal; }
+
+  /* RIGHT — code-ish snippet */
+  .right {
+    border: 1px solid var(--rule);
+    background: var(--canvas);
+    padding: 18px 18px 16px;
+    position: relative;
+  }
+  .right .hdr {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-bottom: 10px; border-bottom: 1px solid var(--rule);
+    margin-bottom: 14px;
+  }
+  .right .hdr .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink);
+  }
+  .right .hdr .ver {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--dust); letter-spacing: 0.12em;
+  }
+  .right .line {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px; line-height: 1.65;
+    color: var(--graphite);
+  }
+  .right .line .num {
+    display: inline-block; width: 22px; color: var(--dust); user-select: none;
+  }
+  .right .line .ink { color: var(--ink); }
+  .right .line .red {
+    background: var(--ink); color: transparent; padding: 0 4px; margin: 0 1px;
+    user-select: none;
+  }
+  .right .line .tok {
+    background: var(--sunken); border: 1px solid var(--rule);
+    padding: 0 4px; color: var(--graphite);
+    display: inline-block; font-size: 11.5px;
+  }
+  .right .verdict {
+    margin-top: 16px;
+    border-top: 1px solid var(--rule);
+    padding-top: 12px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .right .verdict .pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 4px 8px; border: 1px solid var(--ink); color: var(--ink);
+    background: var(--canvas);
+  }
+  .right .verdict .pill.block { color: var(--vermillion); border-color: var(--vermillion); }
+  .right .verdict .pill.transform { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+  .right .verdict .stat {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--dust);
+    letter-spacing: 0.08em;
+  }
+
+  /* BOTTOM */
+  .bottom {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 16px; border-top: 1px solid var(--rule);
+  }
+  .bottom .colophon { display: flex; align-items: center; gap: 22px; }
+  .bottom .item { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.12em; color: var(--dust); text-transform: uppercase; }
+  .bottom .item.ink { color: var(--ink); }
+  .bottom .url { color: var(--ink); font-family: 'JetBrains Mono', monospace; font-size: 11.5px; }
+  .bottom .url .slash { color: var(--vermillion); }
+
+  /* Mark in the background of the right card */
+  .mark-bg {
+    position: absolute;
+    right: -6px;
+    bottom: -16px;
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 180px;
+    color: var(--rule);
+    opacity: 0.18;
+    line-height: 1;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="top">
+    <div class="brand">
+      <span class="word"><em style="font-style:italic">Praesidio</em></span>
+      <span class="ver">v1.0 · 2026</span>
+    </div>
+    <div class="meta">
+      <span class="item eyebrow"><span class="dot accent"></span> AI SECURITY CONTROL PLANE</span>
+      <span class="item eyebrow">APACHE 2.0</span>
+      <span class="item eyebrow">github.com/<span style="color:var(--ink)">praesidio</span></span>
+    </div>
+  </div>
+
+  <div class="center">
+    <div class="left">
+      <h1>
+        <span class="sect">§</span>The data your<br/>
+        models <em>never</em> see.
+      </h1>
+      <p class="lede">
+        A semantic DLP gateway for OpenAI, Anthropic, Bedrock<br/>
+        and your private models. Tokenise, redact, allow — by <span class="accent">policy</span>.
+      </p>
+    </div>
+    <div class="right">
+      <div class="hdr">
+        <span class="lbl">§ simulator · req_8f3e</span>
+        <span class="ver">policy v2026.05.3</span>
+      </div>
+      <div class="line"><span class="num">01</span><span class="ink">Email the contract to</span> <span class="red">alice.kim@acme.example</span>;</div>
+      <div class="line"><span class="num">02</span>her direct line is <span class="red">+1 415 555 0142</span>.</div>
+      <div class="line" style="margin-top:14px"><span class="num">03</span><span class="ink" style="color:var(--dust); letter-spacing:0.12em; font-size:10.5px; text-transform:uppercase">→ rewritten ↓</span></div>
+      <div class="line"><span class="num">04</span><span class="ink">Email the contract to</span> <span class="tok">&lt;EMAIL_A2B3&gt;</span>;</div>
+      <div class="line"><span class="num">05</span>her direct line is <span class="tok">+1 748 888 0475</span>.</div>
+      <div class="verdict">
+        <span class="pill transform">▸ TRANSFORM</span>
+        <span class="stat">2 findings · 12 ms · audit · req_8f3e</span>
+      </div>
+      <span class="mark-bg">§</span>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="colophon">
+      <span class="item ink">PRAESIDIO · INSTRUMENT</span>
+      <span class="item">BONE · INK · VERMILLION</span>
+      <span class="item">EU-WEST-1 · STAGING</span>
+    </div>
+    <div class="url"><span class="slash">/</span>announcing v1.0</div>
+  </div>
+</div>
+</body>
+</html>

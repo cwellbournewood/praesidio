@@ -1,0 +1,7 @@
+<!--
+  Tool window icon — IntelliJ requires 13x13 SVG for tool windows.
+  Keep the stroke heavier so it remains legible at toolbar size.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 13" width="13" height="13">
+  <path d="M3 11V2h3.3q1.4 0 2.15.62.75.6.75 1.74 0 1.13-.77 1.77-.77.63-2.13.63H4.65V11zm1.65-5.55h1.45q.65 0 .98-.25.32-.27.32-.76 0-.5-.32-.76-.33-.27-.98-.27H4.65z" fill="currentColor"/>
+</svg>

@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "Praesidio — AI prompt DLP",
+    "description": "Extension name shown in chrome://extensions."
+  },
+  "extDescription": {
+    "message": "Scan and mask sensitive data in prompts to consumer AI sites before they leave your browser.",
+    "description": "Extension description shown in chrome://extensions and the Web Store listing."
+  },
+  "actionTitle": {
+    "message": "Praesidio",
+    "description": "Tooltip on the toolbar action icon."
+  }
+}

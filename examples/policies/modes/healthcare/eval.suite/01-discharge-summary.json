@@ -1,0 +1,22 @@
+{
+  "name": "Discharge summary with MRN and patient name",
+  "description": "Positive case — common clinical-assistant workflow.",
+  "input": {
+    "messages": [
+      {
+        "role": "user",
+        "content": "Draft a discharge summary for John Doe, MRN 12345678, DOB 03/14/1972, admitted 05/20 for hypertensive urgency. BP 182/104 on admission, normalised to 138/86 on metoprolol 50mg BID. Discharge home with PCP follow-up in 7 days."
+      }
+    ]
+  },
+  "expected": {
+    "action": "transform",
+    "findings": [
+      { "label": "regex.mrn",            "min_count": 1 },
+      { "label": "regex.dob",            "min_count": 1 },
+      { "label": "pii.person",      "min_count": 1 },
+      { "label": "pii.date",   "min_count": 1 }
+    ],
+    "egress_contains_none": ["John Doe", "12345678", "03/14/1972"]
+  }
+}

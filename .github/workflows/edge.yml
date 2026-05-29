@@ -1,0 +1,201 @@
+name: edge
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'services/edge-proxy/**'
+      - 'clients/**'
+      - 'services/gateway/praesidio_gateway/api/v1/scan.py'
+      - 'docs/edge-rfp.md'
+      - 'docs/edge-coverage-matrix.md'
+      - '.github/workflows/edge.yml'
+  pull_request:
+    paths:
+      - 'services/edge-proxy/**'
+      - 'clients/**'
+      - 'services/gateway/praesidio_gateway/api/v1/scan.py'
+      - '.github/workflows/edge.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  edge-proxy:
+    name: edge-proxy (python)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: services/edge-proxy
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: services/edge-proxy/uv.lock
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Sync dependencies
+        run: uv sync --frozen || uv pip install -e '.[dev]'
+
+      - name: Ruff
+        run: uv run ruff check .
+
+      - name: Pytest
+        run: uv run pytest -q --maxfail=1
+
+      - name: Build wheel
+        run: uv build
+
+      - name: Upload wheel
+        uses: actions/upload-artifact@v4
+        with:
+          name: praesidio-edge-proxy-wheel
+          path: services/edge-proxy/dist/*.whl
+
+  browser:
+    name: browser extension (mv3)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: clients/browser
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install
+        run: npm ci || npm install
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint --if-present
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Install Playwright deps
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E tests
+        run: npm run e2e --if-present
+
+      - name: Build
+        run: npm run build
+
+      - name: Package
+        run: npm run build:zip
+
+      - name: Upload zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: praesidio-browser-extension
+          path: clients/browser/dist-zip/*.zip
+
+  vscode:
+    name: vscode extension
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: clients/vscode
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install
+        run: npm ci || npm install
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Package
+        run: npx --yes @vscode/vsce package -o praesidio-vscode.vsix
+
+      - name: Upload vsix
+        uses: actions/upload-artifact@v4
+        with:
+          name: praesidio-vscode-vsix
+          path: clients/vscode/praesidio-vscode.vsix
+
+  jetbrains:
+    name: jetbrains plugin
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: clients/jetbrains
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: "8.5"
+
+      - name: Bootstrap gradle wrapper (one-time)
+        run: |
+          if [ ! -f gradle/wrapper/gradle-wrapper.jar ]; then
+            gradle wrapper --gradle-version 8.5 --distribution-type bin
+          fi
+
+      - name: Build plugin
+        run: ./gradlew --no-daemon buildPlugin
+
+      - name: Test plugin
+        run: ./gradlew --no-daemon test
+
+      - name: Upload plugin zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: praesidio-jetbrains-plugin
+          path: clients/jetbrains/build/distributions/*.zip
+
+  gateway-scan-endpoints:
+    name: gateway /v1/scan integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: services/gateway
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: services/gateway/uv.lock
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Sync
+        run: uv sync --frozen
+
+      - name: Pytest scan endpoints
+        run: uv run pytest -q tests/test_v1_scan.py --maxfail=1

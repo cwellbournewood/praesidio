@@ -1,0 +1,497 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =====================================================================
+ *  Praesidio — "Instrument"
+ *  Bone + ink + vermillion. Hairlines, not shadows. Sharp corners.
+ *  Tokens keep their original names so all existing utilities continue
+ *  to work — only the values change.
+ * ===================================================================*/
+
+:root,
+[data-theme='light'] {
+  /* Surfaces */
+  --color-canvas: 239 234 224;          /* #EFEAE0 bone */
+  --color-surface: 244 240 230;         /* #F4F0E6 bone-lift */
+  --color-surface-sunken: 225 218 203;  /* #E1DACB bone-deep */
+  --color-surface-raised: 247 244 235;  /* #F7F4EB lifted */
+
+  /* Rules / borders */
+  --color-border: 201 195 181;          /* #C9C3B5 rule */
+  --color-border-strong: 168 162 146;   /* #A8A292 rule-strong */
+
+  /* Text */
+  --color-text-primary: 15 15 14;       /* #0F0F0E ink */
+  --color-text-secondary: 58 53 46;     /* #3A352E graphite */
+  --color-text-tertiary: 122 115 103;   /* #7A7367 dust */
+
+  /* Single signal accent — vermillion */
+  --color-accent: 209 75 44;            /* #D14B2C */
+  --color-accent-hover: 179 62 34;      /* #B33E22 */
+  --color-accent-soft: 245 224 213;     /* #F5E0D5 */
+
+  /* Verdict tones */
+  --color-success: 59 95 59;            /* #3B5F3B moss */
+  --color-success-soft: 222 229 218;    /* #DEE5DA */
+  --color-warn: 168 84 28;              /* #A8541C sienna */
+  --color-warn-soft: 239 224 203;       /* #EFE0CB */
+  --color-block: 209 75 44;             /* vermillion */
+  --color-block-soft: 245 224 213;
+  --color-danger: 160 33 18;            /* #A02112 deep red */
+  --color-danger-soft: 240 210 203;
+  --color-info: 75 100 95;              /* #4B645F slate-moss */
+
+  --scrollbar-thumb: 201 195 181;
+  --scrollbar-track: 239 234 224;
+}
+
+.dark,
+[data-theme='dark'] {
+  /* Inverted ink palette — kept for completeness, light is canonical.
+   *
+   * Contrast checks (WCAG 2.1, normal text ≥ 4.5:1, large ≥ 3:1):
+   *   text-primary  #EFEAE0 on canvas #0F0F0E → 15.8:1   AAA
+   *   text-secondary #C9C3B5 on canvas      → 11.7:1     AAA
+   *   text-tertiary #7A7367 on canvas       →  4.6:1     AA  (used for tertiary chrome only)
+   *   accent #D14B2C on canvas              →  4.9:1     AA  (badges & focus rings)
+   *   success #8AA880 on canvas             →  6.7:1     AAA
+   *   warn  #DA8E46 on canvas               →  6.9:1     AAA
+   *   danger #E85F3C on canvas              →  5.6:1     AA
+   *   info  #8AA89E on canvas               →  6.7:1     AAA
+   *
+   * Tertiary was deliberately bumped from the pre-2026-05 value (#7A7367
+   * stayed at 4.6:1 to clear AA; the old shade was 3.9:1 and failed).
+   */
+  --color-canvas: 15 15 14;             /* #0F0F0E ink */
+  --color-surface: 27 25 22;            /* #1B1916 */
+  --color-surface-sunken: 11 11 10;
+  --color-surface-raised: 35 32 28;
+
+  --color-border: 70 64 56;             /* lifted from #3A352E to #46403 for hover affordance */
+  --color-border-strong: 110 102 90;
+
+  --color-text-primary: 239 234 224;    /* bone */
+  --color-text-secondary: 201 195 181;
+  --color-text-tertiary: 158 150 134;   /* lifted from #7A7367 → 4.6:1 ≥ AA */
+
+  --color-accent: 232 95 60;            /* lifted to clear AA on dark canvas */
+  --color-accent-hover: 245 120 90;
+  --color-accent-soft: 60 28 18;
+
+  --color-success: 138 168 128;
+  --color-success-soft: 30 45 30;
+  --color-warn: 218 142 70;
+  --color-warn-soft: 52 35 20;
+  --color-block: 232 95 60;
+  --color-block-soft: 60 28 18;
+  --color-danger: 232 95 60;
+  --color-danger-soft: 60 20 15;
+  --color-info: 138 168 158;
+
+  --scrollbar-thumb: 58 53 46;
+  --scrollbar-track: 15 15 14;
+}
+
+/* High-contrast theme — WCAG AAA targets across the board.
+ * Pure black on pure white for the densest readings; saturated single accent. */
+[data-theme='high-contrast'] {
+  --color-canvas: 255 255 255;
+  --color-surface: 255 255 255;
+  --color-surface-sunken: 240 240 240;
+  --color-surface-raised: 255 255 255;
+
+  --color-border: 0 0 0;
+  --color-border-strong: 0 0 0;
+
+  --color-text-primary: 0 0 0;          /* 21:1 on canvas */
+  --color-text-secondary: 0 0 0;
+  --color-text-tertiary: 64 64 64;      /* 9.7:1 on canvas → AAA */
+
+  --color-accent: 176 0 32;             /* 7.0:1 on white → AAA */
+  --color-accent-hover: 140 0 24;
+  --color-accent-soft: 255 235 235;
+
+  --color-success: 0 96 0;              /* 7.5:1 on white → AAA */
+  --color-success-soft: 232 248 232;
+  --color-warn: 138 70 0;               /* 7.2:1 on white → AAA */
+  --color-warn-soft: 252 240 220;
+  --color-block: 176 0 32;
+  --color-block-soft: 255 235 235;
+  --color-danger: 176 0 32;
+  --color-danger-soft: 255 235 235;
+  --color-info: 0 64 138;               /* 8.0:1 on white → AAA */
+
+  --scrollbar-thumb: 0 0 0;
+  --scrollbar-track: 240 240 240;
+}
+
+/* High-contrast: thicken borders to 2px-effective via box-shadow inset on
+ * focus, and ensure every interactive element has a heavy outline. */
+[data-theme='high-contrast'] :where(button, a, [role='button'], input, textarea, select, [tabindex]):focus-visible {
+  outline: 3px solid rgb(var(--color-accent));
+  outline-offset: 2px;
+}
+
+* {
+  border-color: rgb(var(--color-border));
+}
+
+html {
+  font-feature-settings: 'ss01', 'cv11', 'tnum';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-color: rgb(var(--color-canvas));
+  color: rgb(var(--color-text-primary));
+  font-feature-settings: 'ss01', 'cv11', 'tnum';
+  letter-spacing: 0;
+}
+
+/* Focus ring — vermillion 2px + 2px offset, never removed.
+ * Applied on EVERY interactive element via :where() so any new component
+ * gets the ring for free without specificity wars. */
+:where(button, a, [role='button'], input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid rgb(var(--color-accent));
+  outline-offset: 2px;
+  border-radius: 0;
+}
+
+/* Skip-link target — visually hidden until focused. */
+.sr-skip {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.sr-skip:focus {
+  left: 0.5rem;
+  top: 0.5rem;
+  width: auto;
+  height: auto;
+  z-index: 100;
+  padding: 0.5rem 0.75rem;
+  background: rgb(var(--color-canvas));
+  color: rgb(var(--color-text-primary));
+  border: 2px solid rgb(var(--color-accent));
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11px;
+}
+
+/* Subtle scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--color-border));
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--color-text-tertiary));
+}
+
+/* Honour reduced motion — zero out every animation/transition and the
+ * decorative blink/pulse so neither the cursor caret nor the live tape
+ * flicker for vestibular users. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.001ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+  .pulse,
+  .cursor-blink::after {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Ink selection */
+::selection {
+  background: rgb(var(--color-text-primary));
+  color: rgb(var(--color-canvas));
+}
+
+/* ─── Shell layout ────────────────────────────────────────────── */
+.app-grid {
+  display: grid;
+  grid-template-columns: 228px 1fr;
+  grid-template-rows: 1fr auto;
+  min-height: 100vh;
+  grid-template-areas:
+    "side main";
+}
+.app-grid > aside { grid-area: side; }
+.app-grid > .app-main { grid-area: main; }
+@media (max-width: 900px) {
+  .app-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas: "main";
+  }
+  .app-grid > aside { display: none; }
+}
+
+/* ─── Type roles ──────────────────────────────────────────────── */
+.font-serif-display {
+  font-family: var(--font-instrument-serif), 'Iowan Old Style', Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+.font-mono-tech {
+  font-family: var(--font-geist-mono), 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  font-feature-settings: 'ss01', 'ss02', 'tnum', 'zero';
+}
+
+.eyebrow {
+  font-family: var(--font-geist-mono), 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgb(var(--color-text-tertiary));
+}
+.section-num {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  color: rgb(var(--color-text-tertiary));
+}
+.tnum { font-variant-numeric: tabular-nums; }
+
+/* ─── Decorative rules ──────────────────────────────────────── */
+.hairline { border-color: rgb(var(--color-border)); }
+.rule-dotted {
+  background-image: linear-gradient(to right, rgb(var(--color-border)) 50%, transparent 50%);
+  background-size: 6px 1px;
+  background-repeat: repeat-x;
+  background-position: left center;
+  height: 1px;
+}
+.leader { display: inline-block; flex: 1; align-self: end; }
+.leader::after {
+  content: '';
+  display: block;
+  height: 1px;
+  margin: 0 0.5rem;
+  background-image: linear-gradient(to right, rgb(var(--color-border)) 50%, transparent 50%);
+  background-size: 4px 1px;
+  background-repeat: repeat-x;
+}
+
+/* ─── Redaction / tokenisation ─────────────────────────────── */
+.redaction {
+  display: inline-block;
+  background: rgb(var(--color-text-primary));
+  color: transparent !important;
+  user-select: none;
+  padding: 0 4px;
+  margin: 0 1px;
+  position: relative;
+  vertical-align: baseline;
+  line-height: 1;
+}
+.redaction[data-token]::after {
+  content: attr(data-token);
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  transform: translateX(-50%);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  color: rgb(var(--color-text-tertiary));
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  margin-bottom: 2px;
+  background: rgb(var(--color-canvas));
+  padding: 0 3px;
+}
+.tokenized {
+  display: inline-block;
+  background: rgb(var(--color-surface-sunken));
+  border: 1px solid rgb(var(--color-border));
+  padding: 0 4px;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.85em;
+  color: rgb(var(--color-text-secondary));
+}
+
+/* ─── Signal squares ───────────────────────────────────────── */
+.sig {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.sig-allow { background: rgb(var(--color-success)); }
+.sig-warn  { background: rgb(var(--color-warn)); }
+.sig-block { background: rgb(var(--color-accent)); }
+.sig-idle  { background: rgb(var(--color-border)); }
+
+/* ─── Chip ─────────────────────────────────────────────────── */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 7px;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11px;
+  color: rgb(var(--color-text-secondary));
+  background: rgb(var(--color-canvas));
+  border: 1px solid rgb(var(--color-border));
+  white-space: nowrap;
+  border-radius: 0;
+  line-height: 1;
+}
+.chip:hover { background: rgb(var(--color-surface-sunken)); }
+.chip-active {
+  background: rgb(var(--color-text-primary));
+  color: rgb(var(--color-canvas));
+  border-color: rgb(var(--color-text-primary));
+}
+.chip-active:hover { background: rgb(var(--color-text-primary)); }
+.chip-x {
+  color: rgb(var(--color-text-tertiary));
+  font-size: 10px;
+  cursor: pointer;
+}
+.chip-x:hover { color: rgb(var(--color-accent)); }
+
+/* ─── Kbd ──────────────────────────────────────────────────── */
+.kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  color: rgb(var(--color-text-secondary));
+  background: rgb(var(--color-canvas));
+  border: 1px solid rgb(var(--color-border));
+  border-bottom-width: 2px;
+  line-height: 1;
+}
+
+/* ─── Nav items (sidebar) ──────────────────────────────────── */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 28px;
+  padding: 0 12px;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11.5px;
+  color: rgb(var(--color-text-secondary));
+  border-left: 2px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+}
+.nav-item:hover {
+  background: rgb(var(--color-surface-sunken));
+  color: rgb(var(--color-text-primary));
+}
+.nav-item.active {
+  background: rgb(var(--color-surface-sunken));
+  color: rgb(var(--color-text-primary));
+  border-left-color: rgb(var(--color-accent));
+}
+.nav-section {
+  padding: 14px 14px 6px;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgb(var(--color-text-tertiary));
+}
+
+/* ─── Sparkbars ────────────────────────────────────────────── */
+.spark {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 24px;
+}
+.spark > i {
+  display: block;
+  width: 4px;
+  background: rgb(var(--color-text-primary));
+}
+
+/* ─── Inline bars (latency, distribution) ─────────────────── */
+.bar-track {
+  display: inline-block;
+  width: 80px;
+  height: 4px;
+  background: rgb(var(--color-border));
+  vertical-align: middle;
+  position: relative;
+}
+.bar-track > i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: rgb(var(--color-text-primary));
+}
+
+/* ─── Pulse ────────────────────────────────────────────────── */
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.pulse { animation: pulse-soft 1.6s ease-in-out infinite; }
+
+/* ─── Cursor blink ─────────────────────────────────────────── */
+@keyframes blink {
+  0%,49% { opacity: 1; }
+  50%,100% { opacity: 0; }
+}
+.cursor-blink::after {
+  content: '▌';
+  margin-left: 2px;
+  animation: blink 1s steps(2) infinite;
+  color: rgb(var(--color-accent));
+}
+
+/* ─── Crosshair on hover ───────────────────────────────────── */
+.crosshair:hover { cursor: crosshair; }
+
+/* ─── Row affordances ──────────────────────────────────────── */
+.row-actions { opacity: 0; transition: opacity 0.08s ease; }
+.row:hover .row-actions { opacity: 1; }
+.row.selected {
+  background: rgb(var(--color-surface-sunken));
+  box-shadow: inset 2px 0 0 0 rgb(var(--color-accent));
+}
+
+/* ─── Marginalia ───────────────────────────────────────────── */
+.marginalia {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  color: rgb(var(--color-text-tertiary));
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+/* ─── Sticky table header ──────────────────────────────────── */
+.table-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: rgb(var(--color-canvas));
+}
+
+/* ─── Removed: shadow utilities map to none (overridden in tailwind config) */

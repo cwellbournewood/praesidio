@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 96" role="img" aria-label="Praesidio">
+  <title>Praesidio</title>
+  <desc>Praesidio horizontal lockup. Section mark § italic lifted vermillion + "praesidio" roman bone in Instrument Serif. Dark variant — for use on ink surfaces.</desc>
+  <text x="36" y="70" text-anchor="middle"
+        font-family="'Instrument Serif','Iowan Old Style','Cambria','Times New Roman',Georgia,serif"
+        font-style="italic" font-weight="400" font-size="80" fill="#E85F3C">§</text>
+  <text x="88" y="66"
+        font-family="'Instrument Serif','Iowan Old Style','Cambria','Times New Roman',Georgia,serif"
+        font-style="normal" font-weight="400" font-size="56" fill="#EFEAE0" letter-spacing="-0.56">praesidio</text>
+</svg>

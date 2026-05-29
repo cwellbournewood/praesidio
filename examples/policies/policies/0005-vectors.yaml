@@ -1,0 +1,78 @@
+apiVersion: praesidio/v1
+kind: Policy
+metadata:
+  id: vectors-strict
+  name: "Vector-store DLP-on-write and ACL-on-read"
+  owner: data-protection@acme.example
+  description: |
+    Governs writes and reads against the /v1/vectors/{store}/* endpoints.
+
+    * On upsert (DLP-on-write): tokenise emails / people names / phones,
+      redact IBANs and PANs, and BLOCK any document that contains live
+      cloud credentials. The vector connector itself also enforces the
+      block-on-secrets contract, but having it in policy makes the
+      audit trail explain WHY the document was refused.
+
+    * On query (ACL-on-read): the connector consults documents_acl and
+      drops any hit the calling principal cannot read. No transform is
+      needed because the persisted text is already sanitised — what we
+      DO want is to make sure the audit log records who searched what.
+spec:
+  match:
+    routes:
+      - "/v1/vectors/*/upsert"
+      - "/v1/vectors/*/query"
+    tenants: ["*"]
+  detect:
+    enable:
+      - pii.email
+      - pii.phone
+      - financial.iban
+      - financial.credit_card
+      - pii.person
+      - pii.location
+      - secrets.aws
+      - secrets.gcp
+      - secrets.azure
+      - credential.generic_high_entropy
+    thresholds:
+      pii.person: 0.7
+      pii.location: 0.8
+  decide:
+    rules:
+      # Hard block: never let credentials get embedded into a vector store.
+      # An embedding is a one-way leakage channel — even if the raw text
+      # is later deleted, the vector itself encodes structure correlated
+      # with the original secret.
+      - when: "any(findings, .label in ['secrets.aws','secrets.gcp','secrets.azure','credential.generic_high_entropy'])"
+        action: block
+        reason: "Credential leakage attempt into vector store"
+        severity: critical
+
+      # Sanitise PII before it reaches the embedding model. The vector
+      # connector hands the sanitised text to the embedder, so the
+      # embedding is over the placeholder form — originals stay in the
+      # tenant-scoped vault.
+      - when: "request.route endsWith '/upsert' && any(findings, .label in ['pii.email','pii.person','pii.phone','financial.iban','financial.credit_card'])"
+        action: transform
+        transforms:
+          - { label: pii.email,     method: tokenise, scope: tenant, ttl: 168h }
+          - { label: pii.person, method: tokenise, scope: tenant, ttl: 168h }
+          - { label: pii.phone,     method: fpe }
+          - { label: financial.iban,      method: redact, replacement: "[REDACTED_IBAN]" }
+          - { label: financial.credit_card,        method: redact, replacement: "[REDACTED_PAN]" }
+
+      # Query path: scan the query for secrets (don't let a search term
+      # full of credentials get logged) but otherwise pass through —
+      # ACL filtering happens in the connector.
+      - when: "request.route endsWith '/query' && any(findings, .label in ['pii.email','pii.person'])"
+        action: transform
+        transforms:
+          - { label: pii.email,     method: tokenise, scope: request }
+          - { label: pii.person, method: tokenise, scope: request }
+
+      - when: "true"
+        action: allow
+  fail_mode: closed
+  audit:
+    severity_min: info

@@ -1,0 +1,109 @@
+# =============================================================================
+# Praesidio — ValidatingAdmissionPolicy (Kubernetes >= 1.30)
+# -----------------------------------------------------------------------------
+# Blocks creation of any Pod that BOTH
+#   (a) mounts a Secret whose name suggests it contains cloud credentials, AND
+#   (b) sets an environment variable whose value resolves to an LLM provider
+#       host that is NOT in the Praesidio allow-list.
+#
+# Rationale: AI workloads with direct cloud-credential access AND direct
+# LLM-provider egress are exactly the population that should be routed
+# through the Praesidio gateway. Forcing them through the gateway is what
+# gives us audit, DLP, and policy enforcement. Without this, a developer
+# can innocently `pip install openai` and pipe a customer database through
+# GPT-4 in 5 lines, completely outside the control plane.
+#
+# This is policy-as-defence-in-depth — it does not replace network
+# isolation or RBAC, it backstops them.
+#
+# Tested on:
+#   * EKS 1.30+, GKE 1.30+, AKS 1.30+, kind 0.23+
+#
+# If your cluster is still on <1.30 use the Gatekeeper variant in the
+# same directory.
+# =============================================================================
+
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: praesidio-llm-egress-guard
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["pods"]
+  # The list of LLM hostnames Praesidio governs. Pods that talk to anything
+  # outside this list are unaffected — only direct, ungated access to a
+  # listed provider triggers the policy.
+  variables:
+    - name: llmHosts
+      expression: |
+        [
+          'api.openai.com',
+          'api.anthropic.com',
+          'generativelanguage.googleapis.com',
+          'bedrock-runtime.us-east-1.amazonaws.com',
+          'bedrock-runtime.us-west-2.amazonaws.com'
+        ]
+    # Secret name patterns we consider "cloud credentials". Adjust per cluster
+    # convention (e.g. add 'gcp-key', 'azure-creds', team-specific prefixes).
+    - name: credentialSecretPatterns
+      expression: |
+        ['aws-credentials', 'aws-creds', 'gcp-credentials', 'azure-creds', 'cloud-creds']
+    - name: mountsCloudCreds
+      expression: |
+        object.spec.?volumes.orValue([]).exists(v,
+          v.?secret.?secretName.orValue('') != '' &&
+          variables.credentialSecretPatterns.exists(p,
+            v.secret.secretName.contains(p)
+          )
+        )
+    - name: containers
+      expression: |
+        object.spec.containers + object.spec.?initContainers.orValue([])
+    - name: directLlmHost
+      expression: |
+        variables.containers.exists(c,
+          c.?env.orValue([]).exists(e,
+            e.?value.orValue('') != '' &&
+            variables.llmHosts.exists(h, e.value.contains(h))
+          )
+        )
+    # Praesidio annotation an operator can use to consciously opt a Pod
+    # OUT of the guard (e.g. the gateway pod itself, which by definition
+    # talks to LLM providers). Requires platform-admin approval to set.
+    - name: hasBypass
+      expression: |
+        object.metadata.?annotations['praesidio.dev/admission-bypass'].orValue('') == 'true'
+  validations:
+    - expression: |
+        variables.hasBypass ||
+        !(variables.mountsCloudCreds && variables.directLlmHost)
+      message: |
+        Pod mounts cloud credentials AND has an environment variable pointing
+        at a known LLM provider host. Route the workload through the
+        Praesidio gateway (set OPENAI_BASE_URL=http://praesidio-gateway:8080/v1
+        or equivalent) instead of contacting the provider directly. To bypass,
+        add annotation praesidio.dev/admission-bypass=true (requires
+        platform-admin RBAC on the namespace).
+      reason: Forbidden
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: praesidio-llm-egress-guard-binding
+spec:
+  policyName: praesidio-llm-egress-guard
+  validationActions: [Deny, Audit]
+  # Default: enforce on every namespace except kube-system / Praesidio's own
+  # namespace. Operators can scope this with matchResources for staged
+  # rollout.
+  matchResources:
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values: [kube-system, kube-public, praesidio]

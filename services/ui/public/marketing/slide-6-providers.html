@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Praesidio · providers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="carousel.css" rel="stylesheet">
+<style>
+  .stage { display: grid; grid-template-rows: auto 1fr auto; gap: 38px; padding-top: 56px; }
+  .head h1 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 76px; line-height: 0.96; letter-spacing: -0.02em; color: var(--ink); }
+  .head h1 em { font-style: italic; color: var(--vermillion); }
+  .head .sub { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 22px; color: var(--graphite); margin-top: 14px; max-width: 780px; line-height: 1.4; }
+
+  .map {
+    border: 1px solid var(--rule); background: var(--canvas);
+    padding: 30px 30px 36px;
+  }
+  .map .hd { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 22px; }
+  .map .hd .lbl { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); }
+  .map .hd .ver { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.14em; color: var(--dust); }
+
+  .center-puck {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    border: 2px solid var(--ink); padding: 18px 20px;
+    background: var(--canvas);
+    text-align: center; min-height: 100px;
+  }
+  .center-puck .mark {
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: 28px; color: var(--vermillion); line-height: 1;
+  }
+  .center-puck .name { font-family: 'Instrument Serif', serif; font-size: 22px; color: var(--ink); margin-top: 4px; letter-spacing: -0.01em; }
+  .center-puck .meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--dust); margin-top: 6px; letter-spacing: 0.14em; text-transform: uppercase; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 0;
+    border-top: 1px dashed var(--rule);
+  }
+  .cell {
+    padding: 18px 16px;
+    border-right: 1px dashed var(--rule);
+    border-bottom: 1px dashed var(--rule);
+    min-height: 110px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .cell:nth-child(3n) { border-right: 0; }
+  .cell .ven { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dust); }
+  .cell .name { font-family: 'Instrument Serif', serif; font-size: 22px; color: var(--ink); letter-spacing: -0.01em; line-height: 1.1; }
+  .cell .meta { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--dust); letter-spacing: 0.08em; text-transform: uppercase; margin-top: auto; }
+  .cell.center {
+    border: 2px solid var(--ink);
+    background: var(--canvas);
+    align-items: center; text-align: center; justify-content: center;
+    position: relative; z-index: 1;
+  }
+  .cell.center .mark { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 32px; color: var(--vermillion); }
+  .cell.center .name { font-family: 'Instrument Serif', serif; font-size: 26px; color: var(--ink); margin-top: -2px; }
+  .cell.center .meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: var(--ink); margin-top: 4px; }
+
+  .stat-row {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--rule); margin-top: 8px;
+  }
+  .stat-row .s { padding: 18px 18px; border-right: 1px solid var(--rule); }
+  .stat-row .s:last-child { border-right: 0; }
+  .stat-row .s .h { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dust); margin-bottom: 6px; }
+  .stat-row .s .v { font-family: 'Instrument Serif', serif; font-size: 26px; color: var(--ink); letter-spacing: -0.01em; }
+  .stat-row .s .v em { font-style: italic; color: var(--vermillion); }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="top-bar">
+    <div class="brand">Praesidio</div>
+    <div class="eyebrow ink"><span class="dot"></span>&nbsp;§ 6 · ONE GATEWAY · EVERY MODEL</div>
+  </div>
+
+  <div class="stage">
+    <div class="head">
+      <h1>OpenAI, Anthropic,<br/>Bedrock — <em>by policy</em>.</h1>
+      <p class="sub">Route by jurisdiction, certifications, or BAA scope. Per-key, per-tenant, per-model rate &amp; token limits. Same DLP, same audit, same cost ledger across every backend.</p>
+    </div>
+
+    <div class="map">
+      <div class="hd">
+        <span class="lbl">Routing table · acme-corp</span>
+        <span class="ver">v2026.05.3 · live</span>
+      </div>
+      <div class="grid">
+        <div class="cell">
+          <span class="ven">OpenAI</span>
+          <span class="name">gpt-4o</span>
+          <span class="meta">us-east · soc2 · iso27001</span>
+        </div>
+        <div class="cell">
+          <span class="ven">Anthropic</span>
+          <span class="name">claude-3-opus</span>
+          <span class="meta">us-west · soc2 · hipaa</span>
+        </div>
+        <div class="cell">
+          <span class="ven">AWS Bedrock</span>
+          <span class="name">claude-3-sonnet</span>
+          <span class="meta">eu-central-1 · baa</span>
+        </div>
+        <div class="cell">
+          <span class="ven">Azure OpenAI</span>
+          <span class="name">gpt-4o-eu</span>
+          <span class="meta">westeurope · iso27018 · baa</span>
+        </div>
+        <div class="cell center">
+          <span class="mark">§</span>
+          <span class="name">Praesidio</span>
+          <span class="meta">gateway · eu-west-1</span>
+        </div>
+        <div class="cell">
+          <span class="ven">Google Vertex</span>
+          <span class="name">gemini-1.5-pro</span>
+          <span class="meta">europe-west4 · cmek</span>
+        </div>
+        <div class="cell">
+          <span class="ven">Self-hosted</span>
+          <span class="name">llama-3.1-70b</span>
+          <span class="meta">on-prem · air-gapped</span>
+        </div>
+        <div class="cell">
+          <span class="ven">Self-hosted</span>
+          <span class="name">qwen-2.5-32b</span>
+          <span class="meta">staging · gpu pool · k8s</span>
+        </div>
+        <div class="cell">
+          <span class="ven">Ollama</span>
+          <span class="name">mistral-small</span>
+          <span class="meta">local dev · zero-network</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-row">
+      <div class="s">
+        <div class="h">Backends</div>
+        <div class="v"><em>9</em> live</div>
+      </div>
+      <div class="s">
+        <div class="h">Auto-routes by</div>
+        <div class="v">region · BAA · cert</div>
+      </div>
+      <div class="s">
+        <div class="h">Token meter</div>
+        <div class="v">per-key · per-model</div>
+      </div>
+      <div class="s">
+        <div class="h">Failover</div>
+        <div class="v">policy-driven</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span><span class="swatch"></span>JURISDICTION-AWARE · CERTIFICATION-AWARE</span>
+    <span class="ink">PROVIDERS</span>
+    <span class="accent">/ swipe →</span>
+  </div>
+</div>
+</body>
+</html>

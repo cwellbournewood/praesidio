@@ -1,0 +1,34 @@
+apiVersion: praesidio/v1
+kind: Policy
+metadata:
+  id: code-protection
+  name: "Source code & secret protection"
+  owner: appsec@acme.example
+spec:
+  match:
+    routes: ["/v1/chat/completions", "/v1/scan"]
+    principals: { groups: ["engineering"] }
+  detect:
+    enable:
+      - secrets.aws
+      - secrets.gcp
+      - secrets.github
+      - credential.openai_api_key
+      - credential.anthropic_api_key
+      - secrets.slack
+      - credential.private_key
+      - code.lang
+      - code.proprietary_marker
+  decide:
+    rules:
+      - when: "any(findings, .detector == 'secrets')"
+        action: block
+        reason: "Secret detected — request blocked"
+        severity: high
+      - when: "any(findings, .label == 'code.proprietary_marker')"
+        action: transform
+        transforms:
+          - { label: code.proprietary_marker, method: redact, replacement: "[REDACTED_INTERNAL]" }
+      - when: "true"
+        action: allow
+  fail_mode: closed

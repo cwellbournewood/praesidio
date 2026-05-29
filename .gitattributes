@@ -1,0 +1,52 @@
+# Normalize line endings on commit. Working-tree line endings are
+# whatever the OS prefers (CRLF on Windows, LF on Unix), but everything
+# in the repo is LF. Mandatory for cross-platform OSS — Windows
+# contributors hit autocrlf surprises otherwise.
+
+* text=auto eol=lf
+
+# Explicit binary files so git doesn't try to normalize them.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.pdf   binary
+*.zip   binary
+*.gz    binary
+*.tar   binary
+*.tgz   binary
+*.xz    binary
+*.bz2   binary
+*.7z    binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.otf   binary
+*.eot   binary
+*.mp3   binary
+*.mp4   binary
+*.webm  binary
+*.webp  binary
+*.crx   binary
+*.vsix  binary
+*.jar   binary
+*.class binary
+
+# Shell scripts must keep LF even on Windows checkouts — CRLF breaks
+# `#!/usr/bin/env bash`.
+*.sh    text eol=lf
+*.bash  text eol=lf
+
+# Windows-only batch / PowerShell scripts keep CRLF.
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+*.ps1   text eol=crlf
+
+# Generated lockfiles — let them keep whatever the tool emitted; diffs
+# in these are noisy enough already.
+*.lock      -text -diff
+package-lock.json -text -diff
+pnpm-lock.yaml    -text -diff
+poetry.lock       -text -diff
+uv.lock           -text -diff

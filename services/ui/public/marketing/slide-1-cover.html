@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Praesidio · cover</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="carousel.css" rel="stylesheet">
+<style>
+  .slide { padding: 80px 88px 64px; }
+  .stage {
+    display: grid; grid-template-rows: auto auto auto 1fr auto; gap: 0;
+  }
+  .markline {
+    display: grid; grid-template-columns: auto 1fr; align-items: center;
+    margin-top: 110px; margin-bottom: 36px;
+  }
+  .markline .ssmark {
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    color: var(--vermillion); font-size: 200px; line-height: 0.8;
+    margin-right: 26px;
+  }
+  .markline .stack {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .markline .stack .pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: 0.20em; text-transform: uppercase;
+    color: var(--dust);
+  }
+  .markline .stack .word {
+    font-family: 'Instrument Serif', serif;
+    font-size: 132px; line-height: 0.9; letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .tagline {
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: 38px; line-height: 1.25; color: var(--graphite);
+    max-width: 880px;
+  }
+  .tagline .accent { color: var(--vermillion); font-style: normal; }
+  .badge-row {
+    display: flex; gap: 0; border: 1px solid var(--rule); margin-top: 56px;
+  }
+  .badge {
+    flex: 1 1 0; padding: 22px 20px; border-right: 1px solid var(--rule);
+    text-align: left;
+  }
+  .badge:last-child { border-right: 0; }
+  .badge .h {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--dust); margin-bottom: 8px;
+  }
+  .badge .v {
+    font-family: 'Instrument Serif', serif;
+    font-size: 26px; color: var(--ink); letter-spacing: -0.01em; line-height: 1.1;
+  }
+  .badge .v em { font-style: italic; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="top-bar">
+    <div class="brand">Praesidio</div>
+    <div class="eyebrow ink"><span class="dot accent"></span>&nbsp;§ 1 · COVER</div>
+  </div>
+
+  <div class="stage">
+    <div class="markline">
+      <span class="ssmark">§</span>
+      <span class="stack">
+        <span class="pre">AI Security Control Plane</span>
+        <span class="word">Praesidio</span>
+      </span>
+    </div>
+
+    <p class="tagline">
+      The data your <span class="accent">models</span> never see.<br/>
+      A semantic DLP gateway for every prompt, every model.
+    </p>
+
+    <div class="badge-row">
+      <div class="badge">
+        <div class="h">License</div>
+        <div class="v"><em>Apache 2.0</em></div>
+      </div>
+      <div class="badge">
+        <div class="h">Backends</div>
+        <div class="v">OpenAI · Anthropic ·<br/>Bedrock · Azure · Ollama</div>
+      </div>
+      <div class="badge">
+        <div class="h">Stack</div>
+        <div class="v">FastAPI · Next.js<br/>Postgres · Redis</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span><span class="swatch"></span>BONE · INK · VERMILLION</span>
+    <span class="ink">v 1.0 · OPEN SOURCE · 2026</span>
+    <span class="accent">/ swipe →</span>
+  </div>
+</div>
+</body>
+</html>

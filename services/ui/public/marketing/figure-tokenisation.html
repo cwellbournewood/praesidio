@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Praesidio — Tokenisation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --canvas: #EFEAE0;
+    --surface: #F4F0E6;
+    --sunken:  #E1DACB;
+    --rule:    #C9C3B5;
+    --ink:     #0F0F0E;
+    --graphite:#3A352E;
+    --dust:    #7A7367;
+    --vermillion: #D14B2C;
+    --moss:    #3B5F3B;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--canvas); color: var(--ink); }
+  body {
+    width: 1600px; height: 900px;
+    font-family: 'Inter', system-ui, sans-serif;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  .frame {
+    width: 100%; height: 100%;
+    padding: 48px 64px 44px;
+    display: grid; grid-template-rows: auto 1fr auto;
+  }
+  .top {
+    display: flex; align-items: baseline; justify-content: space-between;
+    padding-bottom: 22px; border-bottom: 1px solid var(--rule);
+  }
+  .top .l { display: flex; align-items: baseline; gap: 16px; }
+  .top .brand { font-family: 'Instrument Serif', serif; font-size: 36px; color: var(--ink); letter-spacing: -0.01em; }
+  .top .sect { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--vermillion); font-size: 26px; }
+  .top .title { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dust); padding-left: 16px; border-left: 1px solid var(--rule); }
+  .top .r { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dust); }
+  .top .r .v { color: var(--ink); }
+
+  .stage {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 32px; padding: 36px 0 24px;
+  }
+  .panel {
+    border: 1px solid var(--rule); background: var(--canvas);
+  }
+  .panel .hd {
+    padding: 14px 22px; border-bottom: 1px solid var(--rule);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .panel .hd .lbl { color: var(--ink); }
+  .panel .hd .ver { color: var(--dust); }
+  .panel .body { padding: 28px 28px 26px; }
+
+  .entry {
+    font-family: 'JetBrains Mono', monospace; font-size: 16.5px; line-height: 1.9; color: var(--graphite);
+  }
+  .entry .ink { color: var(--ink); }
+  .red { background: var(--ink); color: transparent; padding: 0 6px; margin: 0 1px; user-select: none; display: inline-block; }
+  .tok { background: var(--sunken); border: 1px solid var(--rule); padding: 0 6px; color: var(--graphite); display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 15.5px; }
+  .hi  { background: #F5E0D5; border-bottom: 2px solid var(--vermillion); padding: 0 5px; color: var(--ink); }
+
+  .vault {
+    margin-top: 32px; border: 1px solid var(--ink); padding: 20px 22px;
+    background: var(--canvas);
+    display: grid; grid-template-rows: auto auto; gap: 14px;
+  }
+  .vault .h { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink); }
+  .vault .h .sect { color: var(--vermillion); font-family: 'Instrument Serif', serif; font-style: italic; font-size: 16px; margin-right: 6px; }
+  .vault table { width: 100%; border-collapse: collapse; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; }
+  .vault th, .vault td { text-align: left; padding: 9px 6px; border-bottom: 1px dashed var(--rule); color: var(--graphite); font-weight: 400; }
+  .vault th { color: var(--dust); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; border-bottom: 1px solid var(--rule); padding-top: 0; }
+  .vault td .ink { color: var(--ink); }
+  .vault td .tok { font-size: 13px; }
+
+  .legend-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    border: 1px solid var(--rule);
+  }
+  .legend-grid .c {
+    padding: 18px 20px; border-right: 1px solid var(--rule);
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .legend-grid .c:last-child { border-right: 0; }
+  .legend-grid .c .h { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dust); }
+  .legend-grid .c .v { font-family: 'Instrument Serif', serif; font-size: 22px; color: var(--ink); letter-spacing: -0.01em; line-height: 1.2; }
+  .legend-grid .c .v em { font-style: italic; color: var(--vermillion); }
+  .legend-grid .c .meta { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--graphite); }
+
+  .arrow-strip {
+    text-align: center; padding: 16px 0;
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    color: var(--vermillion); font-size: 26px;
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="top">
+    <div class="l">
+      <span class="sect">§</span>
+      <span class="brand"><em style="font-style:italic">Praesidio</em></span>
+      <span class="title">FIG. 2 — TOKENISATION · REVERSIBLE BY DEFAULT</span>
+    </div>
+    <div class="r">
+      <span>VAULT · REDIS · AES-256-GCM · HKDF</span>
+      <span class="v" style="margin-left:18px">v1.0 · 2026</span>
+    </div>
+  </div>
+
+  <div class="stage">
+    <!-- LEFT: Before -->
+    <div class="panel">
+      <div class="hd"><span class="lbl">§ A · INBOUND PROMPT · RAW</span><span class="ver">tenant: acme-corp</span></div>
+      <div class="body">
+        <p class="entry">
+          <span class="ink">"Please email the renewal contract<br/>
+          to <span class="hi">alice.kim@acme.example</span><br/>
+          by Friday; her direct line is<br/>
+          <span class="hi">+1 415 555 0142</span>.<br/>
+          Also rotate AWS key <span class="hi">AKIA…7EXAMPLE</span>."</span>
+        </p>
+
+        <div class="vault">
+          <div class="h"><span class="sect">§</span>TENANT VAULT · REDIS · AES-256-GCM</div>
+          <table>
+            <tr>
+              <th>Token (egress-safe)</th><th>Method</th><th>Vault row · sealed</th>
+            </tr>
+            <tr>
+              <td><span class="tok">&lt;EMAIL_A2B3&gt;</span></td>
+              <td>tokenise</td>
+              <td><span class="ink">vault:acme/EMAIL/A2B3</span></td>
+            </tr>
+            <tr>
+              <td><span class="tok">+1 748 888 0475</span></td>
+              <td>fpe (FF3-1)</td>
+              <td><span class="ink">format-preserving · no row</span></td>
+            </tr>
+            <tr style="border-bottom:0">
+              <td style="color:var(--vermillion)">[BLOCKED_AWS]</td>
+              <td style="color:var(--vermillion)">redact</td>
+              <td style="color:var(--vermillion)">irreversible · audit only</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: After -->
+    <div class="panel">
+      <div class="hd"><span class="lbl">§ B · EGRESS TO UPSTREAM · SANITISED</span><span class="ver">policy: pii-strict · v2026.05.3</span></div>
+      <div class="body">
+        <p class="entry">
+          <span class="ink">"Please email the renewal contract<br/>
+          to <span class="tok">&lt;EMAIL_A2B3&gt;</span><br/>
+          by Friday; her direct line is<br/>
+          <span class="tok">+1 748 888 0475</span>.<br/>
+          Also rotate AWS key <span style="color:var(--vermillion)">[BLOCKED_AWS]</span>."</span>
+        </p>
+
+        <div style="margin-top:32px; display: grid; grid-template-rows: auto auto; gap: 14px; border: 1px solid var(--rule); padding: 18px 20px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dust);">§ RESPONSE · STREAMED BACK · DETOKENISE</div>
+          <p class="entry" style="font-size: 15px; line-height: 1.8;">
+            <span class="ink">"...I've drafted the renewal to <span style="border-bottom: 1px solid var(--moss);">alice.kim@acme.example</span><br/>
+            and confirmed her line <span style="border-bottom: 1px solid var(--moss);">+1 415 555 0142</span>.<br/>
+            The AWS key was not rotated — request blocked."</span>
+          </p>
+          <div style="display:flex; gap:24px; padding-top:8px; border-top:1px dashed var(--rule); font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--dust); letter-spacing: 0.14em; text-transform: uppercase;">
+            <span><span style="display:inline-block;width:10px;height:10px;background:#3B5F3B;vertical-align:middle;margin-right:6px"></span>RESTORED FROM VAULT</span>
+            <span style="margin-left:auto;color:var(--vermillion)">▸ DOWNSTREAM USER SEES THE ORIGINAL</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend-grid">
+    <div class="c">
+      <div class="h">§ tokenise</div>
+      <div class="v">vault round-trip</div>
+      <div class="meta">AES-256-GCM · per-tenant HKDF · vault row sealed.</div>
+    </div>
+    <div class="c">
+      <div class="h">§ fpe (ff3-1)</div>
+      <div class="v">format-preserving</div>
+      <div class="meta">same shape, same length, different digits. no vault row.</div>
+    </div>
+    <div class="c">
+      <div class="h">§ redact</div>
+      <div class="v"><em>irreversible</em></div>
+      <div class="meta">for secrets that should never have shipped.</div>
+    </div>
+    <div class="c">
+      <div class="h">§ policy selects</div>
+      <div class="v">per entity · per tenant</div>
+      <div class="meta">CEL match → action. signed by cosign.</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

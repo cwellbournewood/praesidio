@@ -1,0 +1,39 @@
+{
+  "$schema": "../../../../docs/modes/schema/ui.theme.schema.json",
+  "mode_id": "healthcare",
+  "subject_noun": "patient",
+  "subject_noun_plural": "patients",
+  "data_noun": "PHI",
+  "data_noun_long": "Protected Health Information",
+  "risk_tone": "clinical",
+  "accent_color": "#4F46E5",
+  "severity_labels": {
+    "critical": "Reportable breach",
+    "high":     "Privacy incident",
+    "medium":   "Disclosure risk",
+    "low":      "Informational"
+  },
+  "action_labels": {
+    "block":    "Blocked",
+    "transform":"Anonymised",
+    "allow":    "Released"
+  },
+  "callout_examples": {
+    "block":    "Blocked: would expose protected health information without a Business Associate Agreement.",
+    "tokenise": "Tokenised: patient identifier replaced with a reversible alias before egress.",
+    "redact":   "Redacted: identifier removed before egress; not recoverable.",
+    "fpe":      "Format-preserved: synthetic identifier of the same shape substituted."
+  },
+  "audit_columns": [
+    { "key": "principal.user_id", "label": "Clinician" },
+    { "key": "principal.purpose", "label": "TPO Purpose" },
+    { "key": "decision",          "label": "Action" },
+    { "key": "findings_summary",  "label": "PHI Detected" },
+    { "key": "policy_id",         "label": "Policy" }
+  ],
+  "empty_state": {
+    "audit": "No PHI events recorded. This is a good sign.",
+    "policy": "No clinical policies loaded. Add the healthcare mode to manifest.yaml to begin."
+  },
+  "compliance_badge": "HIPAA + GDPR Art.9"
+}

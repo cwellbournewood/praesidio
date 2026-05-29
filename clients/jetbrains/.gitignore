@@ -1,0 +1,22 @@
+# Gradle.
+.gradle/
+build/
+out/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE.
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# JetBrains plugin scratch.
+local.properties
+
+# OS detritus.
+.DS_Store
+Thumbs.db
+
+# Editor temp files.
+*.swp
+*~

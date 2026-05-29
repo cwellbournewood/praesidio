@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Praesidio · Favicon candidates</title>
+  <style>
+    :root {
+      --bone: #EFEAE0;
+      --ink: #0F0F0E;
+      --rule: #C9C3B5;
+      --dust: #7A7367;
+      --vermillion: #D14B2C;
+    }
+    * { box-sizing: border-box; }
+    html, body { background: var(--bone); color: var(--ink); margin: 0; padding: 0; }
+    body {
+      font-family: ui-monospace, 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+      padding: 48px 56px 96px;
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+    .eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--dust);
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-family: 'Instrument Serif', 'Times New Roman', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 56px;
+      line-height: 1;
+      margin: 0 0 8px;
+      letter-spacing: -0.01em;
+    }
+    .tagline {
+      font-family: 'Instrument Serif', 'Times New Roman', serif;
+      font-style: italic;
+      font-size: 16px;
+      color: var(--dust);
+      max-width: 640px;
+      margin-bottom: 36px;
+    }
+    .rule {
+      height: 1px;
+      background: var(--rule);
+      margin: 0 0 36px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+    .card {
+      border: 1px solid var(--rule);
+      background: var(--bone);
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    .meta .num {
+      font-family: 'Instrument Serif', 'Times New Roman', serif;
+      font-size: 28px;
+      font-style: italic;
+      color: var(--dust);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .meta .name {
+      font-family: 'Instrument Serif', 'Times New Roman', serif;
+      font-size: 28px;
+      line-height: 1.1;
+      margin-bottom: 14px;
+    }
+    .meta .desc {
+      font-size: 11px;
+      line-height: 1.55;
+      color: var(--dust);
+    }
+    .sizes {
+      display: flex;
+      align-items: flex-end;
+      gap: 18px;
+      justify-content: flex-end;
+    }
+    .swatch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .swatch .lbl {
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--dust);
+    }
+    .swatch .box {
+      border: 1px solid var(--rule);
+      background: var(--bone);
+      display: grid;
+      place-items: center;
+    }
+    .s16 { width: 16px; height: 16px; }
+    .s32 { width: 32px; height: 32px; }
+    .s64 { width: 64px; height: 64px; }
+    .s128 { width: 128px; height: 128px; }
+    .box img { width: 100%; height: 100%; display: block; }
+
+    /* Tab-bar mockup */
+    .tab {
+      margin-top: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--rule);
+      border-bottom: none;
+      background: var(--bone);
+      padding: 6px 10px;
+      max-width: 220px;
+    }
+    .tab img { width: 14px; height: 14px; display: block; }
+    .tab span {
+      font-size: 11px;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .tab .dot {
+      width: 5px; height: 5px;
+      background: var(--vermillion);
+      flex-shrink: 0;
+    }
+
+    .footer {
+      margin-top: 48px;
+      font-size: 11px;
+      color: var(--dust);
+      border-top: 1px solid var(--rule);
+      padding-top: 16px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .footer a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); }
+  </style>
+</head>
+<body>
+
+  <div class="eyebrow">§ FAVICON · CANDIDATES · INSTRUMENT</div>
+  <h1><em>Favicon options</em></h1>
+  <div class="tagline">
+    Six marks for Praesidio. Each shown at 16, 32, 64, 128px and in a tab-bar mockup.
+    Pick by number and I'll wire it up as the canonical favicon.
+  </div>
+  <div class="rule"></div>
+
+  <div class="grid">
+
+    <!-- 01 -->
+    <div class="card">
+      <div class="meta">
+        <div class="num">i.</div>
+        <div class="name">Section&nbsp;mark</div>
+        <div class="desc">
+          The § already prefixes every nav section, breadcrumb and KPI label. Using it as
+          the favicon makes the wordmark and chrome speak the same language. Vermillion on
+          bone — most legible of the lot.
+        </div>
+        <div class="tab">
+          <img src="/favicon-candidates/01-section-mark.svg" alt=""/>
+          <span class="dot"></span>
+          <span>Praesidio · Overview</span>
+        </div>
+      </div>
+      <div class="sizes">
+        <div class="swatch"><div class="box s16"><img src="/favicon-candidates/01-section-mark.svg"/></div><div class="lbl">16</div></div>
+        <div class="swatch"><div class="box s32"><img src="/favicon-candidates/01-section-mark.svg"/></div><div class="lbl">32</div></div>
+        <div class="swatch"><div class="box s64"><img src="/favicon-candidates/01-section-mark.svg"/></div><div class="lbl">64</div></div>
+        <div class="swatch"><div class="box s128"><img src="/favicon-candidates/01-section-mark.svg"/></div><div class="lbl">128</div></div>
+      </div>
+    </div>
+
+    <!-- 02 -->
+    <div class="card">
+      <div class="meta">
+        <div class="num">ii.</div>
+        <div class="name">Signal grid</div>
+        <div class="desc">
+          A 3×3 matrix of ink squares with one vermillion centre — the same 7×7 signal-square
+          glyph used throughout the console, scaled up. Reads as instrumentation, control
+          plane, "many decisions, one in flight".
+        </div>
+        <div class="tab">
+          <img src="/favicon-candidates/02-signal-grid.svg" alt=""/>
+          <span class="dot"></span>
+          <span>Praesidio · Events</span>
+        </div>
+      </div>
+      <div class="sizes">
+        <div class="swatch"><div class="box s16"><img src="/favicon-candidates/02-signal-grid.svg"/></div><div class="lbl">16</div></div>
+        <div class="swatch"><div class="box s32"><img src="/favicon-candidates/02-signal-grid.svg"/></div><div class="lbl">32</div></div>
+        <div class="swatch"><div class="box s64"><img src="/favicon-candidates/02-signal-grid.svg"/></div><div class="lbl">64</div></div>
+        <div class="swatch"><div class="box s128"><img src="/favicon-candidates/02-signal-grid.svg"/></div><div class="lbl">128</div></div>
+      </div>
+    </div>
+
+    <!-- 03 -->
+    <div class="card">
+      <div class="meta">
+        <div class="num">iii.</div>
+        <div class="name">Italic P</div>
+        <div class="desc">
+          A direct echo of the Instrument Serif italic wordmark in the sidebar, with a
+          vermillion sig dot at the descender. Most "brand", least abstract — but at 16px
+          the italic strokes get thin.
+        </div>
+        <div class="tab">
+          <img src="/favicon-candidates/03-italic-p.svg" alt=""/>
+          <span class="dot"></span>
+          <span>Praesidio · Policies</span>
+        </div>
+      </div>
+      <div class="sizes">
+        <div class="swatch"><div class="box s16"><img src="/favicon-candidates/03-italic-p.svg"/></div><div class="lbl">16</div></div>
+        <div class="swatch"><div class="box s32"><img src="/favicon-candidates/03-italic-p.svg"/></div><div class="lbl">32</div></div>
+        <div class="swatch"><div class="box s64"><img src="/favicon-candidates/03-italic-p.svg"/></div><div class="lbl">64</div></div>
+        <div class="swatch"><div class="box s128"><img src="/favicon-candidates/03-italic-p.svg"/></div><div class="lbl">128</div></div>
+      </div>
+    </div>
+
+    <!-- 04 -->
+    <div class="card">
+      <div class="meta">
+        <div class="num">iv.</div>
+        <div class="name">Reticle</div>
+        <div class="desc">
+          Hairline crosshairs with corner brackets and a vermillion centre — pure mission-
+          control. Reads as "the thing watching the thing". Strongest at 32+; brackets
+          collapse below 16.
+        </div>
+        <div class="tab">
+          <img src="/favicon-candidates/04-reticle.svg" alt=""/>
+          <span class="dot"></span>
+          <span>Praesidio · Lineage</span>
+        </div>
+      </div>
+      <div class="sizes">
+        <div class="swatch"><div class="box s16"><img src="/favicon-candidates/04-reticle.svg"/></div><div class="lbl">16</div></div>
+        <div class="swatch"><div class="box s32"><img src="/favicon-candidates/04-reticle.svg"/></div><div class="lbl">32</div></div>
+        <div class="swatch"><div class="box s64"><img src="/favicon-candidates/04-reticle.svg"/></div><div class="lbl">64</div></div>
+        <div class="swatch"><div class="box s128"><img src="/favicon-candidates/04-reticle.svg"/></div><div class="lbl">128</div></div>
+      </div>
+    </div>
+
+    <!-- 05 -->
+    <div class="card">
+      <div class="meta">
+        <div class="num">v.</div>
+        <div class="name">Bracketed dot</div>
+        <div class="desc">
+          Two ink brackets wrap a single vermillion signal square — the universal "decision"
+          glyph from the audit log, framed. Sharp, geometric, scales beautifully even at
+          16×16.
+        </div>
+        <div class="tab">
+          <img src="/favicon-candidates/05-bracketed-dot.svg" alt=""/>
+          <span class="dot"></span>
+          <span>Praesidio · Audit</span>
+        </div>
+      </div>
+      <div class="sizes">
+        <div class="swatch"><div class="box s16"><img src="/favicon-candidates/05-bracketed-dot.svg"/></div><div class="lbl">16</div></div>
+        <div class="swatch"><div class="box s32"><img src="/favicon-candidates/05-bracketed-dot.svg"/></div><div class="lbl">32</div></div>
+        <div class="swatch"><div class="box s64"><img src="/favicon-candidates/05-bracketed-dot.svg"/></div><div class="lbl">64</div></div>
+        <div class="swatch"><div class="box s128"><img src="/favicon-candidates/05-bracketed-dot.svg"/></div><div class="lbl">128</div></div>
+      </div>
+    </div>
+
+    <!-- 06 -->
+    <div class="card">
+      <div class="meta">
+        <div class="num">vi.</div>
+        <div class="name">Architectural P</div>
+        <div class="desc">
+          The letter P built from a stem + squared bowl, underlined by a vermillion baseline
+          rule. Geometric and font-independent (renders identically everywhere). Reads as
+          "P" without depending on a serif being installed.
+        </div>
+        <div class="tab">
+          <img src="/favicon-candidates/06-architectural-p.svg" alt=""/>
+          <span class="dot"></span>
+          <span>Praesidio · Models</span>
+        </div>
+      </div>
+      <div class="sizes">
+        <div class="swatch"><div class="box s16"><img src="/favicon-candidates/06-architectural-p.svg"/></div><div class="lbl">16</div></div>
+        <div class="swatch"><div class="box s32"><img src="/favicon-candidates/06-architectural-p.svg"/></div><div class="lbl">32</div></div>
+        <div class="swatch"><div class="box s64"><img src="/favicon-candidates/06-architectural-p.svg"/></div><div class="lbl">64</div></div>
+        <div class="swatch"><div class="box s128"><img src="/favicon-candidates/06-architectural-p.svg"/></div><div class="lbl">128</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <span>§ /favicon-candidates · pick by number (i–vi)</span>
+    <span>bone #EFEAE0 · ink #0F0F0E · vermillion #D14B2C</span>
+  </div>
+
+</body>
+</html>

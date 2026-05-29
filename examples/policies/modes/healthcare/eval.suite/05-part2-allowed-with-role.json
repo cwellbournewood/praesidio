@@ -1,0 +1,22 @@
+{
+  "name": "42 CFR Part 2 record allowed (tokenised) when caller is treating-physician",
+  "description": "Inverse of test 04 — same content, but a treating-physician caller proceeds to standard tokenisation.",
+  "input": {
+    "principal": {
+      "user_id": "dr-watson",
+      "groups": ["clinician", "treating-physician"]
+    },
+    "messages": [
+      {
+        "role": "user",
+        "content": "Patient is enrolled in our methadone maintenance programme; reviewing dose adjustment."
+      }
+    ]
+  },
+  "expected": {
+    "action": "transform",
+    "findings": [
+      { "label": "cls.behavioural_health", "min_count": 1 }
+    ]
+  }
+}

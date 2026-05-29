@@ -1,0 +1,26 @@
+{
+  "name": "praesidio-docs-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Praesidio documentation site (Astro + Starlight).",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "sync": "node scripts/sync-docs.mjs",
+    "prebuild": "node scripts/sync-docs.mjs"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.28.2",
+    "astro": "^4.16.0",
+    "sharp": "^0.33.5"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.12.0"
+}

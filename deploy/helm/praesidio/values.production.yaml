@@ -1,0 +1,233 @@
+# =============================================================================
+# Praesidio — production values overlay
+# -----------------------------------------------------------------------------
+# Opinionated defaults for a real production install. Layer on top of the
+# stock values.yaml:
+#
+#   helm upgrade --install praesidio deploy/helm/praesidio \
+#       -n praesidio --create-namespace \
+#       -f deploy/helm/praesidio/values.production.yaml \
+#       -f my-site-values.yaml          # tenant-specific overrides last
+#
+# Assumes:
+#   * external-secrets-operator is installed and a ClusterSecretStore
+#     named "praesidio" exists. See docs/operations/secrets-*.md for the
+#     three supported back-ends (AWS Secrets Manager, HashiCorp Vault,
+#     Bitnami Sealed Secrets).
+#   * Managed Postgres (RDS / Cloud SQL / Azure Flexible Server) and
+#     managed Redis (ElastiCache / Memorystore / Azure Cache) — DSNs come
+#     from the secrets store, not from values.
+#   * A CNI that enforces NetworkPolicies (Cilium recommended for FQDN
+#     egress; plain CNI policies are honoured but only for IP-based
+#     egress rules).
+#   * cert-manager and an ingress controller (NGINX, Traefik, ALB) are
+#     deployed if `ingress.enabled` is true at the site layer.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Container images — pin by digest at the site layer for true immutability.
+# -----------------------------------------------------------------------------
+image:
+  gateway:
+    repository: ghcr.io/praesidio/gateway
+    pullPolicy: IfNotPresent
+  ui:
+    repository: ghcr.io/praesidio/ui
+    pullPolicy: IfNotPresent
+
+# -----------------------------------------------------------------------------
+# Replicas / autoscaling — HA from day one.
+# -----------------------------------------------------------------------------
+replicas:
+  gateway: 3
+  ui: 2
+
+autoscaling:
+  gateway:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 50
+    targetCPUUtilizationPercentage: 65
+    targetMemoryUtilizationPercentage: 80
+  ui:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 6
+    targetCPUUtilizationPercentage: 70
+
+podDisruptionBudget:
+  gateway:
+    enabled: true
+    minAvailable: 2
+  ui:
+    enabled: true
+    minAvailable: 1
+
+# -----------------------------------------------------------------------------
+# Resources — sized for ~1k RPS sustained per pod. Adjust per workload.
+# -----------------------------------------------------------------------------
+resources:
+  gateway:
+    requests:
+      cpu: 1
+      memory: 1Gi
+    limits:
+      cpu: "4"
+      memory: 4Gi
+  ui:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+# -----------------------------------------------------------------------------
+# Pod security — strict baseline that satisfies restricted PSS.
+# -----------------------------------------------------------------------------
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  fsGroup: 10001
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+# -----------------------------------------------------------------------------
+# Gateway runtime
+# -----------------------------------------------------------------------------
+gateway:
+  env: production
+  logLevel: INFO
+  failMode: closed
+  host: 0.0.0.0
+  port: 8080
+  probes:
+    liveness:
+      path: /healthz
+      initialDelaySeconds: 15
+      periodSeconds: 15
+      timeoutSeconds: 3
+      failureThreshold: 3
+    readiness:
+      path: /readyz
+      initialDelaySeconds: 10
+      periodSeconds: 5
+      timeoutSeconds: 3
+      failureThreshold: 3
+  upstreamFQDNs:
+    - api.openai.com
+    - api.anthropic.com
+  extraEnv:
+    # Alembic auto-migrate is enabled by default in the image; opt out here
+    # if migrations are owned by a separate Job in your delivery pipeline.
+    - name: PRAESIDIO_AUTO_MIGRATE
+      value: "1"
+    # SIEM webhook timeout — keep low so a slow SIEM cannot back-pressure
+    # the audit writer queue.
+    - name: PRAESIDIO_SIEM_WEBHOOK_TIMEOUT_SECONDS
+      value: "3"
+
+# -----------------------------------------------------------------------------
+# Policy bundle delivery — OCI-distributed signed bundle, verified by cosign.
+# Override `policyBundle.http.url` at the site layer if you serve from S3 / Git.
+# -----------------------------------------------------------------------------
+policyBundle:
+  source: http
+  mountPath: /etc/praesidio/policies
+  signatureVerification: cosign
+  publicKeyRef: praesidio-bundle-signing-pubkey
+  http:
+    intervalSeconds: 60
+    bearerTokenSecretRef:
+      name: praesidio-bundle-pull
+      key: token
+
+# -----------------------------------------------------------------------------
+# Secrets — ExternalSecrets only. Never inline.
+# -----------------------------------------------------------------------------
+secrets:
+  externalSecrets: true
+  secretStore:
+    name: praesidio
+    kind: ClusterSecretStore
+  kmsRef: ""    # set at site layer, e.g. KMS key ARN for auditability
+  remoteKeys:
+    vaultKey: praesidio/gateway/vault-key
+    fpeKey: praesidio/gateway/fpe-key
+    fpeTweak: praesidio/gateway/fpe-tweak
+    openaiApiKey: praesidio/upstream/openai
+    anthropicApiKey: praesidio/upstream/anthropic
+    azureOpenaiApiKey: praesidio/upstream/azure-openai
+    apiKeys: praesidio/gateway/api-keys
+
+# -----------------------------------------------------------------------------
+# NetworkPolicy — locked down. Egress only to DNS, managed Postgres /
+# Redis CIDRs (set at site layer), and the FQDNs listed under
+# gateway.upstreamFQDNs above.
+# -----------------------------------------------------------------------------
+networkPolicy:
+  enabled: true
+  allowDnsEgress: true
+  extraEgressCIDRs: []
+
+# -----------------------------------------------------------------------------
+# Metrics — ServiceMonitor on; assumes prometheus-operator is installed.
+# -----------------------------------------------------------------------------
+metrics:
+  enabled: true
+  path: /metrics
+  port: 8080
+  serviceMonitor:
+    enabled: true
+    interval: 30s
+    scrapeTimeout: 10s
+    labels:
+      release: prometheus
+
+# -----------------------------------------------------------------------------
+# Storage — managed services only. Never run embedded Postgres / Redis in prod.
+# -----------------------------------------------------------------------------
+postgres:
+  embedded: false
+  # externalDSN is read from ExternalSecret at the site layer; the chart
+  # injects DATABASE_URL into the gateway pod from the praesidio-gateway
+  # Secret, which the ExternalSecret writes.
+redis:
+  embedded: false
+
+# -----------------------------------------------------------------------------
+# Migrations — runs as a pre-upgrade Helm hook Job and also at gateway pod
+# start (idempotent — Alembic owns the schema version table).
+# -----------------------------------------------------------------------------
+migrations:
+  enabled: true
+  backoffLimit: 3
+  activeDeadlineSeconds: 600
+
+# -----------------------------------------------------------------------------
+# Scheduling — spread across zones and prefer dedicated nodes if labelled.
+# -----------------------------------------------------------------------------
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: topology.kubernetes.io/zone
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels:
+        app.kubernetes.io/component: gateway
+
+# -----------------------------------------------------------------------------
+# Ingress — disabled here so the site overlay can choose its own controller.
+# -----------------------------------------------------------------------------
+ingress:
+  enabled: false

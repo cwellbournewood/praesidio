@@ -1,0 +1,44 @@
+apiVersion: praesidio/v1
+kind: Mode
+metadata:
+  id: healthcare
+  name: "Healthcare / Clinical"
+  version: 0.1.0
+  owner: privacy@acme.example
+  maintainers:
+    - { name: "Praesidio Maintainers", email: "maintainers@praesidio.dev", org: "Praesidio" }
+  description: |
+    HIPAA Safe-Harbor + GDPR Art.9 tuning for clinical assistants,
+    discharge-summary drafting, and de-identification of PHI for analytics.
+    Tokenises 17 of the 18 HIPAA Safe Harbor identifier categories detected
+    in text; routes inference exclusively to BAA-covered upstreams; fails
+    closed; logs every re-identification with treatment/payment/operations
+    purpose declared by the caller.
+  homepage: https://praesidio.dev/modes/healthcare
+  license: Apache-2.0
+spec:
+  extends: pii-strict
+  compatible_overlays:
+    - strict
+    - productivity
+    - research
+  jurisdictions:
+    - US
+    - EU
+    - UK
+  regulations:
+    - HIPAA
+    - HITECH
+    - GDPR-Art-9
+    - NHS-DSPT
+  risk_tier: high
+  includes:
+    entities:   entities.yaml
+    policy:     policy.yaml
+    compliance: compliance.map.yaml
+    vault:      vault.profile.yaml
+    ui:         ui.theme.json
+    eval:       eval.suite/
+  signature:
+    keyref: ""
+    digest: ""

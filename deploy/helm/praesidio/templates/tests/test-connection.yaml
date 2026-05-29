@@ -1,0 +1,39 @@
+# helm test target — runs curl against the gateway health endpoint.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "praesidio.fullname" . }}-test-connection"
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "praesidio.componentLabels" (dict "ctx" . "component" "test") | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  restartPolicy: Never
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 10001
+    seccompProfile:
+      type: RuntimeDefault
+  containers:
+    - name: curl
+      image: curlimages/curl:8.10.1
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop: ["ALL"]
+      command:
+        - /bin/sh
+        - -ec
+        - |
+          set -eu
+          BASE="http://{{ include "praesidio.componentName" (dict "ctx" . "component" "gateway") }}:{{ .Values.service.gateway.port }}"
+          echo "GET $BASE/healthz"
+          curl -fsS "$BASE/healthz" >/dev/null
+          echo "GET $BASE/readyz"
+          curl -fsS "$BASE/readyz" >/dev/null
+          echo "GET $BASE/metrics"
+          curl -fsS "$BASE/metrics" | head -n 5
+          echo "OK"

@@ -1,0 +1,47 @@
+apiVersion: praesidio/v1
+kind: Policy
+metadata:
+  id: pii-strict
+  name: "Strict PII anonymisation"
+  owner: data-protection@acme.example
+  description: |
+    Tokenise emails and people names; FPE phone numbers; redact IBANs and
+    credit-card-shaped numbers; block AWS / GCP / Azure / generic secrets.
+spec:
+  match:
+    routes: ["/v1/chat/completions", "/v1/completions", "/anthropic/v1/messages"]
+    tenants: ["*"]
+  detect:
+    enable:
+      - pii.email
+      - pii.phone
+      - financial.iban
+      - financial.credit_card
+      - pii.person
+      - pii.location
+      - secrets.aws
+      - secrets.gcp
+      - secrets.azure
+      - credential.generic_high_entropy
+    thresholds:
+      pii.person: 0.7
+      pii.location: 0.8
+  decide:
+    rules:
+      - when: "any(findings, .label in ['secrets.aws','secrets.gcp','secrets.azure','credential.generic_high_entropy'])"
+        action: block
+        reason: "Credential leakage attempt"
+        severity: critical
+      - when: "any(findings, .label in ['pii.email','pii.person','pii.phone','financial.iban','financial.credit_card'])"
+        action: transform
+        transforms:
+          - { label: pii.email,     method: tokenise, scope: session, ttl: 1h }
+          - { label: pii.person, method: tokenise, scope: session, ttl: 1h }
+          - { label: pii.phone,     method: fpe }
+          - { label: financial.iban,      method: redact, replacement: "[REDACTED_IBAN]" }
+          - { label: financial.credit_card,        method: redact, replacement: "[REDACTED_PAN]" }
+      - when: "true"
+        action: allow
+  fail_mode: closed
+  audit:
+    severity_min: info

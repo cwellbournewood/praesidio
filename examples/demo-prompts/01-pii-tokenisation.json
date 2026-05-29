@@ -1,0 +1,10 @@
+{
+  "_purpose": "Sends a prompt containing a person name + email; expects a 200 with response, with audit showing transform applied (tokenise EMAIL + PERSON).",
+  "model": "gpt-4o-mini",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Draft a polite reply to john.smith@acme.example about invoice 4471. He asked when his order will ship."
+    }
+  ]
+}

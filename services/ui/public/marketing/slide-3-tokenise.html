@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Praesidio · tokenise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="carousel.css" rel="stylesheet">
+<style>
+  .stage { display: grid; grid-template-rows: auto 1fr auto; gap: 36px; padding-top: 56px; }
+  .head h1 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 76px; line-height: 0.96; letter-spacing: -0.02em; color: var(--ink); }
+  .head h1 em { font-style: italic; color: var(--vermillion); }
+  .head .sub { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 22px; color: var(--graphite); margin-top: 14px; max-width: 780px; line-height: 1.4; }
+
+  .pair { display: grid; grid-template-rows: 1fr 1fr; gap: 22px; }
+  .box {
+    border: 1px solid var(--rule); background: var(--canvas);
+  }
+  .box .hd {
+    padding: 12px 22px; border-bottom: 1px solid var(--rule);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  }
+  .box .hd .lbl { color: var(--ink); }
+  .box .hd .ver { color: var(--dust); }
+  .box .body { padding: 20px 24px; }
+  .box .body p {
+    font-family: 'JetBrains Mono', monospace; font-size: 16px; line-height: 1.8; color: var(--graphite);
+  }
+  .box .body p .ink { color: var(--ink); }
+
+  .red {
+    background: var(--ink); color: transparent; padding: 0 5px; margin: 0 1px;
+    user-select: none; display: inline-block; line-height: 1.3;
+  }
+  .tok {
+    background: var(--sunken); border: 1px solid var(--rule);
+    padding: 0 5px; color: var(--graphite);
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 14.5px;
+  }
+  .hi {
+    background: #F5E0D5; border-bottom: 2px solid var(--vermillion);
+    padding: 0 4px; color: var(--ink);
+  }
+
+  .leg {
+    margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--rule);
+    display: flex; gap: 24px; align-items: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dust);
+  }
+  .leg .pill {
+    border: 1px solid var(--ink); padding: 4px 9px; color: var(--ink);
+    background: var(--canvas);
+    font-size: 10.5px; letter-spacing: 0.16em;
+  }
+  .leg .pill.t { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+  .arrow {
+    text-align: center;
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: 44px; color: var(--vermillion); line-height: 1; margin: -8px 0 -10px;
+  }
+
+  .legend {
+    display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--rule); margin-top: 8px;
+  }
+  .legend .item { padding: 16px 18px; border-right: 1px solid var(--rule); display: flex; flex-direction: column; gap: 6px; }
+  .legend .item:last-child { border-right: 0; }
+  .legend .item .h { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dust); }
+  .legend .item .v { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 21px; color: var(--ink); line-height: 1.3; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="top-bar">
+    <div class="brand">Praesidio</div>
+    <div class="eyebrow ink"><span class="dot accent"></span>&nbsp;§ 3 · TOKENISE</div>
+  </div>
+
+  <div class="stage">
+    <div class="head">
+      <h1>Reversible <em>tokenisation</em>,<br/>not regex roulette.</h1>
+      <p class="sub">PII is replaced with format-preserving tokens before the prompt leaves your tenant. The model never sees the secret. The response is restored downstream — automatically, by request ID.</p>
+    </div>
+
+    <div class="pair">
+      <div class="box">
+        <div class="hd"><span class="lbl">Inbound prompt · raw</span><span class="ver">tenant: acme-corp</span></div>
+        <div class="body">
+          <p>
+            <span class="ink">Email the renewal contract to</span>
+            <span class="hi">alice.kim@acme.example</span>
+            <span class="ink">by Friday; her direct line is</span>
+            <span class="hi">+1 415 555 0142</span><span class="ink">.</span>
+          </p>
+        </div>
+      </div>
+      <div class="arrow">↓ tokenise · vault: redis · key: per-tenant HKDF</div>
+      <div class="box">
+        <div class="hd"><span class="lbl">Egress to OpenAI · sanitised</span><span class="ver">policy: pii-strict</span></div>
+        <div class="body">
+          <p>
+            <span class="ink">Email the renewal contract to</span>
+            <span class="tok">&lt;EMAIL_A2B3&gt;</span>
+            <span class="ink">by Friday; her direct line is</span>
+            <span class="tok">+1 748 888 0475</span><span class="ink">.</span>
+          </p>
+          <div class="leg">
+            <span class="pill t">▸ TRANSFORM</span>
+            <span>EMAIL · TOKENISE (vault)</span>
+            <span>PHONE · FPE (FF3-1)</span>
+            <span>12 ms · audit ✓</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="item">
+        <div class="h">tokenise</div>
+        <div class="v">vault round-trip, AES-256-GCM with per-tenant key derivation.</div>
+      </div>
+      <div class="item">
+        <div class="h">fpe (ff3-1)</div>
+        <div class="v">format-preserving — same shape, same length, different digits.</div>
+      </div>
+      <div class="item">
+        <div class="h">redact</div>
+        <div class="v">irreversible. for secrets you should never have shipped.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span><span class="swatch"></span>POLICY-SELECTABLE PER ENTITY · PER TENANT</span>
+    <span class="ink">TOKENISE</span>
+    <span class="accent">/ swipe →</span>
+  </div>
+</div>
+</body>
+</html>

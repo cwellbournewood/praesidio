@@ -1,0 +1,317 @@
+name: helm-upgrade
+
+# Verifies that a Praesidio Helm release installed from a *previous* version of
+# the chart can be cleanly `helm upgrade`d to the chart in the current commit
+# without the gateway losing readiness or breaking a basic round-trip.
+#
+# Baseline selection (in order):
+#   1. The most recent git tag matching v*.*.* reachable from HEAD.
+#   2. The merge-base of HEAD against origin/main (i.e. "main when this PR
+#      branched"). Useful before the first tagged release exists.
+#   3. The first commit on the chart path. Final fallback so the job never
+#      no-ops silently.
+
+on:
+  pull_request:
+    paths:
+      - "deploy/helm/**"
+      - "services/gateway/**"
+      - "services/ui/**"
+      - ".github/workflows/helm-upgrade.yml"
+  push:
+    branches: [main]
+    paths:
+      - "deploy/helm/**"
+      - "services/gateway/**"
+      - "services/ui/**"
+      - ".github/workflows/helm-upgrade.yml"
+  workflow_dispatch:
+    inputs:
+      baseline_ref:
+        description: "Git ref (tag/branch/sha) to install as the baseline. Empty = auto-detect."
+        required: false
+        default: ""
+
+concurrency:
+  group: helm-upgrade-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  upgrade:
+    name: install baseline -> helm upgrade -> verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout (full history for baseline resolution)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve baseline ref
+        id: baseline
+        env:
+          OVERRIDE: ${{ github.event.inputs.baseline_ref }}
+        run: |
+          set -euo pipefail
+          if [ -n "${OVERRIDE}" ]; then
+            ref="${OVERRIDE}"
+            source="workflow_dispatch input"
+          elif tag=$(git describe --tags --abbrev=0 --match 'v*.*.*' HEAD^ 2>/dev/null); then
+            ref="${tag}"
+            source="latest tag reachable from HEAD^"
+          elif git fetch --no-tags --depth=200 origin main 2>/dev/null && \
+               mb=$(git merge-base HEAD origin/main 2>/dev/null) && [ -n "${mb}" ] && \
+               [ "${mb}" != "$(git rev-parse HEAD)" ]; then
+            ref="${mb}"
+            source="merge-base with origin/main"
+          else
+            # Last resort: the very first commit that touched the chart.
+            ref=$(git log --diff-filter=A --format=%H -- deploy/helm/praesidio/Chart.yaml | tail -1)
+            source="first commit touching Chart.yaml"
+          fi
+          if [ -z "${ref}" ]; then
+            echo "ERROR: could not resolve any baseline ref" >&2
+            exit 1
+          fi
+          echo "Baseline ref: ${ref}  (source: ${source})"
+          echo "ref=${ref}" >> "$GITHUB_OUTPUT"
+          echo "source=${source}" >> "$GITHUB_OUTPUT"
+
+      - name: Worktree for baseline chart
+        run: |
+          set -euo pipefail
+          git worktree add /tmp/praesidio-baseline ${{ steps.baseline.outputs.ref }}
+          echo "--- baseline Chart.yaml ---"
+          cat /tmp/praesidio-baseline/deploy/helm/praesidio/Chart.yaml || true
+          echo "--- HEAD Chart.yaml ---"
+          cat deploy/helm/praesidio/Chart.yaml
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: buildx-helm-upgrade-${{ runner.os }}-${{ hashFiles('services/gateway/Dockerfile','services/ui/Dockerfile','services/gateway/pyproject.toml','services/ui/pnpm-lock.yaml') }}
+          restore-keys: |
+            buildx-helm-upgrade-${{ runner.os }}-
+
+      # Two image tags: :baseline built from the baseline ref, :head built from
+      # HEAD. The baseline install uses :baseline so the upgrade has something
+      # meaningful to roll, even when the chart on disk is identical.
+      - name: Build gateway image (baseline)
+        uses: docker/build-push-action@v6
+        with:
+          context: /tmp/praesidio-baseline/services/gateway
+          tags: ghcr.io/praesidio/gateway:baseline
+          load: true
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
+
+      - name: Build UI image (baseline)
+        uses: docker/build-push-action@v6
+        with:
+          context: /tmp/praesidio-baseline/services/ui
+          tags: ghcr.io/praesidio/ui:baseline
+          load: true
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
+
+      - name: Build gateway image (HEAD)
+        uses: docker/build-push-action@v6
+        with:
+          context: services/gateway
+          tags: ghcr.io/praesidio/gateway:head
+          load: true
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
+
+      - name: Build UI image (HEAD)
+        uses: docker/build-push-action@v6
+        with:
+          context: services/ui
+          tags: ghcr.io/praesidio/ui:head
+          load: true
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
+
+      - name: Create kind cluster
+        uses: helm/kind-action@v1.10.0
+        with:
+          cluster_name: praesidio-upgrade
+          version: v0.23.0
+
+      - name: Load images into kind
+        run: |
+          kind load docker-image ghcr.io/praesidio/gateway:baseline --name praesidio-upgrade
+          kind load docker-image ghcr.io/praesidio/ui:baseline --name praesidio-upgrade
+          kind load docker-image ghcr.io/praesidio/gateway:head --name praesidio-upgrade
+          kind load docker-image ghcr.io/praesidio/ui:head --name praesidio-upgrade
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.15.4
+
+      # ----- BASELINE INSTALL -----
+      - name: helm install (baseline chart, baseline images)
+        id: install-baseline
+        run: |
+          set -euo pipefail
+          VAULT_KEY="$(openssl rand -base64 32)"
+          FPE_KEY="$(openssl rand -hex 32)"
+          FPE_TWEAK="$(openssl rand -hex 7)"
+          # Persist secrets so the upgrade run uses identical values — a
+          # vault-key change between install and upgrade would falsely look
+          # like a regression (placeholders born under the old key would
+          # become unreversible).
+          mkdir -p /tmp/praesidio-secrets
+          printf '%s' "$VAULT_KEY"  > /tmp/praesidio-secrets/vault
+          printf '%s' "$FPE_KEY"    > /tmp/praesidio-secrets/fpe
+          printf '%s' "$FPE_TWEAK"  > /tmp/praesidio-secrets/tweak
+
+          helm install praesidio /tmp/praesidio-baseline/deploy/helm/praesidio \
+            --namespace praesidio --create-namespace \
+            --set image.gateway.tag=baseline \
+            --set image.ui.tag=baseline \
+            --set image.gateway.pullPolicy=IfNotPresent \
+            --set image.ui.pullPolicy=IfNotPresent \
+            --set postgres.embedded=true \
+            --set redis.embedded=true \
+            --set secrets.externalSecrets=false \
+            --set secrets.values.vaultKey="$VAULT_KEY" \
+            --set secrets.values.fpeKey="$FPE_KEY" \
+            --set secrets.values.fpeTweak="$FPE_TWEAK" \
+            --set autoscaling.gateway.enabled=false \
+            --set replicas.gateway=1 \
+            --set replicas.ui=1 \
+            --wait --timeout 10m
+
+      - name: Wait for baseline pods Ready
+        run: |
+          kubectl -n praesidio rollout status deploy -l app.kubernetes.io/component=gateway --timeout=5m
+          kubectl -n praesidio get pods -o wide
+
+      - name: Smoke-test baseline gateway
+        id: smoke-baseline
+        run: |
+          set -euo pipefail
+          kubectl -n praesidio port-forward svc/praesidio-gateway 8080:8080 >/tmp/pf-baseline.log 2>&1 &
+          PF_PID=$!
+          trap "kill $PF_PID 2>/dev/null || true" EXIT
+          for i in $(seq 1 30); do
+            if curl -fsS http://localhost:8080/healthz >/dev/null 2>&1; then
+              echo "baseline gateway healthy after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          curl -fsS http://localhost:8080/healthz | tee /tmp/baseline-healthz.json
+          # Best-effort tokenisation round-trip — the endpoint surface
+          # at the baseline ref may differ from HEAD, so we tolerate a 404
+          # but fail on 5xx.
+          set +e
+          code=$(curl -s -o /tmp/baseline-sim.json -w "%{http_code}" \
+            -X POST http://localhost:8080/admin/simulate \
+            -H 'content-type: application/json' \
+            -H 'x-praesidio-tenant: default' \
+            -d '{"text":"contact me at alice@example.com"}')
+          set -e
+          echo "baseline /admin/simulate -> HTTP $code"
+          if [ "$code" -ge 500 ] 2>/dev/null; then
+            echo "ERROR: baseline gateway returned 5xx from /admin/simulate" >&2
+            cat /tmp/baseline-sim.json || true
+            exit 1
+          fi
+
+      # ----- HELM UPGRADE -----
+      - name: helm upgrade (HEAD chart, HEAD images)
+        run: |
+          set -euo pipefail
+          VAULT_KEY=$(cat /tmp/praesidio-secrets/vault)
+          FPE_KEY=$(cat /tmp/praesidio-secrets/fpe)
+          FPE_TWEAK=$(cat /tmp/praesidio-secrets/tweak)
+          helm upgrade praesidio deploy/helm/praesidio \
+            --namespace praesidio \
+            --set image.gateway.tag=head \
+            --set image.ui.tag=head \
+            --set image.gateway.pullPolicy=IfNotPresent \
+            --set image.ui.pullPolicy=IfNotPresent \
+            --set postgres.embedded=true \
+            --set redis.embedded=true \
+            --set secrets.externalSecrets=false \
+            --set secrets.values.vaultKey="$VAULT_KEY" \
+            --set secrets.values.fpeKey="$FPE_KEY" \
+            --set secrets.values.fpeTweak="$FPE_TWEAK" \
+            --set autoscaling.gateway.enabled=false \
+            --set replicas.gateway=1 \
+            --set replicas.ui=1 \
+            --wait --timeout 10m
+
+      - name: Wait for HEAD pods Ready after upgrade
+        run: |
+          set -euo pipefail
+          kubectl -n praesidio rollout status deploy -l app.kubernetes.io/component=gateway --timeout=5m
+          # Confirm every gateway pod is actually running the :head tag —
+          # a stuck upgrade would leave some on :baseline.
+          imgs=$(kubectl -n praesidio get pods -l app.kubernetes.io/component=gateway \
+            -o jsonpath='{range .items[*]}{.spec.containers[?(@.name=="gateway")].image}{"\n"}{end}' | sort -u)
+          echo "Gateway images after upgrade:"
+          echo "$imgs"
+          if echo "$imgs" | grep -v ':head$' >/dev/null; then
+            echo "ERROR: at least one gateway pod is not on :head after upgrade" >&2
+            exit 1
+          fi
+          kubectl -n praesidio get pods -o wide
+
+      - name: Smoke-test HEAD gateway after upgrade
+        run: |
+          set -euo pipefail
+          # Re-establish the port-forward; the previous pod was rolled.
+          pkill -f 'kubectl.*port-forward.*praesidio-gateway' 2>/dev/null || true
+          sleep 2
+          kubectl -n praesidio port-forward svc/praesidio-gateway 8080:8080 >/tmp/pf-head.log 2>&1 &
+          PF_PID=$!
+          trap "kill $PF_PID 2>/dev/null || true" EXIT
+          for i in $(seq 1 30); do
+            if curl -fsS http://localhost:8080/healthz >/dev/null 2>&1; then
+              echo "HEAD gateway healthy after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          curl -fsS http://localhost:8080/healthz | tee /tmp/head-healthz.json
+
+      - name: Run demo.sh against upgraded release
+        env:
+          NO_COLOR: "1"
+        run: bash scripts/demo.sh http://localhost:8080
+
+      - name: helm history
+        if: always()
+        run: |
+          mkdir -p artifacts
+          helm history praesidio -n praesidio | tee artifacts/helm-history.txt
+          helm get manifest praesidio -n praesidio > artifacts/manifest-head.yaml || true
+
+      - name: Collect cluster state on failure
+        if: failure()
+        run: |
+          mkdir -p artifacts
+          kubectl -n praesidio get all -o wide > artifacts/all.txt || true
+          kubectl -n praesidio describe pods > artifacts/describe.txt || true
+          kubectl -n praesidio logs --tail=500 -l app.kubernetes.io/component=gateway > artifacts/gateway.log || true
+          kubectl -n praesidio logs --tail=500 -l app.kubernetes.io/component=ui > artifacts/ui.log || true
+          cat /tmp/pf-baseline.log >> artifacts/pf.log 2>/dev/null || true
+          cat /tmp/pf-head.log     >> artifacts/pf.log 2>/dev/null || true
+
+      - name: Upload upgrade artefacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: helm-upgrade-${{ github.run_id }}
+          path: artifacts/

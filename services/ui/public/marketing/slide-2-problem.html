@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Praesidio · problem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="carousel.css" rel="stylesheet">
+<style>
+  /* Slide 2: 3-row layout (head / leak panel / stat grid) — tighter gap. */
+  .stage { display: grid; grid-template-rows: auto auto 1fr; gap: 38px; padding-top: 32px; }
+
+  .leak {
+    border: 1px solid var(--rule); background: var(--canvas);
+  }
+  .leak .hd {
+    padding: 14px 22px; border-bottom: 1px solid var(--rule);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  }
+  .leak .hd .lbl { color: var(--ink); }
+  .leak .hd .ver { color: var(--dust); }
+  .leak .body { padding: 22px 26px; }
+  .leak p {
+    font-family: 'JetBrains Mono', monospace; font-size: 14.5px; line-height: 1.85; color: var(--graphite);
+  }
+  .leak p .ink { color: var(--ink); }
+  .leak p .red {
+    background: var(--ink); color: transparent; padding: 0 5px; margin: 0 1px;
+    user-select: none; display: inline-block;
+  }
+  .leak p .hi {
+    background: #F5E0D5; border-bottom: 2px solid var(--vermillion);
+    padding: 0 4px; color: var(--ink);
+  }
+  .leak .note {
+    margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--rule);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--dust);
+  }
+  .leak .note .ver { color: var(--vermillion); }
+
+  .stat-grid { border: 1px solid var(--rule); }
+  .stat { padding: 24px 22px; }
+  .stat .num { font-size: 60px; }
+  .stat .note { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 16px; color: var(--graphite); margin-top: 8px; line-height: 1.4; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="top-bar">
+    <div class="brand">Praesidio</div>
+    <div class="eyebrow ink"><span class="dot"></span>&nbsp;§ 2 · THE PROBLEM</div>
+  </div>
+
+  <div class="stage">
+    <div class="head">
+      <h1>Every prompt is<br/>a <em>data leak</em><br/>waiting to happen.</h1>
+      <p class="sub">Customer names, card numbers, source code, credentials, PHI — pasted into chat windows, embedded into tool calls, retrieved from your vector DB. The model remembers. The provider logs it. Compliance bleeds.</p>
+    </div>
+
+    <div class="leak">
+      <div class="hd">
+        <span class="lbl">A real prompt · production support tenant</span>
+        <span class="ver">unprotected · raw</span>
+      </div>
+      <div class="body">
+        <p>
+          <span class="ink">"Please refund customer</span>
+          <span class="hi">alice.kim@acme.example</span>
+          <span class="ink">— she paid with card</span>
+          <span class="hi">4242 4242 4242 4242</span>
+          <span class="ink">on her direct line</span>
+          <span class="hi">+1 415 555 0142</span>.
+          <span class="ink">Also rotate AWS key</span>
+          <span class="hi">AKIAIOSFODNN7EXAMPLE</span><span class="ink">."</span>
+        </p>
+        <div class="note">
+          <span>4 entities · PII · FINANCIAL · SECRETS</span>
+          <span class="ver">▸ EGRESSED TO OPENAI</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat">
+        <div class="label">Of orgs deploying LLMs</div>
+        <div class="num">73<span style="font-size:0.5em;color:var(--dust);font-variant-numeric:tabular-nums">%</span></div>
+        <div class="note">cite data-leakage as the #1 blocker to production rollout.</div>
+      </div>
+      <div class="stat">
+        <div class="label">Median orgs’ unredacted</div>
+        <div class="num">9.4<span style="font-size:0.5em;color:var(--dust)">k</span></div>
+        <div class="note">PII fragments egressed per week to third-party model providers.</div>
+      </div>
+      <div class="stat">
+        <div class="label">Compliance posture</div>
+        <div class="num"><em style="font-style:italic;color:var(--vermillion)">none</em></div>
+        <div class="note">Most teams ship raw to the provider — and hope.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span><span class="swatch"></span>SOURCE · INTERNAL TELEMETRY · 2026 Q1</span>
+    <span class="ink">PROBLEM</span>
+    <span class="accent">/ swipe →</span>
+  </div>
+</div>
+</body>
+</html>

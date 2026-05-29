@@ -1,0 +1,21 @@
+{
+  "name": "SSN must be redacted, never tokenised",
+  "description": "SSN follows a hard-redact rule (rule 4 in policy.yaml) even when other PHI is present.",
+  "input": {
+    "messages": [
+      {
+        "role": "user",
+        "content": "Patient SSN 123-45-6789, address 742 Evergreen Terrace, has questions about Medicare enrolment."
+      }
+    ]
+  },
+  "expected": {
+    "action": "transform",
+    "findings": [
+      { "label": "pii.us_ssn",   "min_count": 1 },
+      { "label": "pii.location", "min_count": 1 }
+    ],
+    "egress_contains_none": ["123-45-6789"],
+    "egress_contains_any":  ["[REDACTED_SSN]"]
+  }
+}

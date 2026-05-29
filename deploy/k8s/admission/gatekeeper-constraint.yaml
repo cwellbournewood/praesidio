@@ -1,0 +1,24 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: PraesidioLlmEgressGuard
+metadata:
+  name: praesidio-llm-egress-guard
+spec:
+  enforcementAction: deny
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    excludedNamespaces: [kube-system, kube-public, gatekeeper-system, praesidio]
+  parameters:
+    llmHosts:
+      - api.openai.com
+      - api.anthropic.com
+      - generativelanguage.googleapis.com
+      - bedrock-runtime.us-east-1.amazonaws.com
+      - bedrock-runtime.us-west-2.amazonaws.com
+    credentialSecretPatterns:
+      - aws-credentials
+      - aws-creds
+      - gcp-credentials
+      - azure-creds
+      - cloud-creds

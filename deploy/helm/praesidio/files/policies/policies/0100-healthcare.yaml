@@ -1,0 +1,52 @@
+apiVersion: praesidio/v1
+kind: Policy
+metadata:
+  id: healthcare
+  name: "HIPAA Safe-Harbor anonymisation"
+  owner: privacy@acme.example
+  description: |
+    Tokenises 17 of the 18 HIPAA Safe Harbor identifier categories
+    detected in text; routes inference to a BAA-covered upstream;
+    fails closed.
+spec:
+  match:
+    routes: ["/v1/chat/completions"]
+    tenants: ["healthcare-*"]
+  detect:
+    enable:
+      - pii.email
+      - pii.phone
+      - pii.us_ssn
+      - regex.us_drivers_license
+      - regex.us_account_number
+      - regex.medical_record_number
+      - regex.health_plan_beneficiary
+      - regex.device_identifier
+      - regex.vehicle_identifier
+      - regex.web_url_with_account
+      - network.ipv4
+      - network.ipv6
+      - regex.date_of_birth
+      - pii.person
+      - pii.location
+      - pii.nationality
+      - pii.us_drivers_license
+      - healthcare.medical_license
+  decide:
+    rules:
+      - when: "any(findings, .label == 'pii.us_ssn')"
+        action: transform
+        transforms:
+          - { label: pii.us_ssn, method: redact, replacement: "[REDACTED_SSN]" }
+      - when: "len(findings) > 0"
+        action: transform
+        transforms:
+          - { label: "*", method: tokenise, scope: session, ttl: 30m }
+      - when: "true"
+        action: allow
+  route:
+    upstream: "azure/gpt-4o-eu"     # BAA-covered
+  fail_mode: closed
+  audit:
+    severity_min: info
+    retention_days: 2555

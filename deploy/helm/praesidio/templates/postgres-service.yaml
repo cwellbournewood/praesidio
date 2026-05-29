@@ -1,0 +1,18 @@
+{{- if .Values.postgres.embedded }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "praesidio.componentName" (dict "ctx" . "component" "postgres") }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "praesidio.componentLabels" (dict "ctx" . "component" "postgres") | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: postgres
+      protocol: TCP
+  selector:
+    {{- include "praesidio.componentSelectorLabels" (dict "ctx" . "component" "postgres") | nindent 4 }}
+{{- end }}

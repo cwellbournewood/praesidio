@@ -1,0 +1,126 @@
+# Observability overlay for Praesidio.
+#
+# Adds Tempo (traces), Loki + Promtail (logs), Prometheus (metrics),
+# and Grafana (pre-provisioned dashboards) to the root compose stack.
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.observability.yml up
+#
+# Endpoints once up:
+#   - Grafana:    http://localhost:3001   (admin / admin)
+#   - Prometheus: http://localhost:9090
+#   - Tempo OTLP: http://tempo:4317       (gateway -> tempo, in-network)
+#   - Loki API:   http://loki:3100        (promtail -> loki, in-network)
+#
+# We deliberately do NOT modify the gateway env in docker-compose.yml.
+# Instead, this overlay layers a single env var (OTEL_EXPORTER_OTLP_ENDPOINT)
+# on top of the existing gateway service so traces are exported to Tempo
+# only when this overlay is active.
+
+services:
+  gateway:
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4317
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_SERVICE_NAME: praesidio-gateway
+      OTEL_RESOURCE_ATTRIBUTES: deployment.environment=local,service.namespace=praesidio
+    labels:
+      logging: "promtail"
+      logging_jobname: "praesidio-gateway"
+
+  ui:
+    labels:
+      logging: "promtail"
+      logging_jobname: "praesidio-ui"
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=7d
+      - --web.enable-lifecycle
+    volumes:
+      - ./deploy/observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - promdata:/prometheus
+    ports:
+      - "9090:9090"
+    depends_on:
+      gateway:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:9090/-/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  tempo:
+    image: grafana/tempo:2.6.0
+    command: ["-config.file=/etc/tempo/tempo.yaml"]
+    volumes:
+      - ./deploy/observability/tempo/tempo.yaml:/etc/tempo/tempo.yaml:ro
+      - tempodata:/var/tempo
+    ports:
+      - "3200:3200"   # tempo http
+      - "4317:4317"   # otlp grpc
+      - "4318:4318"   # otlp http
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:3200/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  loki:
+    image: grafana/loki:3.2.0
+    command: ["-config.file=/etc/loki/loki-config.yaml"]
+    volumes:
+      - ./deploy/observability/loki/loki-config.yaml:/etc/loki/loki-config.yaml:ro
+      - lokidata:/loki
+    ports:
+      - "3100:3100"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:3100/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  promtail:
+    image: grafana/promtail:3.2.0
+    command: ["-config.file=/etc/promtail/promtail.yaml"]
+    volumes:
+      - ./deploy/observability/promtail/promtail.yaml:/etc/promtail/promtail.yaml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      loki:
+        condition: service_healthy
+
+  grafana:
+    image: grafana/grafana:11.2.2
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+      GF_USERS_DEFAULT_THEME: light
+      GF_FEATURE_TOGGLES_ENABLE: traceqlEditor
+    volumes:
+      - ./deploy/observability/grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml:ro
+      - ./deploy/observability/grafana/dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml:ro
+      - ./deploy/grafana/dashboards:/var/lib/grafana/dashboards/praesidio:ro
+      - grafanadata:/var/lib/grafana
+    ports:
+      - "3001:3000"
+    depends_on:
+      prometheus:
+        condition: service_healthy
+      loki:
+        condition: service_healthy
+      tempo:
+        condition: service_healthy
+
+volumes:
+  promdata:
+  tempodata:
+  lokidata:
+  grafanadata:

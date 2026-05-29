@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "praesidio.componentName" (dict "ctx" . "component" "ui") }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "praesidio.componentLabels" (dict "ctx" . "component" "ui") | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.ui.enabled }}
+  replicas: {{ .Values.replicas.ui }}
+  {{- end }}
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      {{- include "praesidio.componentSelectorLabels" (dict "ctx" . "component" "ui") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "praesidio.componentSelectorLabels" (dict "ctx" . "component" "ui") | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "praesidio.serviceAccountName" . }}
+      {{- with .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: ui
+          image: {{ include "praesidio.image" (dict "img" .Values.image.ui "ctx" .) }}
+          imagePullPolicy: {{ .Values.image.ui.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.ui.port }}
+              protocol: TCP
+          env:
+            - name: NEXT_PUBLIC_GATEWAY_URL
+              value: {{ .Values.ui.publicGatewayUrl | default (printf "http://%s:%v" (include "praesidio.componentName" (dict "ctx" . "component" "gateway")) .Values.service.gateway.port) | quote }}
+            - name: NEXT_PUBLIC_BRAND
+              value: {{ .Values.ui.brand | quote }}
+            - name: PRAESIDIO_GATEWAY_INTERNAL_URL
+              value: {{ printf "http://%s:%v" (include "praesidio.componentName" (dict "ctx" . "component" "gateway")) .Values.service.gateway.port | quote }}
+            {{- with .Values.ui.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.resources.ui | nindent 12 }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: cache
+              mountPath: /.next/cache
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: cache
+          emptyDir: {}

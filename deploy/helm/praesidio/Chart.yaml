@@ -1,0 +1,31 @@
+apiVersion: v2
+name: praesidio
+description: |
+  Praesidio — AI Security Control Plane. Semantic DLP, reversible
+  anonymisation, policy-as-code, and full audit/lineage for every LLM
+  request, embedding, and agent action.
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+kubeVersion: ">=1.26.0-0"
+home: https://github.com/cwellbournewood/praesidio
+sources:
+  - https://github.com/cwellbournewood/praesidio
+keywords:
+  - ai
+  - llm
+  - dlp
+  - security
+  - gateway
+  - governance
+  - compliance
+maintainers:
+  - name: Praesidio Maintainers
+    email: maintainers@praesidio.example
+    url: https://github.com/cwellbournewood/praesidio
+annotations:
+  category: Security
+  licenses: Apache-2.0
+  artifacthub.io/changes: |
+    - kind: added
+      description: Initial Helm chart for Praesidio gateway + UI

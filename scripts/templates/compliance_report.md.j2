@@ -1,0 +1,104 @@
+# Praesidio compliance report — `{{ m.tenant }}`
+
+**Generated**: {{ generated_at }}
+**Period**: {{ m.period_start }} → {{ m.period_end }}
+**Total audit events**: {{ "{:,}".format(m.total_events) }}
+
+> Generated automatically by `scripts/compliance_report.py`. The
+> underlying data is the Praesidio hash-chained audit log; this report
+> is a *summary* — the audit log itself is the system of record.
+
+## 1. Decision summary
+
+| Decision | Count | Share |
+|---|---:|---:|
+{% for d, n in m.decisions.items() -%}
+| `{{ d }}` | {{ "{:,}".format(n) }} | {{ "%.2f%%"|format((n / m.total_events * 100) if m.total_events else 0) }} |
+{% endfor %}
+
+- Block rate: **{{ "%.3f"|format(m.block_rate) }}**
+- Transform rate: **{{ "%.3f"|format(m.transform_rate) }}**
+
+## 2. Severity mix
+
+| Severity | Count |
+|---|---:|
+{% for s, n in m.severity.items() -%}
+| `{{ s }}` | {{ "{:,}".format(n) }} |
+{% endfor %}
+
+## 3. Findings by category
+
+{% if m.findings_by_category %}
+| Category | Count |
+|---|---:|
+{% for c, n in m.findings_by_category.items() -%}
+| `{{ c }}` | {{ "{:,}".format(n) }} |
+{% endfor %}
+{% else %}
+_No findings in this window._
+{% endif %}
+
+## 4. Top policies invoked
+
+{% if m.top_policies %}
+| Policy | Decision | Count |
+|---|---|---:|
+{% for r in m.top_policies -%}
+| `{{ r.policy_name }}` | `{{ r.decision }}` | {{ "{:,}".format(r.n) }} |
+{% endfor %}
+{% else %}
+_No policy attribution recorded._
+{% endif %}
+
+## 5. Bundle digests observed
+
+The set of policy bundle digests that produced decisions in this
+window. Each digest is signed and pinned per the
+[signed bundles guide](../docs/operations/signed-bundles.md).
+
+{% if m.bundle_digests_seen %}
+{% for d in m.bundle_digests_seen %}
+- `{{ d }}`
+{% endfor %}
+{% else %}
+_No bundle digest recorded — gateway is running with an unsigned bundle._
+{% endif %}
+
+## 6. Privileged operations
+
+| Metric | Value |
+|---|---:|
+| `admin.detokenise` calls | {{ "{:,}".format(m.detokenise_calls) }} |
+| distinct principals that called detokenise | {{ m.detokenise_unique_principals }} |
+| SIEM egress deliveries (total) | {{ "{:,}".format(m.siem_egress_total) }} |
+| SIEM egress failures | {{ "{:,}".format(m.siem_egress_failures) }} |
+
+## 7. SOC 2 Common Criteria coverage
+
+| Criterion | Description | Evidence in this report |
+|---|---|---|
+{% for code, name, evidence in soc2 -%}
+| **{{ code }}** | {{ name }} | {{ evidence }} |
+{% endfor %}
+
+See [`docs/compliance/soc2.md`](../docs/compliance/soc2.md) for the
+authoritative mapping.
+
+## 8. GDPR articles coverage
+
+| Article | Obligation | Evidence in this report |
+|---|---|---|
+{% for code, name, evidence in gdpr -%}
+| **{{ code }}** | {{ name }} | {{ evidence }} |
+{% endfor %}
+
+See [`docs/compliance/gdpr.md`](../docs/compliance/gdpr.md) for the
+authoritative mapping.
+
+---
+
+_This report is suitable as an evidence attachment in a SOC 2 Type II
+audit walk-through or a GDPR Art. 30 records-of-processing review.
+The Praesidio audit log itself remains the source of truth and is
+hash-chain verifiable via `praesidio-audit verify`._

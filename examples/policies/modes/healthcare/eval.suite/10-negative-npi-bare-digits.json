@@ -1,0 +1,17 @@
+{
+  "name": "Negative — bare 10-digit string without NPI context",
+  "description": "Anti-over-firing on phone-number-shaped numerics. regex.npi base score 0.55 requires context boost.",
+  "input": {
+    "messages": [
+      {
+        "role": "user",
+        "content": "The serial of the office printer is 9876543210; please log it for inventory."
+      }
+    ]
+  },
+  "expected": {
+    "action": "allow",
+    "findings_max_count": 0,
+    "findings_must_not_contain": ["regex.npi"]
+  }
+}

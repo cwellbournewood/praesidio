@@ -1,0 +1,16 @@
+{
+  "name": "Negative — ICD-10-shaped string with no clinical context",
+  "description": "Anti-over-firing. Without the diagnosis/icd/code/dx context words, the regex.icd10 base score (0.6) should not promote to a finding.",
+  "input": {
+    "messages": [
+      {
+        "role": "user",
+        "content": "The reference designation E11 on the schematic refers to capacitor E11, not anything else."
+      }
+    ]
+  },
+  "expected": {
+    "action": "allow",
+    "findings_max_count": 0
+  }
+}

@@ -1,0 +1,2947 @@
+{
+  "schema": 1,
+  "started_utc": "2026-05-27T22:10:15.793588+00:00",
+  "python": "3.12.12",
+  "corpora": [
+    {
+      "corpus": "presidio_sample",
+      "path": "bench/eval/corpora/presidio_sample.jsonl",
+      "sha256": "3b5e74b97eddc27c289179d067d651a140922836118f8d40b03721501bdc3191",
+      "n_examples": 150,
+      "labels_evaluated": [
+        "financial.credit_card",
+        "pii.date",
+        "pii.email",
+        "financial.iban",
+        "network.ip_address",
+        "pii.location",
+        "healthcare.medical_license",
+        "pii.person",
+        "pii.phone",
+        "pii.us_ssn",
+        "financial.credit_card",
+        "pii.email",
+        "financial.iban",
+        "network.ipv4",
+        "pii.phone",
+        "pii.us_ssn"
+      ],
+      "per_label": {
+        "financial.credit_card": {
+          "tp": 11,
+          "fp": 2,
+          "fn": 1,
+          "support": 12,
+          "precision": 0.8462,
+          "recall": 0.9167,
+          "f1": 0.88
+        },
+        "pii.date": {
+          "tp": 26,
+          "fp": 42,
+          "fn": 0,
+          "support": 26,
+          "precision": 0.3824,
+          "recall": 1.0,
+          "f1": 0.5532
+        },
+        "pii.email": {
+          "tp": 9,
+          "fp": 0,
+          "fn": 3,
+          "support": 12,
+          "precision": 1.0,
+          "recall": 0.75,
+          "f1": 0.8571
+        },
+        "financial.iban": {
+          "tp": 9,
+          "fp": 0,
+          "fn": 2,
+          "support": 11,
+          "precision": 1.0,
+          "recall": 0.8182,
+          "f1": 0.9
+        },
+        "network.ip_address": {
+          "tp": 11,
+          "fp": 0,
+          "fn": 0,
+          "support": 11,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "pii.location": {
+          "tp": 16,
+          "fp": 3,
+          "fn": 1,
+          "support": 17,
+          "precision": 0.8421,
+          "recall": 0.9412,
+          "f1": 0.8889
+        },
+        "healthcare.medical_license": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "support": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "pii.person": {
+          "tp": 17,
+          "fp": 5,
+          "fn": 1,
+          "support": 18,
+          "precision": 0.7727,
+          "recall": 0.9444,
+          "f1": 0.85
+        },
+        "pii.phone": {
+          "tp": 11,
+          "fp": 3,
+          "fn": 1,
+          "support": 12,
+          "precision": 0.7857,
+          "recall": 0.9167,
+          "f1": 0.8462
+        },
+        "pii.us_ssn": {
+          "tp": 6,
+          "fp": 0,
+          "fn": 3,
+          "support": 9,
+          "precision": 1.0,
+          "recall": 0.6667,
+          "f1": 0.8
+        },
+        "financial.credit_card": {
+          "tp": 11,
+          "fp": 0,
+          "fn": 1,
+          "support": 12,
+          "precision": 1.0,
+          "recall": 0.9167,
+          "f1": 0.9565
+        },
+        "pii.email": {
+          "tp": 12,
+          "fp": 0,
+          "fn": 0,
+          "support": 12,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "financial.iban": {
+          "tp": 11,
+          "fp": 0,
+          "fn": 0,
+          "support": 11,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "network.ipv4": {
+          "tp": 11,
+          "fp": 0,
+          "fn": 0,
+          "support": 11,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "pii.phone": {
+          "tp": 11,
+          "fp": 19,
+          "fn": 1,
+          "support": 12,
+          "precision": 0.3667,
+          "recall": 0.9167,
+          "f1": 0.5238
+        },
+        "pii.us_ssn": {
+          "tp": 8,
+          "fp": 0,
+          "fn": 1,
+          "support": 9,
+          "precision": 1.0,
+          "recall": 0.8889,
+          "f1": 0.9412
+        }
+      },
+      "micro": {
+        "tp": 180,
+        "fp": 74,
+        "fn": 15,
+        "precision": 0.7087,
+        "recall": 0.9231,
+        "f1": 0.8018
+      },
+      "rows": [
+        {
+          "id": "p001",
+          "truth": [
+            "pii.email",
+            "pii.email"
+          ],
+          "predicted": [
+            "pii.email",
+            "pii.email"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p002",
+          "truth": [
+            "pii.email",
+            "pii.email"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.email",
+            "pii.email"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p003",
+          "truth": [
+            "pii.email",
+            "pii.email"
+          ],
+          "predicted": [
+            "pii.email",
+            "pii.email"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p004",
+          "truth": [
+            "pii.phone",
+            "pii.phone"
+          ],
+          "predicted": [
+            "pii.phone",
+            "pii.phone"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p005",
+          "truth": [
+            "pii.phone",
+            "pii.phone"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.phone",
+            "pii.phone"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p006",
+          "truth": [
+            "pii.phone",
+            "pii.phone"
+          ],
+          "predicted": [
+            "pii.location",
+            "pii.phone",
+            "pii.phone"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p007",
+          "truth": [
+            "financial.credit_card",
+            "financial.credit_card"
+          ],
+          "predicted": [
+            "financial.credit_card",
+            "pii.date",
+            "financial.credit_card"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p008",
+          "truth": [
+            "financial.credit_card",
+            "financial.credit_card"
+          ],
+          "predicted": [
+            "financial.credit_card",
+            "pii.date",
+            "financial.credit_card"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p009",
+          "truth": [
+            "financial.credit_card",
+            "financial.credit_card"
+          ],
+          "predicted": [
+            "financial.credit_card",
+            "pii.date",
+            "financial.credit_card"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p010",
+          "truth": [
+            "financial.iban",
+            "financial.iban"
+          ],
+          "predicted": [
+            "financial.iban",
+            "financial.iban"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p011",
+          "truth": [
+            "financial.iban",
+            "financial.iban"
+          ],
+          "predicted": [
+            "pii.date",
+            "financial.iban",
+            "pii.phone"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p012",
+          "truth": [
+            "pii.us_ssn",
+            "pii.us_ssn"
+          ],
+          "predicted": [
+            "pii.phone",
+            "pii.us_ssn"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p013",
+          "truth": [
+            "pii.us_ssn",
+            "pii.us_ssn"
+          ],
+          "predicted": [
+            "pii.us_ssn",
+            "pii.phone",
+            "pii.us_ssn"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p014",
+          "truth": [
+            "network.ip_address",
+            "network.ipv4"
+          ],
+          "predicted": [
+            "network.ip_address",
+            "network.ipv4"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p015",
+          "truth": [
+            "network.ip_address",
+            "network.ipv4"
+          ],
+          "predicted": [
+            "network.ip_address",
+            "pii.phone",
+            "network.ipv4"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p016",
+          "truth": [
+            "pii.date"
+          ],
+          "predicted": [
+            "pii.date"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p017",
+          "truth": [
+            "pii.date"
+          ],
+          "predicted": [
+            "pii.date"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p018",
+          "truth": [
+            "pii.date"
+          ],
+          "predicted": [
+            "pii.date"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p019",
+          "truth": [
+            "pii.person"
+          ],
+          "predicted": [
+            "pii.person"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p020",
+          "truth": [
+            "pii.person"
+          ],
+          "predicted": [
+            "pii.person"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p021",
+          "truth": [
+            "pii.person"
+          ],
+          "predicted": [
+            "pii.person"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p022",
+          "truth": [
+            "pii.location"
+          ],
+          "predicted": [
+            "pii.location"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p023",
+          "truth": [
+            "pii.location"
+          ],
+          "predicted": [
+            "pii.location"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p024",
+          "truth": [
+            "pii.location"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.location"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p025",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p026",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p027",
+          "truth": [],
+          "predicted": [
+            "pii.date"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p028",
+          "truth": [],
+          "predicted": [
+            "pii.date",
+            "pii.phone"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p029",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p030",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p031",
+          "truth": [
+            "pii.date"
+          ],
+          "predicted": [
+            "pii.date"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p032",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p033",
+          "truth": [
+            "pii.date",
+            "pii.person"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.person"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p034",
+          "truth": [
+            "pii.location"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.location"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p035",
+          "truth": [
+            "pii.email",
+            "pii.email"
+          ],
+          "predicted": [
+            "pii.email",
+            "pii.email"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p036",
+          "truth": [
+            "pii.phone",
+            "pii.phone"
+          ],
+          "predicted": [
+            "pii.phone",
+            "pii.phone"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p037",
+          "truth": [
+            "financial.credit_card",
+            "financial.credit_card"
+          ],
+          "predicted": [
+            "financial.credit_card",
+            "pii.date",
+            "financial.credit_card"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p038",
+          "truth": [
+            "financial.iban",
+            "financial.iban"
+          ],
+          "predicted": [
+            "pii.date",
+            "financial.iban",
+            "financial.iban",
+            "pii.phone"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p039",
+          "truth": [
+            "pii.us_ssn",
+            "pii.us_ssn"
+          ],
+          "predicted": [
+            "pii.phone",
+            "pii.phone",
+            "pii.us_ssn"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p040",
+          "truth": [
+            "network.ip_address",
+            "network.ipv4"
+          ],
+          "predicted": [
+            "network.ip_address",
+            "network.ipv4",
+            "pii.phone"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p041",
+          "truth": [
+            "pii.date",
+            "pii.person"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.person"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p042",
+          "truth": [
+            "pii.date",
+            "pii.location"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.location"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p043",
+          "truth": [
+            "pii.date"
+          ],
+          "predicted": [
+            "pii.date"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p044",
+          "truth": [
+            "pii.person"
+          ],
+          "predicted": [
+            "pii.date"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p045",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p046",
+          "truth": [
+            "pii.email",
+            "pii.email"
+          ],
+          "predicted": [
+            "pii.email",
+            "pii.person",
+            "pii.email"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p047",
+          "truth": [
+            "pii.phone",
+            "pii.phone"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.location",
+            "pii.phone",
+            "pii.phone"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p048",
+          "truth": [
+            "financial.credit_card",
+            "financial.credit_card"
+          ],
+          "predicted": [
+            "financial.credit_card",
+            "pii.date",
+            "financial.credit_card"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p049",
+          "truth": [
+            "financial.iban",
+            "financial.iban"
+          ],
+          "predicted": [
+            "financial.iban",
+            "financial.iban",
+            "pii.phone"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p050",
+          "truth": [
+            "pii.us_ssn",
+            "pii.us_ssn"
+          ],
+          "predicted": [
+            "pii.us_ssn",
+            "pii.phone",
+            "pii.us_ssn"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p051",
+          "truth": [
+            "network.ip_address",
+            "network.ipv4"
+          ],
+          "predicted": [
+            "network.ip_address",
+            "network.ipv4"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p052",
+          "truth": [
+            "pii.location"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.location"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p053",
+          "truth": [
+            "pii.person"
+          ],
+          "predicted": [
+            "pii.person"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p054",
+          "truth": [
+            "pii.date"
+          ],
+          "predicted": [
+            "pii.date"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p055",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p056",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p057",
+          "truth": [
+            "pii.person"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.person"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p058",
+          "truth": [
+            "pii.email",
+            "pii.phone",
+            "pii.email",
+            "pii.phone"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.email"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p059",
+          "truth": [
+            "financial.credit_card",
+            "financial.credit_card"
+          ],
+          "predicted": [
+            "financial.credit_card",
+            "pii.date",
+            "financial.credit_card"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p060",
+          "truth": [
+            "financial.iban",
+            "financial.iban"
+          ],
+          "predicted": [
+            "pii.date",
+            "financial.iban",
+            "pii.location",
+            "pii.person",
+            "financial.iban"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p061",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p062",
+          "truth": [
+            "network.ip_address",
+            "network.ipv4"
+          ],
+          "predicted": [
+            "network.ip_address",
+            "network.ipv4"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p063",
+          "truth": [
+            "pii.date",
+            "pii.person"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.person"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p064",
+          "truth": [
+            "pii.location"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.location"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p065",
+          "truth": [
+            "pii.date",
+            "pii.location"
+          ],
+          "predicted": [
+            "pii.date"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p066",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p067",
+          "truth": [
+            "pii.date"
+          ],
+          "predicted": [
+            "pii.date"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p068",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p069",
+          "truth": [
+            "pii.email",
+            "pii.email"
+          ],
+          "predicted": [
+            "pii.email"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p070",
+          "truth": [
+            "pii.phone",
+            "pii.phone"
+          ],
+          "predicted": [
+            "pii.phone",
+            "pii.phone"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p071",
+          "truth": [
+            "financial.credit_card",
+            "financial.credit_card"
+          ],
+          "predicted": [
+            "financial.credit_card",
+            "pii.date",
+            "financial.credit_card"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p072",
+          "truth": [
+            "financial.iban",
+            "financial.iban"
+          ],
+          "predicted": [
+            "pii.date",
+            "financial.iban",
+            "financial.iban"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p073",
+          "truth": [
+            "pii.us_ssn",
+            "pii.us_ssn"
+          ],
+          "predicted": [
+            "pii.us_ssn",
+            "pii.phone",
+            "pii.us_ssn"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p074",
+          "truth": [
+            "network.ip_address",
+            "network.ipv4"
+          ],
+          "predicted": [
+            "network.ip_address",
+            "network.ipv4",
+            "pii.phone"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p075",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p076",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p077",
+          "truth": [
+            "pii.date",
+            "pii.person"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.person"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p078",
+          "truth": [
+            "pii.location"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.location"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p079",
+          "truth": [
+            "pii.date"
+          ],
+          "predicted": [
+            "pii.date"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p080",
+          "truth": [
+            "pii.person"
+          ],
+          "predicted": [
+            "pii.person"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p081",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p082",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p083",
+          "truth": [
+            "pii.date",
+            "pii.email",
+            "pii.email"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.email",
+            "pii.email"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p084",
+          "truth": [
+            "pii.phone",
+            "pii.phone"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.phone",
+            "pii.phone"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p085",
+          "truth": [
+            "financial.credit_card",
+            "financial.credit_card"
+          ],
+          "predicted": [
+            "financial.credit_card",
+            "financial.credit_card"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p086",
+          "truth": [
+            "financial.iban",
+            "financial.iban"
+          ],
+          "predicted": [
+            "pii.date",
+            "financial.iban",
+            "financial.iban"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p087",
+          "truth": [],
+          "predicted": [
+            "pii.phone"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p088",
+          "truth": [
+            "network.ip_address",
+            "network.ipv4"
+          ],
+          "predicted": [
+            "pii.date",
+            "network.ip_address",
+            "network.ipv4"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p089",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p090",
+          "truth": [],
+          "predicted": [
+            "pii.date",
+            "pii.person"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p091",
+          "truth": [
+            "pii.date",
+            "pii.location",
+            "pii.person"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.location",
+            "pii.person"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p092",
+          "truth": [
+            "pii.location"
+          ],
+          "predicted": [
+            "pii.location"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p093",
+          "truth": [
+            "pii.date"
+          ],
+          "predicted": [
+            "pii.date"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p094",
+          "truth": [
+            "pii.person"
+          ],
+          "predicted": [
+            "pii.person"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p095",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p096",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p097",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p098",
+          "truth": [
+            "pii.location"
+          ],
+          "predicted": [
+            "pii.location"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p099",
+          "truth": [
+            "pii.person"
+          ],
+          "predicted": [
+            "pii.person"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p100",
+          "truth": [
+            "pii.date"
+          ],
+          "predicted": [
+            "pii.date"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p101",
+          "truth": [
+            "pii.email",
+            "pii.email"
+          ],
+          "predicted": [
+            "pii.email",
+            "pii.email"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p102",
+          "truth": [
+            "pii.phone",
+            "pii.phone"
+          ],
+          "predicted": [
+            "pii.phone",
+            "pii.phone"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p103",
+          "truth": [
+            "financial.credit_card",
+            "financial.credit_card"
+          ],
+          "predicted": [
+            "financial.credit_card",
+            "pii.date",
+            "financial.credit_card"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p104",
+          "truth": [
+            "financial.iban",
+            "financial.iban"
+          ],
+          "predicted": [
+            "pii.date",
+            "financial.iban",
+            "financial.iban"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p105",
+          "truth": [
+            "pii.us_ssn",
+            "pii.us_ssn"
+          ],
+          "predicted": [
+            "pii.phone"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p106",
+          "truth": [
+            "network.ip_address",
+            "network.ipv4"
+          ],
+          "predicted": [
+            "network.ip_address",
+            "network.ipv4"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p107",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p108",
+          "truth": [
+            "pii.date"
+          ],
+          "predicted": [
+            "pii.date"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p109",
+          "truth": [
+            "pii.person"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.person"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p110",
+          "truth": [
+            "pii.location"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.location"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p111",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p112",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p113",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p114",
+          "truth": [
+            "pii.email",
+            "pii.email"
+          ],
+          "predicted": [
+            "pii.email",
+            "pii.email"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p115",
+          "truth": [
+            "pii.phone",
+            "pii.phone"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.phone",
+            "pii.phone"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p116",
+          "truth": [
+            "financial.credit_card",
+            "financial.credit_card"
+          ],
+          "predicted": [
+            "financial.credit_card",
+            "pii.date",
+            "financial.credit_card"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p117",
+          "truth": [
+            "financial.iban",
+            "financial.iban"
+          ],
+          "predicted": [
+            "pii.date",
+            "financial.iban"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p118",
+          "truth": [
+            "pii.us_ssn",
+            "pii.us_ssn"
+          ],
+          "predicted": [
+            "pii.us_ssn",
+            "pii.phone",
+            "pii.us_ssn"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p119",
+          "truth": [
+            "network.ip_address",
+            "network.ipv4"
+          ],
+          "predicted": [
+            "network.ip_address",
+            "network.ipv4"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p120",
+          "truth": [],
+          "predicted": [
+            "pii.date"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p121",
+          "truth": [],
+          "predicted": [
+            "pii.date"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p122",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p123",
+          "truth": [
+            "pii.date",
+            "pii.location"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.location"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p124",
+          "truth": [
+            "pii.person"
+          ],
+          "predicted": [
+            "pii.person"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p125",
+          "truth": [
+            "pii.date"
+          ],
+          "predicted": [
+            "pii.date"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p126",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p127",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p128",
+          "truth": [
+            "pii.date",
+            "pii.location"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.location"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p129",
+          "truth": [
+            "pii.email",
+            "pii.phone",
+            "pii.email",
+            "pii.phone"
+          ],
+          "predicted": [
+            "pii.email",
+            "pii.phone",
+            "pii.email",
+            "pii.phone"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p130",
+          "truth": [],
+          "predicted": [
+            "pii.date",
+            "pii.phone"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p131",
+          "truth": [],
+          "predicted": [
+            "pii.phone"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p132",
+          "truth": [
+            "financial.credit_card",
+            "financial.credit_card"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.person"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p133",
+          "truth": [
+            "financial.iban",
+            "financial.iban"
+          ],
+          "predicted": [
+            "financial.credit_card",
+            "financial.iban",
+            "pii.person",
+            "financial.iban"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p134",
+          "truth": [
+            "pii.us_ssn",
+            "pii.us_ssn"
+          ],
+          "predicted": [
+            "pii.us_ssn",
+            "pii.phone",
+            "pii.us_ssn"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p135",
+          "truth": [
+            "network.ip_address",
+            "network.ipv4"
+          ],
+          "predicted": [
+            "network.ip_address",
+            "network.ipv4"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p136",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p137",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p138",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "p139",
+          "truth": [
+            "pii.person"
+          ],
+          "predicted": [
+            "pii.person"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p140",
+          "truth": [
+            "pii.date",
+            "pii.location"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.location"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p141",
+          "truth": [
+            "pii.date"
+          ],
+          "predicted": [
+            "pii.date"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p142",
+          "truth": [
+            "pii.email",
+            "pii.email"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.email"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p143",
+          "truth": [
+            "pii.phone",
+            "pii.phone"
+          ],
+          "predicted": [
+            "pii.date",
+            "pii.phone",
+            "pii.phone"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p144",
+          "truth": [
+            "financial.credit_card",
+            "pii.date",
+            "financial.credit_card"
+          ],
+          "predicted": [
+            "financial.credit_card",
+            "pii.date",
+            "financial.credit_card"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p145",
+          "truth": [
+            "financial.iban",
+            "financial.iban"
+          ],
+          "predicted": [
+            "financial.credit_card",
+            "pii.date",
+            "financial.iban",
+            "financial.iban"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p146",
+          "truth": [
+            "pii.us_ssn",
+            "pii.us_ssn"
+          ],
+          "predicted": [
+            "pii.us_ssn",
+            "pii.phone",
+            "pii.us_ssn"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p147",
+          "truth": [
+            "network.ip_address",
+            "network.ipv4"
+          ],
+          "predicted": [
+            "network.ip_address",
+            "pii.phone",
+            "network.ipv4",
+            "pii.phone"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p148",
+          "truth": [
+            "pii.date"
+          ],
+          "predicted": [
+            "pii.date"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p149",
+          "truth": [
+            "pii.person"
+          ],
+          "predicted": [
+            "pii.person"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "p150",
+          "truth": [
+            "pii.location"
+          ],
+          "predicted": [
+            "pii.location"
+          ],
+          "extra_predicted": []
+        }
+      ]
+    },
+    {
+      "corpus": "secrets",
+      "path": "bench/eval/corpora/secrets.jsonl",
+      "sha256": "e6688f361f12b96d86f14bf40aa41dc53a0531433bad5f9120f488c599c11a31",
+      "n_examples": 50,
+      "labels_evaluated": [
+        "credential.jwt",
+        "credential.anthropic_api_key",
+        "credential.aws_access_key",
+        "credential.aws_secret_key",
+        "credential.azure_storage_key",
+        "credential.gcp_service_account",
+        "credential.generic_high_entropy",
+        "credential.github_pat",
+        "credential.openai_api_key",
+        "credential.private_key",
+        "credential.slack_bot_token",
+        "credential.stripe_api_key"
+      ],
+      "per_label": {
+        "credential.jwt": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "credential.anthropic_api_key": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "support": 3,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "credential.aws_access_key": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 2,
+          "support": 7,
+          "precision": 1.0,
+          "recall": 0.7143,
+          "f1": 0.8333
+        },
+        "credential.aws_secret_key": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "credential.azure_storage_key": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "support": 1,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "credential.gcp_service_account": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "credential.generic_high_entropy": {
+          "tp": 2,
+          "fp": 2,
+          "fn": 0,
+          "support": 2,
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.6667
+        },
+        "credential.github_pat": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0,
+          "support": 4,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "credential.openai_api_key": {
+          "tp": 3,
+          "fp": 3,
+          "fn": 0,
+          "support": 3,
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.6667
+        },
+        "credential.private_key": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "support": 3,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "credential.slack_bot_token": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "support": 3,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "credential.stripe_api_key": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0,
+          "support": 4,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        }
+      },
+      "micro": {
+        "tp": 34,
+        "fp": 5,
+        "fn": 2,
+        "precision": 0.8718,
+        "recall": 0.9444,
+        "f1": 0.9067
+      },
+      "rows": [
+        {
+          "id": "s001",
+          "truth": [
+            "credential.aws_access_key"
+          ],
+          "predicted": [
+            "credential.aws_access_key"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s002",
+          "truth": [
+            "credential.aws_access_key"
+          ],
+          "predicted": [
+            "credential.aws_access_key"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s003",
+          "truth": [
+            "credential.aws_access_key"
+          ],
+          "predicted": [
+            "credential.aws_access_key"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s004",
+          "truth": [
+            "credential.aws_access_key"
+          ],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "s005",
+          "truth": [
+            "credential.aws_access_key"
+          ],
+          "predicted": [
+            "credential.aws_access_key"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s006",
+          "truth": [
+            "credential.aws_secret_key"
+          ],
+          "predicted": [
+            "credential.aws_secret_key"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s007",
+          "truth": [
+            "credential.aws_secret_key"
+          ],
+          "predicted": [
+            "credential.aws_secret_key"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s008",
+          "truth": [
+            "credential.github_pat"
+          ],
+          "predicted": [
+            "credential.github_pat"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s009",
+          "truth": [
+            "credential.github_pat"
+          ],
+          "predicted": [
+            "credential.github_pat"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s010",
+          "truth": [
+            "credential.github_pat"
+          ],
+          "predicted": [
+            "credential.github_pat"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s011",
+          "truth": [
+            "credential.openai_api_key"
+          ],
+          "predicted": [
+            "credential.openai_api_key"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s012",
+          "truth": [
+            "credential.openai_api_key"
+          ],
+          "predicted": [
+            "credential.openai_api_key"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s013",
+          "truth": [
+            "credential.anthropic_api_key"
+          ],
+          "predicted": [
+            "credential.anthropic_api_key",
+            "credential.openai_api_key"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s014",
+          "truth": [
+            "credential.anthropic_api_key"
+          ],
+          "predicted": [
+            "credential.anthropic_api_key",
+            "credential.openai_api_key"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s015",
+          "truth": [
+            "credential.slack_bot_token"
+          ],
+          "predicted": [
+            "credential.slack_bot_token"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s016",
+          "truth": [
+            "credential.slack_bot_token"
+          ],
+          "predicted": [
+            "credential.slack_bot_token"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s017",
+          "truth": [
+            "credential.gcp_service_account"
+          ],
+          "predicted": [
+            "credential.gcp_service_account"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s018",
+          "truth": [
+            "credential.azure_storage_key"
+          ],
+          "predicted": [
+            "credential.azure_storage_key"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s019",
+          "truth": [
+            "credential.private_key"
+          ],
+          "predicted": [
+            "credential.private_key"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s020",
+          "truth": [
+            "credential.private_key"
+          ],
+          "predicted": [
+            "credential.private_key"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s021",
+          "truth": [
+            "credential.stripe_api_key"
+          ],
+          "predicted": [
+            "credential.stripe_api_key"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s022",
+          "truth": [
+            "credential.stripe_api_key"
+          ],
+          "predicted": [
+            "credential.stripe_api_key"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s023",
+          "truth": [
+            "credential.stripe_api_key"
+          ],
+          "predicted": [
+            "credential.stripe_api_key"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s024",
+          "truth": [
+            "credential.aws_access_key",
+            "credential.github_pat"
+          ],
+          "predicted": [
+            "credential.github_pat"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s025",
+          "truth": [
+            "credential.jwt"
+          ],
+          "predicted": [
+            "credential.jwt",
+            "credential.generic_high_entropy"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s026",
+          "truth": [
+            "credential.jwt"
+          ],
+          "predicted": [
+            "credential.jwt",
+            "credential.generic_high_entropy"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s027",
+          "truth": [
+            "credential.generic_high_entropy"
+          ],
+          "predicted": [
+            "credential.generic_high_entropy"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s028",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "s029",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "s030",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "s031",
+          "truth": [
+            "credential.aws_access_key"
+          ],
+          "predicted": [
+            "credential.aws_access_key"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s032",
+          "truth": [
+            "credential.gcp_service_account"
+          ],
+          "predicted": [
+            "credential.gcp_service_account"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s033",
+          "truth": [
+            "credential.stripe_api_key"
+          ],
+          "predicted": [
+            "credential.stripe_api_key"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s034",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "s035",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "s036",
+          "truth": [
+            "credential.slack_bot_token"
+          ],
+          "predicted": [
+            "credential.slack_bot_token"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s037",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "s038",
+          "truth": [
+            "credential.openai_api_key"
+          ],
+          "predicted": [
+            "credential.openai_api_key"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s039",
+          "truth": [
+            "credential.anthropic_api_key"
+          ],
+          "predicted": [
+            "credential.anthropic_api_key",
+            "credential.openai_api_key"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s040",
+          "truth": [
+            "credential.private_key"
+          ],
+          "predicted": [
+            "credential.private_key"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s041",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "s042",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "s043",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "s044",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "s045",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "s046",
+          "truth": [
+            "credential.generic_high_entropy"
+          ],
+          "predicted": [
+            "credential.generic_high_entropy"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "s047",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "s048",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "s049",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "s050",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        }
+      ]
+    },
+    {
+      "corpus": "redteam",
+      "path": "bench/eval/corpora/redteam.jsonl",
+      "sha256": "1f7ad9355f27b54beb65e19dd2f764c08c8a51d780c746db2a7fea7115a5e270",
+      "n_examples": 60,
+      "labels_evaluated": [
+        "behavior.injection_jailbreak",
+        "behavior.injection_prompt_exfil",
+        "behavior.injection_ignore_previous",
+        "behavior.injection_system_override",
+        "behavior.injection_base64_tool_abuse",
+        "behavior.injection_role_swap"
+      ],
+      "per_label": {
+        "behavior.injection_jailbreak": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0,
+          "support": 5,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "behavior.injection_prompt_exfil": {
+          "tp": 8,
+          "fp": 0,
+          "fn": 3,
+          "support": 11,
+          "precision": 1.0,
+          "recall": 0.7273,
+          "f1": 0.8421
+        },
+        "behavior.injection_ignore_previous": {
+          "tp": 8,
+          "fp": 0,
+          "fn": 3,
+          "support": 11,
+          "precision": 1.0,
+          "recall": 0.7273,
+          "f1": 0.8421
+        },
+        "behavior.injection_system_override": {
+          "tp": 4,
+          "fp": 1,
+          "fn": 3,
+          "support": 7,
+          "precision": 0.8,
+          "recall": 0.5714,
+          "f1": 0.6667
+        },
+        "behavior.injection_base64_tool_abuse": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 1,
+          "support": 4,
+          "precision": 1.0,
+          "recall": 0.75,
+          "f1": 0.8571
+        },
+        "behavior.injection_role_swap": {
+          "tp": 6,
+          "fp": 0,
+          "fn": 0,
+          "support": 6,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        }
+      },
+      "micro": {
+        "tp": 34,
+        "fp": 1,
+        "fn": 10,
+        "precision": 0.9714,
+        "recall": 0.7727,
+        "f1": 0.8608
+      },
+      "rows": [
+        {
+          "id": "r001",
+          "truth": [
+            "behavior.injection_prompt_exfil",
+            "behavior.injection_ignore_previous"
+          ],
+          "predicted": [
+            "behavior.injection_ignore_previous"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r002",
+          "truth": [
+            "behavior.injection_ignore_previous"
+          ],
+          "predicted": [
+            "behavior.injection_ignore_previous"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r003",
+          "truth": [
+            "behavior.injection_ignore_previous"
+          ],
+          "predicted": [
+            "behavior.injection_ignore_previous"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r004",
+          "truth": [
+            "behavior.injection_role_swap"
+          ],
+          "predicted": [
+            "behavior.injection_role_swap"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r005",
+          "truth": [
+            "behavior.injection_role_swap"
+          ],
+          "predicted": [
+            "behavior.injection_role_swap"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r006",
+          "truth": [
+            "behavior.injection_jailbreak"
+          ],
+          "predicted": [
+            "behavior.injection_jailbreak"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r007",
+          "truth": [
+            "behavior.injection_jailbreak",
+            "behavior.injection_ignore_previous"
+          ],
+          "predicted": [
+            "behavior.injection_jailbreak"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r008",
+          "truth": [
+            "behavior.injection_jailbreak"
+          ],
+          "predicted": [
+            "behavior.injection_jailbreak"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r009",
+          "truth": [
+            "behavior.injection_system_override"
+          ],
+          "predicted": [
+            "behavior.injection_system_override"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r010",
+          "truth": [
+            "behavior.injection_system_override"
+          ],
+          "predicted": [
+            "behavior.injection_system_override"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r011",
+          "truth": [
+            "behavior.injection_prompt_exfil"
+          ],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r012",
+          "truth": [
+            "behavior.injection_prompt_exfil"
+          ],
+          "predicted": [
+            "behavior.injection_prompt_exfil"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r013",
+          "truth": [
+            "behavior.injection_prompt_exfil"
+          ],
+          "predicted": [
+            "behavior.injection_prompt_exfil"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r014",
+          "truth": [
+            "behavior.injection_prompt_exfil"
+          ],
+          "predicted": [
+            "behavior.injection_prompt_exfil"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r015",
+          "truth": [
+            "behavior.injection_prompt_exfil"
+          ],
+          "predicted": [
+            "behavior.injection_prompt_exfil"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r016",
+          "truth": [
+            "behavior.injection_base64_tool_abuse"
+          ],
+          "predicted": [
+            "behavior.injection_base64_tool_abuse"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r017",
+          "truth": [
+            "behavior.injection_base64_tool_abuse"
+          ],
+          "predicted": [
+            "behavior.injection_base64_tool_abuse"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r018",
+          "truth": [
+            "behavior.injection_prompt_exfil",
+            "behavior.injection_ignore_previous"
+          ],
+          "predicted": [
+            "behavior.injection_prompt_exfil",
+            "behavior.injection_ignore_previous"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r019",
+          "truth": [
+            "behavior.injection_ignore_previous"
+          ],
+          "predicted": [
+            "behavior.injection_ignore_previous"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r020",
+          "truth": [
+            "behavior.injection_system_override"
+          ],
+          "predicted": [
+            "behavior.injection_system_override"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r021",
+          "truth": [
+            "behavior.injection_role_swap"
+          ],
+          "predicted": [
+            "behavior.injection_role_swap"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r022",
+          "truth": [
+            "behavior.injection_ignore_previous"
+          ],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r023",
+          "truth": [
+            "behavior.injection_ignore_previous"
+          ],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r024",
+          "truth": [
+            "behavior.injection_jailbreak"
+          ],
+          "predicted": [
+            "behavior.injection_jailbreak"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r025",
+          "truth": [
+            "behavior.injection_role_swap"
+          ],
+          "predicted": [
+            "behavior.injection_role_swap"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r026",
+          "truth": [
+            "behavior.injection_prompt_exfil"
+          ],
+          "predicted": [
+            "behavior.injection_prompt_exfil"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r027",
+          "truth": [
+            "behavior.injection_system_override"
+          ],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r028",
+          "truth": [
+            "behavior.injection_system_override"
+          ],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r029",
+          "truth": [
+            "behavior.injection_base64_tool_abuse"
+          ],
+          "predicted": [
+            "behavior.injection_base64_tool_abuse"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r030",
+          "truth": [
+            "behavior.injection_ignore_previous"
+          ],
+          "predicted": [
+            "behavior.injection_ignore_previous"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r031",
+          "truth": [
+            "behavior.injection_jailbreak"
+          ],
+          "predicted": [
+            "behavior.injection_jailbreak"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r032",
+          "truth": [
+            "behavior.injection_ignore_previous"
+          ],
+          "predicted": [
+            "behavior.injection_ignore_previous"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r033",
+          "truth": [
+            "behavior.injection_role_swap"
+          ],
+          "predicted": [
+            "behavior.injection_role_swap"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r034",
+          "truth": [
+            "behavior.injection_role_swap"
+          ],
+          "predicted": [
+            "behavior.injection_role_swap"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r035",
+          "truth": [
+            "behavior.injection_prompt_exfil"
+          ],
+          "predicted": [
+            "behavior.injection_prompt_exfil"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r036",
+          "truth": [
+            "behavior.injection_prompt_exfil"
+          ],
+          "predicted": [
+            "behavior.injection_prompt_exfil"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r037",
+          "truth": [
+            "behavior.injection_prompt_exfil",
+            "behavior.injection_system_override"
+          ],
+          "predicted": [
+            "behavior.injection_system_override"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r038",
+          "truth": [
+            "behavior.injection_system_override"
+          ],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r039",
+          "truth": [
+            "behavior.injection_base64_tool_abuse"
+          ],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r040",
+          "truth": [
+            "behavior.injection_ignore_previous"
+          ],
+          "predicted": [
+            "behavior.injection_ignore_previous"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r041",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r042",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r043",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r044",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r045",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r046",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r047",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r048",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r049",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r050",
+          "truth": [],
+          "predicted": [
+            "behavior.injection_system_override"
+          ],
+          "extra_predicted": []
+        },
+        {
+          "id": "r051",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r052",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r053",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r054",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r055",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r056",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r057",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r058",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r059",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        },
+        {
+          "id": "r060",
+          "truth": [],
+          "predicted": [],
+          "extra_predicted": []
+        }
+      ]
+    }
+  ]
+}

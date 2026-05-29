@@ -1,0 +1,150 @@
+{"id": "p001", "text": "Please email john.doe@example.com about the contract renewal.", "spans": [{"label": "pii.email", "start": 13, "end": 33}, {"label": "pii.email", "start": 13, "end": 33}]}
+{"id": "p002", "text": "Contact jane_smith+work@foo.co.uk before Friday.", "spans": [{"label": "pii.email", "start": 8, "end": 31}, {"label": "pii.email", "start": 8, "end": 31}]}
+{"id": "p003", "text": "Send a copy to bob.alice@university.edu and cc carol@dept.uni.au.", "spans": [{"label": "pii.email", "start": 15, "end": 39}, {"label": "pii.email", "start": 47, "end": 64}, {"label": "pii.email", "start": 15, "end": 39}, {"label": "pii.email", "start": 47, "end": 64}]}
+{"id": "p004", "text": "Our office number is +1 415-555-2671 if you need urgent help.", "spans": [{"label": "pii.phone", "start": 21, "end": 36}, {"label": "pii.phone", "start": 21, "end": 36}]}
+{"id": "p005", "text": "My cell: (212) 555-0199. Try after 6pm EST.", "spans": [{"label": "pii.phone", "start": 9, "end": 23}, {"label": "pii.phone", "start": 9, "end": 23}]}
+{"id": "p006", "text": "Call +44 20 7946 0958 to reach the London desk.", "spans": [{"label": "pii.phone", "start": 5, "end": 21}, {"label": "pii.phone", "start": 5, "end": 21}]}
+{"id": "p007", "text": "Credit card on file: 4111 1111 1111 1111, expires 12/27.", "spans": [{"label": "financial.credit_card", "start": 21, "end": 40}, {"label": "financial.credit_card", "start": 21, "end": 40}]}
+{"id": "p008", "text": "Try 5500 0000 0000 0004 (a test MasterCard).", "spans": [{"label": "financial.credit_card", "start": 4, "end": 23}, {"label": "financial.credit_card", "start": 4, "end": 23}]}
+{"id": "p009", "text": "Amex test card 378282246310005 should be rejected.", "spans": [{"label": "financial.credit_card", "start": 15, "end": 30}, {"label": "financial.credit_card", "start": 15, "end": 30}]}
+{"id": "p010", "text": "Wire to IBAN DE89 3704 0044 0532 0130 00 at Commerzbank.", "spans": [{"label": "financial.iban", "start": 13, "end": 40}, {"label": "financial.iban", "start": 13, "end": 40}]}
+{"id": "p011", "text": "Belgian IBAN BE68 5390 0754 7034 should clear by Tuesday.", "spans": [{"label": "financial.iban", "start": 13, "end": 32}, {"label": "financial.iban", "start": 13, "end": 32}]}
+{"id": "p012", "text": "SSN on the W-2 reads 123-45-6789.", "spans": [{"label": "pii.us_ssn", "start": 21, "end": 32}, {"label": "pii.us_ssn", "start": 21, "end": 32}]}
+{"id": "p013", "text": "Patient SSN 555-12-9087 — file under intake.", "spans": [{"label": "pii.us_ssn", "start": 12, "end": 23}, {"label": "pii.us_ssn", "start": 12, "end": 23}]}
+{"id": "p014", "text": "The server IP is 10.0.3.42 inside the VPC.", "spans": [{"label": "network.ipv4", "start": 17, "end": 26}, {"label": "network.ip_address", "start": 17, "end": 26}]}
+{"id": "p015", "text": "Block 192.168.1.100 at the perimeter.", "spans": [{"label": "network.ipv4", "start": 6, "end": 19}, {"label": "network.ip_address", "start": 6, "end": 19}]}
+{"id": "p016", "text": "I'll meet you on January 5, 2025 at noon.", "spans": [{"label": "pii.date", "start": 17, "end": 32}]}
+{"id": "p017", "text": "The audit happened on 2024-11-03 — see ticket.", "spans": [{"label": "pii.date", "start": 22, "end": 32}]}
+{"id": "p018", "text": "Tomorrow we ship the patch.", "spans": [{"label": "pii.date", "start": 0, "end": 8}]}
+{"id": "p019", "text": "Alice Johnson signed off on the design review.", "spans": [{"label": "pii.person", "start": 0, "end": 13}]}
+{"id": "p020", "text": "Dr. Robert Carter will present the findings.", "spans": [{"label": "pii.person", "start": 4, "end": 17}]}
+{"id": "p021", "text": "Have Maria González review the proposal by EOD.", "spans": [{"label": "pii.person", "start": 5, "end": 26}]}
+{"id": "p022", "text": "The new office is in San Francisco, California.", "spans": [{"label": "pii.location", "start": 21, "end": 46}]}
+{"id": "p023", "text": "Backup site lives in Frankfurt, Germany.", "spans": [{"label": "pii.location", "start": 21, "end": 39}]}
+{"id": "p024", "text": "We onboarded a team in Tokyo last quarter.", "spans": [{"label": "pii.location", "start": 23, "end": 28}]}
+{"id": "p025", "text": "See https://docs.example.com/handbook/security for the playbook.", "spans": []}
+{"id": "p026", "text": "The image lives at https://cdn.example.org/x.png — embed it.", "spans": []}
+{"id": "p027", "text": "Medical license MD-12345 expires next year.", "spans": []}
+{"id": "p028", "text": "License A-987654321 was suspended last quarter.", "spans": []}
+{"id": "p029", "text": "Just say hi, no PII here.", "spans": []}
+{"id": "p030", "text": "Approved. No further changes needed.", "spans": []}
+{"id": "p031", "text": "The status meeting is at 3pm sharp.", "spans": [{"label": "pii.date", "start": 25, "end": 28}]}
+{"id": "p032", "text": "Run the migration script first, then verify.", "spans": []}
+{"id": "p033", "text": "Diana Prince will lead the security review tomorrow.", "spans": [{"label": "pii.person", "start": 0, "end": 12}, {"label": "pii.date", "start": 42, "end": 50}]}
+{"id": "p034", "text": "From Manchester, the train to Edinburgh takes ~4 hours.", "spans": [{"label": "pii.location", "start": 5, "end": 15}, {"label": "pii.location", "start": 30, "end": 39}]}
+{"id": "p035", "text": "Send invoice to billing@acme.com and copy ops@acme.com.", "spans": [{"label": "pii.email", "start": 16, "end": 32}, {"label": "pii.email", "start": 42, "end": 54}, {"label": "pii.email", "start": 16, "end": 32}, {"label": "pii.email", "start": 42, "end": 54}]}
+{"id": "p036", "text": "Fax 415-555-0142, ask for accounts payable.", "spans": [{"label": "pii.phone", "start": 4, "end": 16}, {"label": "pii.phone", "start": 4, "end": 16}]}
+{"id": "p037", "text": "Verify Visa 4012 8888 8888 1881 before shipping.", "spans": [{"label": "financial.credit_card", "start": 12, "end": 31}, {"label": "financial.credit_card", "start": 12, "end": 31}]}
+{"id": "p038", "text": "Payment routed to IBAN GB29 NWBK 6016 1331 9268 19 yesterday.", "spans": [{"label": "financial.iban", "start": 23, "end": 50}, {"label": "financial.iban", "start": 23, "end": 50}]}
+{"id": "p039", "text": "Veteran SSN 078-05-1120 is in the historical record.", "spans": [{"label": "pii.us_ssn", "start": 12, "end": 23}, {"label": "pii.us_ssn", "start": 12, "end": 23}]}
+{"id": "p040", "text": "Probe 172.16.254.1 — looks like a router.", "spans": [{"label": "network.ipv4", "start": 6, "end": 18}, {"label": "network.ip_address", "start": 6, "end": 18}]}
+{"id": "p041", "text": "Ed Sheeran cancelled his tour dates in March.", "spans": [{"label": "pii.person", "start": 0, "end": 10}, {"label": "pii.date", "start": 38, "end": 44}]}
+{"id": "p042", "text": "The summit is in Singapore next week.", "spans": [{"label": "pii.location", "start": 17, "end": 26}, {"label": "pii.date", "start": 27, "end": 36}]}
+{"id": "p043", "text": "DOB 1985-07-21, please confirm.", "spans": [{"label": "pii.date", "start": 4, "end": 14}]}
+{"id": "p044", "text": "Call Susan at extension 4711.", "spans": [{"label": "pii.person", "start": 5, "end": 10}]}
+{"id": "p045", "text": "Move to building B by Q3.", "spans": []}
+{"id": "p046", "text": "Email me at me+tag@gmail.com later.", "spans": [{"label": "pii.email", "start": 12, "end": 29}, {"label": "pii.email", "start": 12, "end": 29}]}
+{"id": "p047", "text": "Reach me on +49 30 1234567 in Berlin time.", "spans": [{"label": "pii.phone", "start": 12, "end": 26}, {"label": "pii.phone", "start": 12, "end": 26}]}
+{"id": "p048", "text": "Sample CC: 6011 0009 9013 9424 (Discover).", "spans": [{"label": "financial.credit_card", "start": 11, "end": 30}, {"label": "financial.credit_card", "start": 11, "end": 30}]}
+{"id": "p049", "text": "Wire transfer reference: NL91ABNA0417164300.", "spans": [{"label": "financial.iban", "start": 25, "end": 43}, {"label": "financial.iban", "start": 25, "end": 43}]}
+{"id": "p050", "text": "Old SSN format 222-33-4444 was deprecated.", "spans": [{"label": "pii.us_ssn", "start": 15, "end": 26}, {"label": "pii.us_ssn", "start": 15, "end": 26}]}
+{"id": "p051", "text": "Routing 127.0.0.1 — localhost only.", "spans": [{"label": "network.ipv4", "start": 8, "end": 17}, {"label": "network.ip_address", "start": 8, "end": 17}]}
+{"id": "p052", "text": "I lived in Oslo for two years.", "spans": [{"label": "pii.location", "start": 11, "end": 15}]}
+{"id": "p053", "text": "President Lincoln freed the slaves.", "spans": [{"label": "pii.person", "start": 10, "end": 17}]}
+{"id": "p054", "text": "Meet 9/15 at 10:00 AM in conference room B.", "spans": [{"label": "pii.date", "start": 5, "end": 9}]}
+{"id": "p055", "text": "Confidential — DO NOT share with anyone.", "spans": []}
+{"id": "p056", "text": "Reset complete. All systems green.", "spans": []}
+{"id": "p057", "text": "Patient name: Sarah Chen, MRN 5523.", "spans": [{"label": "pii.person", "start": 14, "end": 24}]}
+{"id": "p058", "text": "Backup admin: ops@internal.corp; pager 555-9988.", "spans": [{"label": "pii.email", "start": 14, "end": 31}, {"label": "pii.phone", "start": 39, "end": 47}, {"label": "pii.email", "start": 14, "end": 31}, {"label": "pii.phone", "start": 39, "end": 47}]}
+{"id": "p059", "text": "Stripe test card 4242 4242 4242 4242 only.", "spans": [{"label": "financial.credit_card", "start": 17, "end": 36}, {"label": "financial.credit_card", "start": 17, "end": 36}]}
+{"id": "p060", "text": "Beneficiary IBAN CH93 0076 2011 6238 5295 7 (Switzerland).", "spans": [{"label": "financial.iban", "start": 17, "end": 43}, {"label": "financial.iban", "start": 17, "end": 43}]}
+{"id": "p061", "text": "Encrypted at rest. Nothing sensitive in this paragraph.", "spans": []}
+{"id": "p062", "text": "Use 8.8.8.8 as the fallback resolver.", "spans": [{"label": "network.ipv4", "start": 4, "end": 11}, {"label": "network.ip_address", "start": 4, "end": 11}]}
+{"id": "p063", "text": "Dr. Smith ordered an MRI for tomorrow.", "spans": [{"label": "pii.person", "start": 4, "end": 9}, {"label": "pii.date", "start": 29, "end": 37}]}
+{"id": "p064", "text": "The factory in Shenzhen ships on Mondays.", "spans": [{"label": "pii.location", "start": 15, "end": 23}]}
+{"id": "p065", "text": "Reservation at Hilton Tokyo for two nights starting June 4.", "spans": [{"label": "pii.location", "start": 15, "end": 27}, {"label": "pii.date", "start": 52, "end": 58}]}
+{"id": "p066", "text": "Hex 0xCAFEBABE is the magic value.", "spans": []}
+{"id": "p067", "text": "Order #98345 shipped on 2024-07-12.", "spans": [{"label": "pii.date", "start": 24, "end": 34}]}
+{"id": "p068", "text": "Pricing tier is enterprise.", "spans": []}
+{"id": "p069", "text": "Reply to admin@dev.local — internal only.", "spans": [{"label": "pii.email", "start": 9, "end": 24}, {"label": "pii.email", "start": 9, "end": 24}]}
+{"id": "p070", "text": "Toll-free 1-800-555-0123 is up.", "spans": [{"label": "pii.phone", "start": 10, "end": 24}, {"label": "pii.phone", "start": 10, "end": 24}]}
+{"id": "p071", "text": "We support BIN 411111 (Visa) and 5555 5555 5555 4444 (MasterCard).", "spans": [{"label": "financial.credit_card", "start": 33, "end": 52}, {"label": "financial.credit_card", "start": 33, "end": 52}]}
+{"id": "p072", "text": "French IBAN FR14 2004 1010 0505 0001 3M02 606 is valid.", "spans": [{"label": "financial.iban", "start": 12, "end": 45}, {"label": "financial.iban", "start": 12, "end": 45}]}
+{"id": "p073", "text": "Cleared traveler SSN 444-55-6666 at TSA.", "spans": [{"label": "pii.us_ssn", "start": 21, "end": 32}, {"label": "pii.us_ssn", "start": 21, "end": 32}]}
+{"id": "p074", "text": "Probe 198.51.100.7 from the jump host.", "spans": [{"label": "network.ipv4", "start": 6, "end": 18}, {"label": "network.ip_address", "start": 6, "end": 18}]}
+{"id": "p075", "text": "Welcome aboard, no further action required.", "spans": []}
+{"id": "p076", "text": "Status: green. Capacity: nominal.", "spans": []}
+{"id": "p077", "text": "Marie Curie discovered radium in 1898.", "spans": [{"label": "pii.person", "start": 0, "end": 11}, {"label": "pii.date", "start": 33, "end": 37}]}
+{"id": "p078", "text": "From Madrid to Lisbon by train takes 10 hours.", "spans": [{"label": "pii.location", "start": 5, "end": 11}, {"label": "pii.location", "start": 15, "end": 21}]}
+{"id": "p079", "text": "Today is the last day to enrol.", "spans": [{"label": "pii.date", "start": 0, "end": 5}]}
+{"id": "p080", "text": "Hi Anna Schultz, ready when you are.", "spans": [{"label": "pii.person", "start": 3, "end": 15}]}
+{"id": "p081", "text": "Visit https://www.example.io for the docs.", "spans": []}
+{"id": "p082", "text": "All clear in production.", "spans": []}
+{"id": "p083", "text": "Send the deck to maria.lopez@partner.com today.", "spans": [{"label": "pii.email", "start": 17, "end": 40}, {"label": "pii.email", "start": 17, "end": 40}, {"label": "pii.date", "start": 41, "end": 46}]}
+{"id": "p084", "text": "Conf call: +1.650.555.9876 at 4:30 PM.", "spans": [{"label": "pii.phone", "start": 11, "end": 26}, {"label": "pii.phone", "start": 11, "end": 26}]}
+{"id": "p085", "text": "Test Amex card 3714 496353 98431 should work.", "spans": [{"label": "financial.credit_card", "start": 15, "end": 32}, {"label": "financial.credit_card", "start": 15, "end": 32}]}
+{"id": "p086", "text": "Italian IBAN IT60 X054 2811 1010 0000 0123 456 cleared.", "spans": [{"label": "financial.iban", "start": 13, "end": 46}, {"label": "financial.iban", "start": 13, "end": 46}]}
+{"id": "p087", "text": "His SSN 666-12-3456 should NOT validate (666 area).", "spans": []}
+{"id": "p088", "text": "VPN endpoint at 203.0.113.5 is rotated nightly.", "spans": [{"label": "network.ipv4", "start": 16, "end": 27}, {"label": "network.ip_address", "start": 16, "end": 27}]}
+{"id": "p089", "text": "Just routine maintenance, nothing to report.", "spans": []}
+{"id": "p090", "text": "Push deploy at 14:00 UTC.", "spans": []}
+{"id": "p091", "text": "Anna and Tom are flying to Paris on Sunday.", "spans": [{"label": "pii.person", "start": 0, "end": 4}, {"label": "pii.person", "start": 9, "end": 12}, {"label": "pii.location", "start": 27, "end": 32}, {"label": "pii.date", "start": 36, "end": 42}]}
+{"id": "p092", "text": "Server in Dublin, backup in Reykjavik.", "spans": [{"label": "pii.location", "start": 10, "end": 16}, {"label": "pii.location", "start": 28, "end": 37}]}
+{"id": "p093", "text": "Quarterly review on April 1, 2025.", "spans": [{"label": "pii.date", "start": 20, "end": 33}]}
+{"id": "p094", "text": "Met with Liu Wei from the partner team.", "spans": [{"label": "pii.person", "start": 9, "end": 16}]}
+{"id": "p095", "text": "Cache warm. Latency back to nominal.", "spans": []}
+{"id": "p096", "text": "Notes: meeting agenda attached. Please review.", "spans": []}
+{"id": "p097", "text": "Ping me at slack handle @connor when ready.", "spans": []}
+{"id": "p098", "text": "The shipment cleared customs in Rotterdam.", "spans": [{"label": "pii.location", "start": 32, "end": 41}]}
+{"id": "p099", "text": "VIP: Beyoncé Knowles is attending.", "spans": [{"label": "pii.person", "start": 5, "end": 20}]}
+{"id": "p100", "text": "Yesterday's outage is fully resolved.", "spans": [{"label": "pii.date", "start": 0, "end": 9}]}
+{"id": "p101", "text": "Email me a copy of the report: lisa.zhang@example.org please.", "spans": [{"label": "pii.email", "start": 31, "end": 52}, {"label": "pii.email", "start": 31, "end": 52}]}
+{"id": "p102", "text": "Phone tree: dial 0 then +1 (310) 555-7766.", "spans": [{"label": "pii.phone", "start": 24, "end": 41}, {"label": "pii.phone", "start": 24, "end": 41}]}
+{"id": "p103", "text": "Don't share 5105 1051 0510 5100 on Slack.", "spans": [{"label": "financial.credit_card", "start": 12, "end": 31}, {"label": "financial.credit_card", "start": 12, "end": 31}]}
+{"id": "p104", "text": "Greek IBAN GR16 0110 1250 0000 0001 2300 695 received.", "spans": [{"label": "financial.iban", "start": 11, "end": 43}, {"label": "financial.iban", "start": 11, "end": 43}]}
+{"id": "p105", "text": "SSN 100-00-0001 (test fixture only).", "spans": [{"label": "pii.us_ssn", "start": 4, "end": 15}, {"label": "pii.us_ssn", "start": 4, "end": 15}]}
+{"id": "p106", "text": "Try 224.0.0.1 (multicast).", "spans": [{"label": "network.ipv4", "start": 4, "end": 13}, {"label": "network.ip_address", "start": 4, "end": 13}]}
+{"id": "p107", "text": "Routine cron job ran at 02:15.", "spans": []}
+{"id": "p108", "text": "Approved by the steering committee on Thursday.", "spans": [{"label": "pii.date", "start": 38, "end": 46}]}
+{"id": "p109", "text": "Coffee with Hiroshi Tanaka at noon.", "spans": [{"label": "pii.person", "start": 12, "end": 26}]}
+{"id": "p110", "text": "Office relocation to Austin next quarter.", "spans": [{"label": "pii.location", "start": 21, "end": 27}]}
+{"id": "p111", "text": "Backup ssh key fingerprint changed — rotate.", "spans": []}
+{"id": "p112", "text": "Reading list updated. No further notes.", "spans": []}
+{"id": "p113", "text": "Cancel my registration please.", "spans": []}
+{"id": "p114", "text": "Send to peter.kim@vendor.io for review.", "spans": [{"label": "pii.email", "start": 8, "end": 27}, {"label": "pii.email", "start": 8, "end": 27}]}
+{"id": "p115", "text": "Operator pager 415 555 2000 escalates to ops.", "spans": [{"label": "pii.phone", "start": 15, "end": 27}, {"label": "pii.phone", "start": 15, "end": 27}]}
+{"id": "p116", "text": "Issuing test card 6011 6011 6011 6611 for QA.", "spans": [{"label": "financial.credit_card", "start": 18, "end": 37}, {"label": "financial.credit_card", "start": 18, "end": 37}]}
+{"id": "p117", "text": "Spanish IBAN ES91 2100 0418 4502 0005 1332 cleared.", "spans": [{"label": "financial.iban", "start": 13, "end": 42}, {"label": "financial.iban", "start": 13, "end": 42}]}
+{"id": "p118", "text": "Employee SSN: 333-22-4444.", "spans": [{"label": "pii.us_ssn", "start": 14, "end": 25}, {"label": "pii.us_ssn", "start": 14, "end": 25}]}
+{"id": "p119", "text": "Allow inbound from 192.0.2.0 (TEST-NET).", "spans": [{"label": "network.ipv4", "start": 19, "end": 28}, {"label": "network.ip_address", "start": 19, "end": 28}]}
+{"id": "p120", "text": "Routine standup in 5 minutes.", "spans": []}
+{"id": "p121", "text": "Logs rotated overnight. All clean.", "spans": []}
+{"id": "p122", "text": "FYI no action required from your team.", "spans": []}
+{"id": "p123", "text": "Marketing event in Barcelona next May.", "spans": [{"label": "pii.location", "start": 19, "end": 28}, {"label": "pii.date", "start": 29, "end": 37}]}
+{"id": "p124", "text": "Olga Petrova will moderate the panel.", "spans": [{"label": "pii.person", "start": 0, "end": 12}]}
+{"id": "p125", "text": "Birth date 1992-03-30 on the application.", "spans": [{"label": "pii.date", "start": 11, "end": 21}]}
+{"id": "p126", "text": "Lunch order received. ETA 12:30.", "spans": []}
+{"id": "p127", "text": "Compliance review scheduled.", "spans": []}
+{"id": "p128", "text": "We hired three engineers in Bangalore last month.", "spans": [{"label": "pii.location", "start": 28, "end": 37}, {"label": "pii.date", "start": 38, "end": 48}]}
+{"id": "p129", "text": "Customer support: support@acme.io or 1-888-555-0100.", "spans": [{"label": "pii.email", "start": 18, "end": 32}, {"label": "pii.phone", "start": 36, "end": 51}, {"label": "pii.email", "start": 18, "end": 32}, {"label": "pii.phone", "start": 36, "end": 51}]}
+{"id": "p130", "text": "ACH routing 011000015 for the wire.", "spans": []}
+{"id": "p131", "text": "VAT number GB123456789 on the invoice.", "spans": []}
+{"id": "p132", "text": "Pre-authorize 4485 5678 9012 3456 (test Visa).", "spans": [{"label": "financial.credit_card", "start": 14, "end": 33}, {"label": "financial.credit_card", "start": 14, "end": 33}]}
+{"id": "p133", "text": "Beneficiary IBAN AT61 1904 3002 3457 3201 — confirm.", "spans": [{"label": "financial.iban", "start": 17, "end": 41}, {"label": "financial.iban", "start": 17, "end": 41}]}
+{"id": "p134", "text": "Patient SSN 199-22-3344, see EHR.", "spans": [{"label": "pii.us_ssn", "start": 12, "end": 23}, {"label": "pii.us_ssn", "start": 12, "end": 23}]}
+{"id": "p135", "text": "Block egress to 100.64.0.1 (CGNAT).", "spans": [{"label": "network.ipv4", "start": 16, "end": 26}, {"label": "network.ip_address", "start": 16, "end": 26}]}
+{"id": "p136", "text": "Nothing actionable in this report.", "spans": []}
+{"id": "p137", "text": "Closed as fixed.", "spans": []}
+{"id": "p138", "text": "Re-enable feature flag for ops.", "spans": []}
+{"id": "p139", "text": "Director Kim Park flagged the PR for re-review.", "spans": [{"label": "pii.person", "start": 9, "end": 17}]}
+{"id": "p140", "text": "Heading to Mumbai for the launch on Friday.", "spans": [{"label": "pii.location", "start": 11, "end": 17}, {"label": "pii.date", "start": 36, "end": 42}]}
+{"id": "p141", "text": "Last Monday's incident postmortem is filed.", "spans": [{"label": "pii.date", "start": 0, "end": 11}]}
+{"id": "p142", "text": "Final notice: contact alex@billing.example before the 30th.", "spans": [{"label": "pii.email", "start": 22, "end": 42}, {"label": "pii.email", "start": 22, "end": 42}]}
+{"id": "p143", "text": "After-hours phone 0207-555-9999 reaches the on-call.", "spans": [{"label": "pii.phone", "start": 18, "end": 31}, {"label": "pii.phone", "start": 18, "end": 31}]}
+{"id": "p144", "text": "Refund the charge on 4263 9826 4026 9299 today.", "spans": [{"label": "financial.credit_card", "start": 21, "end": 40}, {"label": "financial.credit_card", "start": 21, "end": 40}, {"label": "pii.date", "start": 41, "end": 46}]}
+{"id": "p145", "text": "Polish IBAN PL61 1090 1014 0000 0712 1981 2874 received.", "spans": [{"label": "financial.iban", "start": 12, "end": 46}, {"label": "financial.iban", "start": 12, "end": 46}]}
+{"id": "p146", "text": "Old SSN on the W-2: 567-89-0123.", "spans": [{"label": "pii.us_ssn", "start": 20, "end": 31}, {"label": "pii.us_ssn", "start": 20, "end": 31}]}
+{"id": "p147", "text": "Allowlist 169.254.169.254 (link-local).", "spans": [{"label": "network.ipv4", "start": 10, "end": 25}, {"label": "network.ip_address", "start": 10, "end": 25}]}
+{"id": "p148", "text": "On track for the May rollout.", "spans": [{"label": "pii.date", "start": 16, "end": 19}]}
+{"id": "p149", "text": "Sarah, can you triple-check the contract?", "spans": [{"label": "pii.person", "start": 0, "end": 5}]}
+{"id": "p150", "text": "Lima, Peru is the next conference venue.", "spans": [{"label": "pii.location", "start": 0, "end": 4}, {"label": "pii.location", "start": 6, "end": 10}]}

@@ -1,0 +1,41 @@
+{
+  "name": "anthropic-messages-block",
+  "description": "Anthropic v1 messages: user request contains an AWS access key — gateway blocks before any upstream call.",
+  "provider": "anthropic",
+  "route": "/anthropic/v1/messages",
+  "upstream": {
+    "method": "POST",
+    "url": "https://api.anthropic.com/v1/messages"
+  },
+  "client_request": {
+    "headers": {
+      "x-api-key": "test-key",
+      "content-type": "application/json"
+    },
+    "body": {
+      "model": "claude-3-haiku-20240307",
+      "max_tokens": 128,
+      "messages": [
+        {"role": "user", "content": "Use my key AKIAIOSFODNN7EXAMPLE to call S3."}
+      ]
+    }
+  },
+  "upstream_response": {
+    "status": 200,
+    "headers": {"content-type": "application/json"},
+    "body_template": {
+      "id": "msg_cassette_002",
+      "type": "message",
+      "role": "assistant",
+      "content": [{"type": "text", "text": "(should never be reached)"}],
+      "stop_reason": "end_turn"
+    }
+  },
+  "policy": "block_on_aws_secret",
+  "expectations": {
+    "status_code": 403,
+    "upstream_must_not_be_called": true,
+    "response_headers_present": ["x-praesidio-decision"],
+    "audit_decision": "block"
+  }
+}

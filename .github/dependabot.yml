@@ -1,0 +1,45 @@
+version: 2
+updates:
+  # Python (gateway)
+  - package-ecosystem: pip
+    directory: /services/gateway
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 10
+    groups:
+      python-minor-and-patch:
+        update-types: [minor, patch]
+    labels: [dependencies, python]
+
+  # Node (ui)
+  - package-ecosystem: npm
+    directory: /services/ui
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 10
+    groups:
+      js-minor-and-patch:
+        update-types: [minor, patch]
+    labels: [dependencies, javascript]
+
+  # Docker base images
+  - package-ecosystem: docker
+    directory: /services/gateway
+    schedule:
+      interval: weekly
+    labels: [dependencies, docker]
+
+  - package-ecosystem: docker
+    directory: /services/ui
+    schedule:
+      interval: weekly
+    labels: [dependencies, docker]
+
+  # GitHub Actions
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    labels: [dependencies, github-actions]

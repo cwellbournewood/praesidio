@@ -1,0 +1,22 @@
+{
+  "name": "Adverse event is redacted irreversibly",
+  "description": "Rule 3 — adverse-event findings escalate from tokenise to redact, regardless of other PHI.",
+  "input": {
+    "messages": [
+      {
+        "role": "user",
+        "content": "Patient Jane Smith developed anaphylaxis 20 minutes after the second dose of contrast media during yesterday's CT. Epi 0.3mg IM given, full recovery."
+      }
+    ]
+  },
+  "expected": {
+    "action": "transform",
+    "severity": "high",
+    "findings": [
+      { "label": "cls.adverse_event", "min_count": 1 },
+      { "label": "pii.person",   "min_count": 1 }
+    ],
+    "egress_contains_any": ["[ADVERSE_EVENT_REDACTED]"],
+    "egress_contains_none": ["Jane Smith"]
+  }
+}

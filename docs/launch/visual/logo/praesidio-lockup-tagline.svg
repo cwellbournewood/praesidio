@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 160" role="img" aria-label="Praesidio · Trustworthy AI, at enterprise scale.">
+  <title>Praesidio — Trustworthy AI, at enterprise scale.</title>
+  <desc>Praesidio horizontal lockup with tagline beneath. Light variant.</desc>
+  <text x="36" y="70" text-anchor="middle"
+        font-family="'Instrument Serif','Iowan Old Style','Cambria','Times New Roman',Georgia,serif"
+        font-style="italic" font-weight="400" font-size="80" fill="#D14B2C">§</text>
+  <text x="88" y="66"
+        font-family="'Instrument Serif','Iowan Old Style','Cambria','Times New Roman',Georgia,serif"
+        font-style="normal" font-weight="400" font-size="56" fill="#0F0F0E" letter-spacing="-0.56">praesidio</text>
+  <text x="88" y="118"
+        font-family="'Geist','Geist Sans','Inter',system-ui,-apple-system,sans-serif"
+        font-style="normal" font-weight="400" font-size="16" fill="#3A352E" letter-spacing="-0.08">Trustworthy AI, at enterprise scale.</text>
+</svg>

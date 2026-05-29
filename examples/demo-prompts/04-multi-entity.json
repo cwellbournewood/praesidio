@@ -1,0 +1,14 @@
+{
+  "_purpose": "A realistic mixed prompt that triggers PERSON, EMAIL, PHONE and a benign domain. Expects 200 with tokenisation + FPE + restored response.",
+  "model": "gpt-4o-mini",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful sales-ops assistant."
+    },
+    {
+      "role": "user",
+      "content": "Schedule a follow-up with Maria Gonzalez (maria.gonzalez@northwind.example, +1-415-555-0142) about the Q3 renewal. Reference deal #4471 in the calendar invite."
+    }
+  ]
+}

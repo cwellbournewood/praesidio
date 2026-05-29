@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Praesidio — Marketing assets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --canvas: #EFEAE0;
+    --surface: #F4F0E6;
+    --sunken:  #E1DACB;
+    --rule:    #C9C3B5;
+    --ink:     #0F0F0E;
+    --graphite:#3A352E;
+    --dust:    #7A7367;
+    --vermillion: #D14B2C;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .serif { font-family: 'Instrument Serif', Georgia, serif; }
+  .mono  { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+  /* Masthead */
+  .mast {
+    padding: 40px 56px 22px;
+    border-bottom: 1px solid var(--rule);
+    background: var(--canvas);
+    position: sticky; top: 0; z-index: 10;
+  }
+  .mast .row {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 32px;
+  }
+  .mast .l { display: flex; align-items: baseline; gap: 14px; }
+  .mast .sect {
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    color: var(--vermillion); font-size: 28px; line-height: 1;
+  }
+  .mast h1 {
+    font-family: 'Instrument Serif', serif; font-weight: 400;
+    font-size: 44px; letter-spacing: -0.01em; color: var(--ink); line-height: 1;
+  }
+  .mast .ed {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--dust);
+    padding-left: 14px; margin-left: 4px; border-left: 1px solid var(--rule);
+  }
+  .mast .meta {
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--dust);
+  }
+  .mast .meta .ink { color: var(--ink); }
+  .mast .meta .ver { color: var(--vermillion); }
+
+  /* TOC */
+  .toc {
+    display: flex; flex-wrap: wrap; gap: 0;
+    padding: 14px 56px 18px;
+    border-bottom: 1px solid var(--rule);
+    background: var(--canvas);
+    position: sticky; top: 102px; z-index: 9;
+  }
+  .toc a {
+    display: inline-flex; align-items: baseline; gap: 6px;
+    padding: 4px 14px 4px 0;
+    margin-right: 10px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--graphite);
+    text-decoration: none;
+    border-right: 1px solid var(--rule);
+  }
+  .toc a:last-child { border-right: 0; }
+  .toc a:hover { color: var(--vermillion); }
+  .toc a .num { color: var(--vermillion); font-family: 'Instrument Serif', serif; font-style: italic; font-size: 14px; }
+
+  /* Section header */
+  section { padding: 56px 56px 24px; }
+  .sec-head {
+    display: grid; grid-template-columns: 110px 1fr auto; align-items: baseline;
+    gap: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--rule);
+    margin-bottom: 30px;
+  }
+  .sec-head .n {
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: 56px; color: var(--vermillion); line-height: 0.9;
+  }
+  .sec-head .stack { display: flex; flex-direction: column; gap: 6px; }
+  .sec-head .ey {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--dust);
+  }
+  .sec-head h2 {
+    font-family: 'Instrument Serif', serif; font-weight: 400;
+    font-size: 56px; letter-spacing: -0.01em; color: var(--ink); line-height: 1;
+  }
+  .sec-head h2 em { font-style: italic; color: var(--vermillion); }
+  .sec-head .r {
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    color: var(--graphite); font-size: 20px; text-align: right; max-width: 360px;
+  }
+
+  /* Image cards */
+  .grid {
+    display: grid; gap: 30px;
+  }
+  .grid.hero { grid-template-columns: 1fr; }
+  .grid.car  { grid-template-columns: repeat(2, 1fr); }
+  .grid.fig  { grid-template-columns: 1fr; }
+  .grid.ui   { grid-template-columns: repeat(2, 1fr); }
+
+  .card {
+    display: flex; flex-direction: column; gap: 0;
+    border: 1px solid var(--rule);
+    background: var(--canvas);
+  }
+  .card .hd {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--rule);
+    display: flex; align-items: baseline; justify-content: space-between; gap: 18px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink);
+  }
+  .card .hd .l { display: flex; align-items: baseline; gap: 10px; }
+  .card .hd .sect {
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    color: var(--vermillion); font-size: 16px;
+  }
+  .card .hd .r { color: var(--dust); font-size: 10px; letter-spacing: 0.14em; }
+  .card .frame {
+    background: #DDD6C5; /* slightly darker than canvas — sets the image off */
+    padding: 18px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .card .frame img {
+    max-width: 100%; height: auto; display: block;
+    border: 1px solid var(--rule);
+    background: var(--canvas);
+  }
+  .card .ft {
+    padding: 10px 18px; border-top: 1px solid var(--rule);
+    display: flex; align-items: baseline; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+    letter-spacing: 0.10em; color: var(--dust);
+  }
+  .card .ft .ink { color: var(--ink); }
+  .card .ft .ver { color: var(--vermillion); }
+
+  .colophon {
+    padding: 30px 56px 56px;
+    border-top: 1px solid var(--rule); margin-top: 24px;
+    display: flex; align-items: baseline; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--dust);
+  }
+  .colophon .ink { color: var(--ink); }
+  .colophon .ver { color: var(--vermillion); }
+
+  @media (max-width: 900px) {
+    .mast { padding: 24px 22px; }
+    section { padding: 36px 22px 18px; }
+    .sec-head { grid-template-columns: 64px 1fr; }
+    .sec-head .r { display: none; }
+    .grid.car, .grid.ui { grid-template-columns: 1fr; }
+    .toc { padding: 12px 22px; top: 110px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="row">
+    <div class="l">
+      <span class="sect">§</span>
+      <h1><em style="font-style:italic">Praesidio</em> · marketing</h1>
+      <span class="ed">CONTACT SHEET · v1.0 · 2026-05-29</span>
+    </div>
+    <div class="meta">
+      <span class="ink">17 ASSETS</span> &nbsp;·&nbsp;
+      <span>LINKEDIN · FIGURES · UI</span> &nbsp;·&nbsp;
+      <span class="ver">APACHE 2.0</span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc">
+  <a href="#hero"><span class="num">§</span>HERO</a>
+  <a href="#carousel"><span class="num">§</span>CAROUSEL · 7 SLIDES</a>
+  <a href="#figures"><span class="num">§</span>FIGURES · 2 DIAGRAMS</a>
+  <a href="#ui"><span class="num">§</span>UI · 7 CAPTURES</a>
+  <a href="#colophon"><span class="num">§</span>COLOPHON</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="sec-head">
+    <div class="n">i.</div>
+    <div class="stack">
+      <div class="ey">§ 1 · LINKEDIN LINK PREVIEW</div>
+      <h2>Hero <em>—</em> 1200 × 627</h2>
+    </div>
+    <div class="r">For the OG image, link card, and page header. Headline + simulator panel + dateline.</div>
+  </div>
+
+  <div class="grid hero">
+    <div class="card">
+      <div class="hd">
+        <span class="l"><span class="sect">§</span>01 · hero · link preview</span>
+        <span class="r">1200 × 627 · 2× retina · 195 KB</span>
+      </div>
+      <div class="frame"><img src="exhibits/01-hero.png" alt="Praesidio hero banner — 1200×627" /></div>
+      <div class="ft">
+        <span><span class="ink">linkedin/01-hero.png</span></span>
+        <span class="ver">▸ USE FOR OG IMAGE</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAROUSEL -->
+<section id="carousel">
+  <div class="sec-head">
+    <div class="n">ii.</div>
+    <div class="stack">
+      <div class="ey">§ 2 · LINKEDIN CAROUSEL · 7 SLIDES</div>
+      <h2>Carousel <em>—</em> 1080 × 1080</h2>
+    </div>
+    <div class="r">Reads as a single story: cover → problem → solution → policy → audit → providers → call to action.</div>
+  </div>
+
+  <div class="grid car">
+    <div class="card">
+      <div class="hd"><span class="l"><span class="sect">§</span>02 · cover · slide 1</span><span class="r">1080 × 1080 · 190 KB</span></div>
+      <div class="frame"><img src="exhibits/02-cover.png" alt="Carousel cover — Praesidio mark + tagline" /></div>
+      <div class="ft"><span><span class="ink">linkedin/02-cover.png</span></span><span>BRAND · APACHE 2.0 · STACK</span></div>
+    </div>
+    <div class="card">
+      <div class="hd"><span class="l"><span class="sect">§</span>03 · problem · slide 2</span><span class="r">1080 × 1080 · 320 KB</span></div>
+      <div class="frame"><img src="exhibits/03-problem.png" alt="Carousel slide 2 — every prompt is a data leak" /></div>
+      <div class="ft"><span><span class="ink">linkedin/03-problem.png</span></span><span>"DATA LEAK" · STAT PANEL</span></div>
+    </div>
+    <div class="card">
+      <div class="hd"><span class="l"><span class="sect">§</span>04 · tokenise · slide 3</span><span class="r">1080 × 1080 · 303 KB</span></div>
+      <div class="frame"><img src="exhibits/04-tokenise.png" alt="Carousel slide 3 — reversible tokenisation, before/after" /></div>
+      <div class="ft"><span><span class="ink">linkedin/04-tokenise.png</span></span><span class="ver">▸ "TOOL IN ACTION"</span></div>
+    </div>
+    <div class="card">
+      <div class="hd"><span class="l"><span class="sect">§</span>05 · policy · slide 4</span><span class="r">1080 × 1080 · 321 KB</span></div>
+      <div class="frame"><img src="exhibits/05-policy.png" alt="Carousel slide 4 — YAML + CEL signed bundle" /></div>
+      <div class="ft"><span><span class="ink">linkedin/05-policy.png</span></span><span>YAML · CEL · COSIGN</span></div>
+    </div>
+    <div class="card">
+      <div class="hd"><span class="l"><span class="sect">§</span>06 · audit · slide 5</span><span class="r">1080 × 1080 · 273 KB</span></div>
+      <div class="frame"><img src="exhibits/06-audit.png" alt="Carousel slide 5 — hash-chained audit + lineage" /></div>
+      <div class="ft"><span><span class="ink">linkedin/06-audit.png</span></span><span>HASH CHAIN · WORM</span></div>
+    </div>
+    <div class="card">
+      <div class="hd"><span class="l"><span class="sect">§</span>07 · providers · slide 6</span><span class="r">1080 × 1080 · 265 KB</span></div>
+      <div class="frame"><img src="exhibits/07-providers.png" alt="Carousel slide 6 — multi-provider routing" /></div>
+      <div class="ft"><span><span class="ink">linkedin/07-providers.png</span></span><span>9 BACKENDS · JURISDICTION</span></div>
+    </div>
+    <div class="card" style="grid-column: 1 / -1; max-width: calc(50% - 15px);">
+      <div class="hd"><span class="l"><span class="sect">§</span>08 · cta · slide 7</span><span class="r">1080 × 1080 · 275 KB</span></div>
+      <div class="frame"><img src="exhibits/08-cta.png" alt="Carousel slide 7 — open source, from clone to block" /></div>
+      <div class="ft"><span><span class="ink">linkedin/08-cta.png</span></span><span class="ver">▸ END · GET STARTED</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FIGURES -->
+<section id="figures">
+  <div class="sec-head">
+    <div class="n">iii.</div>
+    <div class="stack">
+      <div class="ey">§ 3 · LONG-FORM FIGURES</div>
+      <h2>Figures <em>—</em> for posts, README, blog</h2>
+    </div>
+    <div class="r">Wide-format diagrams. Embed near the relevant paragraph, or use as a hero in a long-form announcement.</div>
+  </div>
+
+  <div class="grid fig">
+    <div class="card">
+      <div class="hd"><span class="l"><span class="sect">§</span>fig. 1 · architecture</span><span class="r">1600 × 1000 · 274 KB · 2×</span></div>
+      <div class="frame"><img src="exhibits/architecture.png" alt="Fig. 1 — Request flow through the gateway" /></div>
+      <div class="ft"><span><span class="ink">figures/architecture.png</span></span><span>CLIENT → GATEWAY → MODELS · WITH AUDIT RAIL</span></div>
+    </div>
+    <div class="card">
+      <div class="hd"><span class="l"><span class="sect">§</span>fig. 2 · tokenisation</span><span class="r">1600 × 900 · 250 KB · 2×</span></div>
+      <div class="frame"><img src="exhibits/tokenisation.png" alt="Fig. 2 — Tokenisation, vault round-trip detail" /></div>
+      <div class="ft"><span><span class="ink">figures/tokenisation.png</span></span><span>BEFORE / AFTER · VAULT ROW · RESTORE STREAM</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- UI -->
+<section id="ui">
+  <div class="sec-head">
+    <div class="n">iv.</div>
+    <div class="stack">
+      <div class="ey">§ 4 · TOOL IN ACTION</div>
+      <h2>UI captures <em>—</em> the live console</h2>
+    </div>
+    <div class="r">Headless-Chrome captures of the running console at 1440 × 900. No retouching — the bone canvas, the hairlines, the vermillion sing for themselves.</div>
+  </div>
+
+  <div class="grid ui">
+    <div class="card">
+      <div class="hd"><span class="l"><span class="sect">§</span>overview · §  /</span><span class="r">1440 × 900</span></div>
+      <div class="frame"><img src="exhibits/overview.png" alt="Overview dashboard" /></div>
+      <div class="ft"><span><span class="ink">ui-screenshots/overview.png</span></span><span>KPIS · THROUGHPUT · LIVE TAPE</span></div>
+    </div>
+    <div class="card">
+      <div class="hd"><span class="l"><span class="sect">§</span>events · §  /events</span><span class="r">1440 × 900</span></div>
+      <div class="frame"><img src="exhibits/events.png" alt="Events / audit log" /></div>
+      <div class="ft"><span><span class="ink">ui-screenshots/events.png</span></span><span class="ver">▸ THE TOOL IN ACTION</span></div>
+    </div>
+    <div class="card">
+      <div class="hd"><span class="l"><span class="sect">§</span>policies · §  /policies</span><span class="r">1440 × 900</span></div>
+      <div class="frame"><img src="exhibits/policies.png" alt="Policies — YAML + CEL bundles" /></div>
+      <div class="ft"><span><span class="ink">ui-screenshots/policies.png</span></span><span>PII-STRICT · CODE · HIPAA</span></div>
+    </div>
+    <div class="card">
+      <div class="hd"><span class="l"><span class="sect">§</span>simulator · §  /simulator</span><span class="r">1440 × 900</span></div>
+      <div class="frame"><img src="exhibits/simulator.png" alt="Simulator — paste prompt, preview decision" /></div>
+      <div class="ft"><span><span class="ink">ui-screenshots/simulator.png</span></span><span>DRY-RUN · 4 SAMPLES</span></div>
+    </div>
+    <div class="card">
+      <div class="hd"><span class="l"><span class="sect">§</span>recommendations · §  /recommendations</span><span class="r">1440 × 900</span></div>
+      <div class="frame"><img src="exhibits/recommendations.png" alt="Recommendations — overlays adoptable as PRs" /></div>
+      <div class="ft"><span><span class="ink">ui-screenshots/recommendations.png</span></span><span>OVERLAYS · EVIDENCE-DRIVEN</span></div>
+    </div>
+    <div class="card">
+      <div class="hd"><span class="l"><span class="sect">§</span>models · §  /models</span><span class="r">1440 × 900</span></div>
+      <div class="frame"><img src="exhibits/models.png" alt="Models — upstream registry" /></div>
+      <div class="ft"><span><span class="ink">ui-screenshots/models.png</span></span><span>OPENAI · AZURE · BEDROCK</span></div>
+    </div>
+    <div class="card" style="grid-column: 1 / -1; max-width: calc(50% - 15px);">
+      <div class="hd"><span class="l"><span class="sect">§</span>onboarding · §  /onboarding</span><span class="r">1440 × 900</span></div>
+      <div class="frame"><img src="exhibits/onboarding.png" alt="Onboarding — choose a path" /></div>
+      <div class="ft"><span><span class="ink">ui-screenshots/onboarding.png</span></span><span>LOCAL DEMO · COMPOSE · K8S</span></div>
+    </div>
+  </div>
+</section>
+
+<footer id="colophon" class="colophon">
+  <span><span class="ink">Praesidio · Instrument</span> &nbsp;·&nbsp; BONE · INK · VERMILLION</span>
+  <span><span class="ver">§</span> RENDERED 2026-05-29 · 2× RETINA · HEADLESS CHROME</span>
+  <span><span class="ink">github.com/praesidio</span> &nbsp;·&nbsp; APACHE 2.0</span>
+</footer>
+
+</body>
+</html>

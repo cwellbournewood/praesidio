@@ -1,0 +1,361 @@
+{
+  "annotations": { "list": [] },
+  "description": "Section /v1/chat/completions availability SLO (99.9%) — error-budget remaining and multi-window multi-burn-rate alerting panels, following the Google SRE burn-rate model.",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "title": "Section — SLO & burn rate",
+  "uid": "section-slo",
+  "tags": ["section", "slo"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "time": { "from": "now-6h", "to": "now" },
+  "templating": {
+    "list": [
+      {
+        "name": "DS_PROMETHEUS",
+        "type": "datasource",
+        "query": "prometheus",
+        "current": {},
+        "hide": 0,
+        "label": "Prometheus",
+        "options": [],
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false
+      },
+      {
+        "name": "namespace",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "query": { "qryType": 1, "query": "label_values(request_total, namespace)", "refId": "ns" },
+        "definition": "label_values(request_total, namespace)",
+        "current": {},
+        "hide": 0,
+        "includeAll": true,
+        "multi": false,
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1
+      },
+      {
+        "name": "slo_objective",
+        "type": "constant",
+        "current": { "selected": false, "text": "0.999", "value": "0.999" },
+        "query": "0.999",
+        "label": "SLO target",
+        "hide": 0
+      }
+    ]
+  },
+  "panels": [
+    {
+      "type": "row",
+      "id": 100,
+      "title": "Headline",
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 }
+    },
+    {
+      "type": "stat",
+      "id": 1,
+      "title": "Availability (30d) — /v1/chat/completions",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 1 },
+      "targets": [
+        {
+          "expr": "1 - (sum(increase(request_total{namespace=~\"$namespace\",route=\"/v1/chat/completions\",status=~\"5..\"}[30d])) / clamp_min(sum(increase(request_total{namespace=~\"$namespace\",route=\"/v1/chat/completions\"}[30d])), 1))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "yellow", "value": 0.995 },
+              { "color": "green", "value": 0.999 }
+            ]
+          },
+          "decimals": 4
+        }
+      },
+      "options": { "colorMode": "background", "graphMode": "none", "textMode": "auto" }
+    },
+    {
+      "type": "stat",
+      "id": 2,
+      "title": "Error-budget remaining (30d)",
+      "description": "1 - (errors_30d / (1 - SLO) * total_30d). 100% = full budget; 0% = budget exhausted; <0% = breach.",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 1 },
+      "targets": [
+        {
+          "expr": "1 - (sum(increase(request_total{namespace=~\"$namespace\",route=\"/v1/chat/completions\",status=~\"5..\"}[30d])) / clamp_min((1 - $slo_objective) * sum(increase(request_total{namespace=~\"$namespace\",route=\"/v1/chat/completions\"}[30d])), 1e-9))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "orange", "value": 0.10 },
+              { "color": "yellow", "value": 0.30 },
+              { "color": "green", "value": 0.60 }
+            ]
+          },
+          "decimals": 1
+        }
+      },
+      "options": { "colorMode": "background", "graphMode": "none", "textMode": "auto" }
+    },
+    {
+      "type": "stat",
+      "id": 3,
+      "title": "Error rate (1h)",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "h": 6, "w": 6, "x": 12, "y": 1 },
+      "targets": [
+        {
+          "expr": "sum(rate(request_total{namespace=~\"$namespace\",route=\"/v1/chat/completions\",status=~\"5..\"}[1h])) / clamp_min(sum(rate(request_total{namespace=~\"$namespace\",route=\"/v1/chat/completions\"}[1h])), 1e-9)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "decimals": 4,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.001 },
+              { "color": "red", "value": 0.01 }
+            ]
+          }
+        }
+      },
+      "options": { "colorMode": "background", "graphMode": "none", "textMode": "auto" }
+    },
+    {
+      "type": "stat",
+      "id": 4,
+      "title": "Error rate (5m)",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "h": 6, "w": 6, "x": 18, "y": 1 },
+      "targets": [
+        {
+          "expr": "sum(rate(request_total{namespace=~\"$namespace\",route=\"/v1/chat/completions\",status=~\"5..\"}[5m])) / clamp_min(sum(rate(request_total{namespace=~\"$namespace\",route=\"/v1/chat/completions\"}[5m])), 1e-9)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "decimals": 4,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.001 },
+              { "color": "red", "value": 0.05 }
+            ]
+          }
+        }
+      },
+      "options": { "colorMode": "background", "graphMode": "none", "textMode": "auto" }
+    },
+    {
+      "type": "row",
+      "id": 101,
+      "title": "Fast burn (page) — 1h × 5m windows, threshold 14.4×",
+      "description": "Burning 2% of a 30d budget in 1h. Pages on-call.",
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 7 }
+    },
+    {
+      "type": "timeseries",
+      "id": 5,
+      "title": "Fast burn rate — 1h window (alert if > 14.4×)",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "targets": [
+        {
+          "expr": "(sum(rate(request_total{namespace=~\"$namespace\",route=\"/v1/chat/completions\",status=~\"5..\"}[1h])) / clamp_min(sum(rate(request_total{namespace=~\"$namespace\",route=\"/v1/chat/completions\"}[1h])), 1e-9)) / (1 - $slo_objective)",
+          "legendFormat": "1h burn ×",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 10 },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 1 },
+              { "color": "red", "value": 14.4 }
+            ]
+          }
+        }
+      },
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom" },
+        "tooltip": { "mode": "single", "sort": "none" }
+      }
+    },
+    {
+      "type": "timeseries",
+      "id": 6,
+      "title": "Fast burn rate — 5m window (alert if > 14.4×)",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "targets": [
+        {
+          "expr": "(sum(rate(request_total{namespace=~\"$namespace\",route=\"/v1/chat/completions\",status=~\"5..\"}[5m])) / clamp_min(sum(rate(request_total{namespace=~\"$namespace\",route=\"/v1/chat/completions\"}[5m])), 1e-9)) / (1 - $slo_objective)",
+          "legendFormat": "5m burn ×",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 10 },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 1 },
+              { "color": "red", "value": 14.4 }
+            ]
+          }
+        }
+      },
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom" },
+        "tooltip": { "mode": "single", "sort": "none" }
+      }
+    },
+    {
+      "type": "row",
+      "id": 102,
+      "title": "Slow burn (ticket) — 6h × 30m windows, threshold 6×",
+      "description": "Burning 5% of a 30d budget in 6h. Files a ticket.",
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 16 }
+    },
+    {
+      "type": "timeseries",
+      "id": 7,
+      "title": "Slow burn rate — 6h window (alert if > 6×)",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 17 },
+      "targets": [
+        {
+          "expr": "(sum(rate(request_total{namespace=~\"$namespace\",route=\"/v1/chat/completions\",status=~\"5..\"}[6h])) / clamp_min(sum(rate(request_total{namespace=~\"$namespace\",route=\"/v1/chat/completions\"}[6h])), 1e-9)) / (1 - $slo_objective)",
+          "legendFormat": "6h burn ×",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 10 },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 1 },
+              { "color": "red", "value": 6 }
+            ]
+          }
+        }
+      },
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom" },
+        "tooltip": { "mode": "single", "sort": "none" }
+      }
+    },
+    {
+      "type": "timeseries",
+      "id": 8,
+      "title": "Slow burn rate — 30m window (alert if > 6×)",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 17 },
+      "targets": [
+        {
+          "expr": "(sum(rate(request_total{namespace=~\"$namespace\",route=\"/v1/chat/completions\",status=~\"5..\"}[30m])) / clamp_min(sum(rate(request_total{namespace=~\"$namespace\",route=\"/v1/chat/completions\"}[30m])), 1e-9)) / (1 - $slo_objective)",
+          "legendFormat": "30m burn ×",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 10 },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 1 },
+              { "color": "red", "value": 6 }
+            ]
+          }
+        }
+      },
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom" },
+        "tooltip": { "mode": "single", "sort": "none" }
+      }
+    },
+    {
+      "type": "row",
+      "id": 103,
+      "title": "Budget consumption over time",
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 25 }
+    },
+    {
+      "type": "timeseries",
+      "id": 9,
+      "title": "Cumulative error-budget consumed (rolling 30d)",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 26 },
+      "targets": [
+        {
+          "expr": "sum(increase(request_total{namespace=~\"$namespace\",route=\"/v1/chat/completions\",status=~\"5..\"}[30d])) / clamp_min((1 - $slo_objective) * sum(increase(request_total{namespace=~\"$namespace\",route=\"/v1/chat/completions\"}[30d])), 1e-9)",
+          "legendFormat": "budget consumed (1 = exhausted)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 15 },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.5 },
+              { "color": "red", "value": 1.0 }
+            ]
+          }
+        }
+      },
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom" },
+        "tooltip": { "mode": "single", "sort": "none" }
+      }
+    }
+  ]
+}

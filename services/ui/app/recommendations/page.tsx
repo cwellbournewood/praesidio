@@ -2,7 +2,7 @@
 
 // Observation-led recommendations.
 //
-// The premise of this page is that Praesidio should never make the operator
+// The premise of this page is that Section should never make the operator
 // declare an industry up front. Instead, the gateway emits events for the
 // universal default policy, and *this page* surfaces optional overlays once
 // enough evidence has accumulated to justify them.
@@ -170,7 +170,7 @@ const FAMILY_META: Record<
 };
 
 /* ─── persistence of dismissed state ─── */
-const DISMISSED_KEY = 'praesidio.recommendations.dismissed.v1';
+const DISMISSED_KEY = 'section.recommendations.dismissed.v1';
 
 function loadDismissed(): Set<string> {
   if (typeof window === 'undefined') return new Set();
@@ -251,7 +251,7 @@ export default function RecommendationsPage() {
           </Link>
         </div>
         <p className="mt-3 marginalia max-w-2xl">
-          Praesidio never asks for your industry. The universal default policy
+          Section never asks for your industry. The universal default policy
           catches everything; this page surfaces optional overlays once real
           traffic has produced enough evidence to make them worth the extra
           friction. Adopt only what your audit log earns.

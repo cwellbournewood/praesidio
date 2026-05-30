@@ -44,7 +44,7 @@ type Shape = 'local' | 'self-hosted' | 'cloud';
 type StepKey = 'shape' | 'bringup' | 'wire' | 'watch' | 'expand' | 'live';
 
 const STEPS: { key: StepKey; num: string; label: string; sub: string }[] = [
-  { key: 'shape', num: '§ 1', label: 'Pick a path', sub: 'How will you run Praesidio?' },
+  { key: 'shape', num: '§ 1', label: 'Pick a path', sub: 'How will you run Section?' },
   { key: 'bringup', num: '§ 2', label: 'Bring it up', sub: 'One command, ~90 seconds' },
   { key: 'wire', num: '§ 3', label: 'Wire a client', sub: 'Point an SDK at the gateway' },
   { key: 'watch', num: '§ 4', label: 'Watch it work', sub: 'See decisions land in real time' },
@@ -52,7 +52,7 @@ const STEPS: { key: StepKey; num: string; label: string; sub: string }[] = [
   { key: 'live', num: '§ 6', label: "You're live", sub: 'Next steps' },
 ];
 
-const STORAGE_KEY = 'praesidio.onboarding.v1';
+const STORAGE_KEY = 'section.onboarding.v1';
 
 type Progress = {
   shape: Shape | null;
@@ -173,7 +173,7 @@ export default function OnboardingPage() {
             const now = new Date().toISOString();
             update({ finishedAt: now });
             // Tell the rest of the app we're past onboarding.
-            window.localStorage.setItem('praesidio.onboarded', '1');
+            window.localStorage.setItem('section.onboarded', '1');
           }}
           finishedAt={progress.finishedAt}
         />
@@ -320,7 +320,7 @@ function StepShape({
       icon: Laptop,
       label: 'Local demo',
       eta: '< 5 min',
-      body: 'Docker Desktop on your laptop. SQLite audit log, demo API key, no TLS. The fastest way to see Praesidio block a real prompt.',
+      body: 'Docker Desktop on your laptop. SQLite audit log, demo API key, no TLS. The fastest way to see Section block a real prompt.',
       target: 'Evaluation · demos · policy authoring',
     },
     {
@@ -418,8 +418,8 @@ function StepBringup({ shape, onDone }: { shape: Shape; onDone: () => void }) {
           {
             label: 'Clone & bring up',
             code: [
-              'git clone --depth 1 https://github.com/cwellbournewood/praesidio.git',
-              'cd praesidio',
+              'git clone --depth 1 https://github.com/cwellbournewood/section.git',
+              'cd section',
               'cp .env.example .env',
               'docker compose --profile quickstart up -d',
             ].join('\n'),
@@ -430,10 +430,10 @@ function StepBringup({ shape, onDone }: { shape: Shape; onDone: () => void }) {
           {
             label: 'Clone & bring up (full)',
             code: [
-              'git clone --depth 1 https://github.com/cwellbournewood/praesidio.git',
-              'cd praesidio',
+              'git clone --depth 1 https://github.com/cwellbournewood/section.git',
+              'cd section',
               'cp .env.example .env',
-              '# edit .env: set PRAESIDIO_API_KEYS, OIDC_*, UPSTREAM keys',
+              '# edit .env: set SECTION_API_KEYS, OIDC_*, UPSTREAM keys',
               'docker compose up -d --build',
             ].join('\n'),
           },
@@ -449,11 +449,11 @@ function StepBringup({ shape, onDone }: { shape: Shape; onDone: () => void }) {
             ].join('\n'),
           },
           {
-            label: 'Install Praesidio (Helm)',
+            label: 'Install Section (Helm)',
             code: [
-              'helm repo add praesidio https://charts.praesidio.io',
-              'helm upgrade --install praesidio praesidio/praesidio \\',
-              '  -n praesidio --create-namespace \\',
+              'helm repo add section https://charts.section.io',
+              'helm upgrade --install section section/section \\',
+              '  -n section --create-namespace \\',
               '  -f deploy/helm/values.production.yaml',
             ].join('\n'),
           },
@@ -471,7 +471,7 @@ function StepBringup({ shape, onDone }: { shape: Shape; onDone: () => void }) {
             ? 'Pre-built images from the public registry. No local build, no Postgres migration — just up.'
             : shape === 'self-hosted'
               ? 'Full compose stack with persistent volumes. Configure .env first.'
-              : 'Terraform creates the cluster + managed Postgres/Redis; Helm installs Praesidio with HA + NetworkPolicies.'
+              : 'Terraform creates the cluster + managed Postgres/Redis; Helm installs Section with HA + NetworkPolicies.'
         }
       />
 
@@ -554,7 +554,7 @@ function StepWire({
 }) {
   const base =
     shape === 'cloud'
-      ? 'https://praesidio.example.com/v1'
+      ? 'https://section.example.com/v1'
       : 'http://localhost:8080/v1';
 
   const ensureMarker = useCallback(() => {
@@ -578,8 +578,8 @@ function StepWire({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'Bearer praesidio-demo-key',
-          'X-Praesidio-Session': m,
+          Authorization: 'Bearer section-demo-key',
+          'X-Section-Session': m,
         },
         body: JSON.stringify({
           model: 'gpt-4o-mini',
@@ -592,7 +592,7 @@ function StepWire({
         }),
       });
       setLastStatus(res.status);
-      setLastReason(res.headers.get('X-Praesidio-Reason'));
+      setLastReason(res.headers.get('X-Section-Reason'));
     } catch (e) {
       setLastStatus(0);
       setLastReason(e instanceof Error ? e.message : 'network error');
@@ -603,12 +603,12 @@ function StepWire({
 
   const envBlock = [
     `export OPENAI_BASE_URL=${base}`,
-    'export OPENAI_API_KEY=praesidio-demo-key',
+    'export OPENAI_API_KEY=section-demo-key',
   ].join('\n');
 
   const curlBlock = [
     `curl ${base}/chat/completions \\`,
-    '  -H "Authorization: Bearer praesidio-demo-key" \\',
+    '  -H "Authorization: Bearer section-demo-key" \\',
     '  -H "Content-Type: application/json" \\',
     "  -d '{",
     '    "model": "gpt-4o-mini",',
@@ -648,7 +648,7 @@ function StepWire({
             <span className="font-mono text-text-primary">transform</span>{' '}
             decision (email tokenised) — or{' '}
             <span className="font-mono text-text-primary">403</span> with{' '}
-            <span className="font-mono text-text-primary">X-Praesidio-Reason</span>{' '}
+            <span className="font-mono text-text-primary">X-Section-Reason</span>{' '}
             if policy says block.
           </p>
           <div className="flex items-center gap-3">
@@ -759,8 +759,8 @@ function StepWatch({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'Bearer praesidio-demo-key',
-          'X-Praesidio-Session': m,
+          Authorization: 'Bearer section-demo-key',
+          'X-Section-Session': m,
         },
         body: JSON.stringify({
           model: 'gpt-4o-mini',
@@ -769,7 +769,7 @@ function StepWatch({
       });
       setResults((prev) => ({
         ...prev,
-        [id]: { status: res.status, reason: res.headers.get('X-Praesidio-Reason') },
+        [id]: { status: res.status, reason: res.headers.get('X-Section-Reason') },
       }));
     } catch (e) {
       setResults((prev) => ({
@@ -962,7 +962,7 @@ function StepExpand({ onDone }: { onDone: () => void }) {
       icon: ShieldCheck,
       status: 'roadmap',
       body: 'Chrome / Edge / Firefox extension pushed via enterprise policy. Catches unmanaged / BYOD where MITM is not viable.',
-      snippet: 'praesidio-ext.crx · pushed via Chrome Enterprise',
+      snippet: 'section-ext.crx · pushed via Chrome Enterprise',
       href: '/settings?tab=connectors#browser-ext',
     },
     {
@@ -972,7 +972,7 @@ function StepExpand({ onDone }: { onDone: () => void }) {
       icon: Terminal,
       status: 'roadmap',
       body: 'VSCode + JetBrains. Wraps Copilot, Cursor, Continue, Cody. The highest-value PEP for engineering orgs.',
-      snippet: 'ext install praesidio.praesidio-vscode',
+      snippet: 'ext install section.section-vscode',
       href: '/settings?tab=connectors#ide',
     },
     {
@@ -982,7 +982,7 @@ function StepExpand({ onDone }: { onDone: () => void }) {
       icon: Sparkles,
       status: 'alpha',
       body: 'Wraps MCP tool calls and the Claude Agent SDK / OpenAI Agents / LangGraph. The cleanest integration for the agentic future.',
-      snippet: 'pip install praesidio-agent-sdk',
+      snippet: 'pip install section-agent-sdk',
       href: '/settings?tab=connectors#mcp',
     },
   ];

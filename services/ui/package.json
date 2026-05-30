@@ -1,8 +1,8 @@
 {
-  "name": "praesidio-ui",
+  "name": "section-ui",
   "version": "0.1.0",
   "private": true,
-  "description": "Praesidio Admin UI — operator console for the AI Security Control Plane.",
+  "description": "Section Admin UI — operator console for the AI Security Control Plane.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

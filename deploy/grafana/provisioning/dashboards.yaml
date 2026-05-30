@@ -1,18 +1,18 @@
 # Grafana provisioning — dashboards.
 # Place this file at /etc/grafana/provisioning/dashboards/dashboards.yaml
-# and mount the contents of ../dashboards/ at /var/lib/grafana/dashboards/praesidio/.
+# and mount the contents of ../dashboards/ at /var/lib/grafana/dashboards/section/.
 apiVersion: 1
 
 providers:
-  - name: Praesidio
+  - name: Section
     orgId: 1
-    folder: Praesidio
-    folderUid: praesidio
+    folder: Section
+    folderUid: section
     type: file
     disableDeletion: false
     editable: true
     updateIntervalSeconds: 30
     allowUiUpdates: true
     options:
-      path: /var/lib/grafana/dashboards/praesidio
+      path: /var/lib/grafana/dashboards/section
       foldersFromFilesStructure: false

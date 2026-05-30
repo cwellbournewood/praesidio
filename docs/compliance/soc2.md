@@ -1,6 +1,6 @@
-# SOC 2 — Praesidio Trust Services Criteria mapping
+# SOC 2 — Section Trust Services Criteria mapping
 
-| TSC | Common criteria | Praesidio control |
+| TSC | Common criteria | Section control |
 |---|---|---|
 | Security (CC) | CC6 Logical & physical access | OIDC, RBAC/ABAC, mTLS, KMS-backed secrets |
 | | CC7 System operations | SLOs, dashboards, structured logging, OTel traces |

@@ -1,4 +1,4 @@
-"""Tests for the PraesidioAddon request + response hooks.
+"""Tests for the SectionAddon request + response hooks.
 
 We exercise the hooks directly with :class:`FakeFlow` objects rather
 than booting mitmproxy. Gateway calls are mocked via respx.
@@ -10,23 +10,23 @@ import json
 import httpx
 import pytest
 
-from praesidio_edge_proxy.proxy import (
-    PraesidioAddon,
+from section_edge_proxy.proxy import (
+    SectionAddon,
     StreamingRestorer,
     _diff_placeholders,
 )
-from praesidio_edge_proxy.scan_client import GatewayClient
-from praesidio_edge_proxy.status import StatusFile
+from section_edge_proxy.scan_client import GatewayClient
+from section_edge_proxy.status import StatusFile
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
 def _addon(settings, gateway_mock):
-    """Build a PraesidioAddon wired to respx via a fresh httpx client."""
+    """Build a SectionAddon wired to respx via a fresh httpx client."""
     httpx_client = httpx.AsyncClient(transport=httpx.MockTransport(_via_respx(gateway_mock)))
     gateway = GatewayClient(settings, client=httpx_client)
-    return PraesidioAddon(settings, gateway=gateway), httpx_client
+    return SectionAddon(settings, gateway=gateway), httpx_client
 
 
 def _via_respx(router):
@@ -47,7 +47,7 @@ def _via_respx(router):
 @pytest.mark.asyncio
 async def test_non_intercepted_host_is_passthrough(settings, gateway_mock, fake_flow_factory):
     """An unrelated host should not invoke the gateway at all."""
-    addon = PraesidioAddon(settings, gateway=GatewayClient(settings))
+    addon = SectionAddon(settings, gateway=GatewayClient(settings))
     flow = fake_flow_factory(host="example.com", path="/api/foo", body={"x": 1})
     await addon.request(flow)
     # No metadata stamp, body untouched, no gateway call.
@@ -59,7 +59,7 @@ async def test_non_intercepted_host_is_passthrough(settings, gateway_mock, fake_
 
 @pytest.mark.asyncio
 async def test_non_json_body_is_passthrough(settings, gateway_mock, fake_flow_factory):
-    addon = PraesidioAddon(settings, gateway=GatewayClient(settings))
+    addon = SectionAddon(settings, gateway=GatewayClient(settings))
     flow = fake_flow_factory(
         host="api.openai.com",
         path="/v1/chat/completions",
@@ -83,7 +83,7 @@ async def test_scan_mask_rewrites_request_body(settings, gateway_mock, fake_flow
         json={
             "request_id": "req-mask-1",
             "action": "mask",
-            "sanitised": "you are helper\x1e\x1e--PRAESIDIO-SEP--\x1e\x1esend mail to <EMAIL_A2B3>",
+            "sanitised": "you are helper\x1e\x1e--SECTION-SEP--\x1e\x1esend mail to <EMAIL_A2B3>",
             "transforms": [
                 {
                     "label": "pii.email",
@@ -99,7 +99,7 @@ async def test_scan_mask_rewrites_request_body(settings, gateway_mock, fake_flow
     )
 
     gateway = GatewayClient(settings)
-    addon = PraesidioAddon(settings, gateway=gateway)
+    addon = SectionAddon(settings, gateway=gateway)
     flow = fake_flow_factory(
         host="api.openai.com",
         path="/v1/chat/completions",
@@ -121,7 +121,7 @@ async def test_scan_mask_rewrites_request_body(settings, gateway_mock, fake_flow
     # System message preserved.
     assert new_body["messages"][0]["content"] == "you are helper"
     # Metadata records the request_id for /v1/restore on the response side.
-    state = flow.metadata["praesidio"]
+    state = flow.metadata["section"]
     assert state.request_id == "req-mask-1"
     await gateway.aclose()
 
@@ -131,7 +131,7 @@ async def test_scan_mask_rewrites_request_body(settings, gateway_mock, fake_flow
 # ---------------------------------------------------------------------------
 
 @pytest.mark.asyncio
-async def test_scan_block_returns_403_with_praesidio_blocked_body(
+async def test_scan_block_returns_403_with_section_blocked_body(
     settings, gateway_mock, fake_flow_factory
 ):
     """A block decision returns HTTP 403 with the gateway's standard body."""
@@ -151,7 +151,7 @@ async def test_scan_block_returns_403_with_praesidio_blocked_body(
     )
 
     gateway = GatewayClient(settings)
-    addon = PraesidioAddon(settings, gateway=gateway)
+    addon = SectionAddon(settings, gateway=gateway)
     flow = fake_flow_factory(
         host="api.openai.com",
         path="/v1/chat/completions",
@@ -168,7 +168,7 @@ async def test_scan_block_returns_403_with_praesidio_blocked_body(
     assert flow.response is not None
     assert flow.response.status_code == 403
     body = json.loads(flow.response.content)
-    assert body["error"]["type"] == "praesidio_blocked"
+    assert body["error"]["type"] == "section_blocked"
     assert body["error"]["message"] == "AWS credential not permitted"
     assert body["error"]["severity"] == "high"
     assert body["error"]["policy_id"] == "sec"
@@ -184,7 +184,7 @@ async def test_scan_block_returns_403_with_praesidio_blocked_body(
 async def test_scan_allow_leaves_body_unchanged(settings, gateway_mock, fake_flow_factory):
     # Default gateway_mock returns allow.
     gateway = GatewayClient(settings)
-    addon = PraesidioAddon(settings, gateway=gateway)
+    addon = SectionAddon(settings, gateway=gateway)
     original_body = {
         "model": "gpt-4o",
         "messages": [{"role": "user", "content": "what is 2 + 2"}],
@@ -211,7 +211,7 @@ async def test_gateway_unreachable_fails_closed(settings, gateway_mock, fake_flo
     gateway_mock.post("http://gateway.test/v1/scan").respond(503, text="oops")
 
     gateway = GatewayClient(settings)
-    addon = PraesidioAddon(settings, gateway=gateway)
+    addon = SectionAddon(settings, gateway=gateway)
     flow = fake_flow_factory(
         host="api.openai.com",
         path="/v1/chat/completions",
@@ -222,7 +222,7 @@ async def test_gateway_unreachable_fails_closed(settings, gateway_mock, fake_flo
     assert flow.response is not None
     assert flow.response.status_code == 502
     body = json.loads(flow.response.content)
-    assert body["error"]["type"] == "praesidio_gateway_unreachable"
+    assert body["error"]["type"] == "section_gateway_unreachable"
     await gateway.aclose()
 
 
@@ -235,7 +235,7 @@ async def test_gateway_unreachable_fails_open_when_configured(
 
     open_settings = settings.model_copy(update={"fail_open": True})
     gateway = GatewayClient(open_settings)
-    addon = PraesidioAddon(open_settings, gateway=gateway)
+    addon = SectionAddon(open_settings, gateway=gateway)
     flow = fake_flow_factory(
         host="api.openai.com",
         path="/v1/chat/completions",
@@ -268,7 +268,7 @@ async def test_response_restores_placeholders(
     )
 
     gateway = GatewayClient(settings)
-    addon = PraesidioAddon(settings, gateway=gateway)
+    addon = SectionAddon(settings, gateway=gateway)
 
     from tests.conftest import FakeResponse
 
@@ -278,7 +278,7 @@ async def test_response_restores_placeholders(
         path="/v1/chat/completions",
         body={"messages": [{"role": "user", "content": "hi"}]},
     )
-    flow.metadata["praesidio"] = type("S", (), {"request_id": "req-1", "placeholders": {}})()
+    flow.metadata["section"] = type("S", (), {"request_id": "req-1", "placeholders": {}})()
     flow.response = FakeResponse(
         status_code=200,
         body=json.dumps(
@@ -309,7 +309,7 @@ async def test_response_with_no_placeholders_skips_gateway(
 ):
     """A clean response body should not trigger a /v1/restore round-trip."""
     gateway = GatewayClient(settings)
-    addon = PraesidioAddon(settings, gateway=gateway)
+    addon = SectionAddon(settings, gateway=gateway)
 
     from tests.conftest import FakeResponse
 
@@ -318,7 +318,7 @@ async def test_response_with_no_placeholders_skips_gateway(
         path="/v1/chat/completions",
         body={"messages": [{"role": "user", "content": "hi"}]},
     )
-    flow.metadata["praesidio"] = type("S", (), {"request_id": "req-2", "placeholders": {}})()
+    flow.metadata["section"] = type("S", (), {"request_id": "req-2", "placeholders": {}})()
     flow.response = FakeResponse(
         body=json.dumps({"choices": [{"message": {"content": "clean reply"}}]}),
         headers={"content-type": "application/json"},
@@ -443,7 +443,7 @@ async def test_status_file_records_each_decision(
         hosts=["api.openai.com"],
     )
     gateway = GatewayClient(settings)
-    addon = PraesidioAddon(settings, gateway=gateway, status=status)
+    addon = SectionAddon(settings, gateway=gateway, status=status)
 
     flow = fake_flow_factory(
         host="api.openai.com",

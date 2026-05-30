@@ -3,7 +3,7 @@ import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import { Instrument_Serif } from 'next/font/google';
 import { Providers } from './providers';
-import { AppShell } from '@/components/praesidio/AppShell';
+import { AppShell } from '@/components/section/AppShell';
 import './globals.css';
 
 const instrumentSerif = Instrument_Serif({
@@ -15,7 +15,7 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: 'Praesidio · AI Security Control Plane',
+  title: 'Section · AI Security Control Plane',
   description: 'Trustworthy AI, at enterprise scale.',
   icons: {
     icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],

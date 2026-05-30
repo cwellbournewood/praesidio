@@ -1,6 +1,6 @@
 # Observability stack
 
-Praesidio ships a turn-key local observability overlay: Tempo for
+Section ships a turn-key local observability overlay: Tempo for
 traces, Loki + Promtail for logs, Prometheus for metrics, and Grafana
 pre-provisioned with the same dashboards used in production.
 
@@ -13,7 +13,7 @@ docker compose \
   up --build
 ```
 
-Open <http://localhost:3001> (admin / admin) and the "Praesidio"
+Open <http://localhost:3001> (admin / admin) and the "Section"
 folder will contain the overview and compliance dashboards.
 
 | Port | Service | Notes |
@@ -41,7 +41,7 @@ quickstart: nothing about it changes when you don't use this overlay.
 ## What you get
 
 - **Metrics**: Prometheus scrapes `gateway:8080/metrics`. The
-  `Praesidio Overview` dashboard renders request rate, p50/p95/p99
+  `Section Overview` dashboard renders request rate, p50/p95/p99
   latency, decision mix (allow/transform/block), and DLP detector
   hit rates.
 - **Traces**: Each request through the gateway emits an OTLP trace
@@ -49,32 +49,32 @@ quickstart: nothing about it changes when you don't use this overlay.
   Look at the `Tempo` datasource in Grafana, or jump from a log line
   using the `trace_id=` derived field.
 - **Logs**: Promtail tails Docker stdout for any container labelled
-  `logging=promtail`. Filter by `{job="praesidio-gateway"}` in the
+  `logging=promtail`. Filter by `{job="section-gateway"}` in the
   Grafana Explore view.
 
 ## SLO & burn-rate alerting
 
-The dashboard `Praesidio — SLO & burn rate`
-(`deploy/grafana/dashboards/praesidio-slo.json`) renders the 99.9 %
+The dashboard `Section — SLO & burn rate`
+(`deploy/grafana/dashboards/section-slo.json`) renders the 99.9 %
 availability SLO for `/v1/chat/completions`: error-budget remaining over
 30 days, plus the four burn-rate panels (fast 1h / 5m, slow 6h / 30m)
 from the Google SRE multi-window multi-burn-rate model.
 
 The matching Prometheus alert rules live in
-`deploy/grafana/alerts/praesidio-slo.yaml`:
+`deploy/grafana/alerts/section-slo.yaml`:
 
 | Alert | Class | Window pair | Burn rate | For |
 |---|---|---|---|---|
-| `PraesidioFastBurn1h` | page | 1h × 5m | > 14.4 × | 2m |
-| `PraesidioSlowBurn6h` | ticket | 6h × 30m | > 6 × | 15m |
-| `PraesidioErrorBudgetExhausted` | ticket | 30d cumulative | > 0.1 % errors | 10m |
+| `SectionFastBurn1h` | page | 1h × 5m | > 14.4 × | 2m |
+| `SectionSlowBurn6h` | ticket | 6h × 30m | > 6 × | 15m |
+| `SectionErrorBudgetExhausted` | ticket | 30d cumulative | > 0.1 % errors | 10m |
 
 Both pair-alerts require **both** windows to trip before firing, which
 suppresses pages from minute-long blips while still catching real
 regressions within ~5 minutes.
 
 To load the alerts into a vanilla Prometheus instance, mount
-`praesidio-slo.yaml` into `/etc/prometheus/rules/` and add
+`section-slo.yaml` into `/etc/prometheus/rules/` and add
 `rule_files: [/etc/prometheus/rules/*.yaml]` to your Prometheus config.
 For Prometheus Operator, uncomment the `PrometheusRule` wrapper at the
 bottom of the file and `kubectl apply` it.
@@ -86,7 +86,7 @@ In production this overlay is **not** used. Instead:
 - Run a real Prometheus / Tempo / Loki (or vendor equivalents:
   Datadog, New Relic, Grafana Cloud).
 - Point the gateway at them via env (`OTEL_EXPORTER_OTLP_ENDPOINT`,
-  `PRAESIDIO_LOG_FORMAT=json`).
+  `SECTION_LOG_FORMAT=json`).
 - Enable the ServiceMonitor in the Helm chart
   (`metrics.serviceMonitor.enabled=true`) so prometheus-operator
   discovers gateway pods automatically.

@@ -1,6 +1,6 @@
 # Mode Authoring Guide
 
-This guide describes how to author a Praesidio **mode** — a signed, versioned
+This guide describes how to author a Section **mode** — a signed, versioned
 bundle that tunes detection, decision, anonymisation, vault behaviour, and UI
 terminology for a specific vertical (healthcare, finance, legal, software,
 defence, etc).
@@ -33,7 +33,7 @@ build time (`make bundle`).
 The manifest. One per mode.
 
 ```yaml
-apiVersion: praesidio/v1
+apiVersion: section/v1
 kind: Mode
 metadata:
   id: healthcare              # lowercase, [a-z0-9-]+
@@ -45,7 +45,7 @@ metadata:
   description: |
     HIPAA Safe-Harbor + GDPR Art.9 tuning. Designed for clinical assistants,
     discharge-summary drafting, and de-identification of PHI for analytics.
-  homepage: https://github.com/cwellbournewood/praesidio/tree/main/examples/policies/modes/healthcare
+  homepage: https://github.com/cwellbournewood/section/tree/main/examples/policies/modes/healthcare
   license: Apache-2.0
 spec:
   extends: pii-strict          # baseline policy this mode layers on; or "none"
@@ -85,7 +85,7 @@ Declares the domain recognisers. Three sources are supported:
    adverse-event) where lexical patterns are insufficient.
 
 ```yaml
-apiVersion: praesidio/v1
+apiVersion: section/v1
 kind: Entities
 spec:
   presidio:                    # enable + tune built-in recognisers
@@ -144,7 +144,7 @@ mode targets. This drives the **compliance report** view in the UI and the
 auto-generated coverage matrix.
 
 ```yaml
-apiVersion: praesidio/v1
+apiVersion: section/v1
 kind: ComplianceMap
 spec:
   mappings:
@@ -167,7 +167,7 @@ Vault behaviour for this mode — TTLs, re-identification scopes, break-glass
 roles.
 
 ```yaml
-apiVersion: praesidio/v1
+apiVersion: section/v1
 kind: VaultProfile
 spec:
   defaults:
@@ -268,12 +268,12 @@ cosign sign-blob --key cosign.key \
   > examples/policies/modes/healthcare/mode.sig
 
 # Publish to a mode registry (OCI artefact)
-make mode-publish MODE=healthcare REGISTRY=ghcr.io/example/praesidio-modes
+make mode-publish MODE=healthcare REGISTRY=ghcr.io/example/section-modes
 ```
 
 Modes are distributed as OCI artefacts. The gateway verifies the cosign
 signature before loading; unsigned modes load only when
-`PRAESIDIO_ALLOW_UNSIGNED_MODES=true` (dev-only).
+`SECTION_ALLOW_UNSIGNED_MODES=true` (dev-only).
 
 ## 10. Conformance checklist
 

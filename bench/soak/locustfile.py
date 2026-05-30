@@ -1,4 +1,4 @@
-"""Locust soak / load test for Praesidio gateway.
+"""Locust soak / load test for Section gateway.
 
 Three user classes mix the same three scenarios used by the perf baseline:
 
@@ -11,9 +11,9 @@ Default mix (weights): 5 / 3 / 2. Override via env:
     LOCUST_SHORT_WEIGHT=5 LOCUST_LONG_WEIGHT=3 LOCUST_STREAM_WEIGHT=2
 
 Target the gateway with ``--host http://localhost:8080`` (Locust flag) or via
-the ``PRAESIDIO_HOST`` env (used by the wrapper script).
+the ``SECTION_HOST`` env (used by the wrapper script).
 
-Auth: set ``PRAESIDIO_API_KEY`` (default ``praesidio-demo-key``). Each user
+Auth: set ``SECTION_API_KEY`` (default ``section-demo-key``). Each user
 sends it as ``X-API-Key``.
 
 To keep numbers comparable with the perf baseline this file uses identical
@@ -31,9 +31,9 @@ from locust import HttpUser, between, events, task
 # Config
 # ---------------------------------------------------------------------------
 
-API_KEY = os.environ.get("PRAESIDIO_API_KEY", "praesidio-demo-key")
-TENANT = os.environ.get("PRAESIDIO_TENANT", "default")
-MODEL = os.environ.get("PRAESIDIO_MODEL", "gpt-4o-mini")
+API_KEY = os.environ.get("SECTION_API_KEY", "section-demo-key")
+TENANT = os.environ.get("SECTION_TENANT", "default")
+MODEL = os.environ.get("SECTION_MODEL", "gpt-4o-mini")
 
 SHORT_WEIGHT = int(os.environ.get("LOCUST_SHORT_WEIGHT", "5"))
 LONG_WEIGHT = int(os.environ.get("LOCUST_LONG_WEIGHT", "3"))
@@ -99,7 +99,7 @@ def _payload(prompt: str, *, stream: bool) -> dict:
 def _headers() -> dict:
     return {
         "X-API-Key": API_KEY,
-        "X-Praesidio-Tenant": TENANT,
+        "X-Section-Tenant": TENANT,
         "Content-Type": "application/json",
     }
 
@@ -124,7 +124,7 @@ class ShortChatUser(HttpUser):
         ) as r:
             if r.status_code == 200:
                 r.success()
-            elif r.status_code == 403 and r.headers.get("x-praesidio-decision") == "block":
+            elif r.status_code == 403 and r.headers.get("x-section-decision") == "block":
                 # Policy block on a PII-tainted prompt — expected, not an error.
                 r.success()
             else:
@@ -146,7 +146,7 @@ class LongChatUser(HttpUser):
         ) as r:
             if r.status_code == 200:
                 r.success()
-            elif r.status_code == 403 and r.headers.get("x-praesidio-decision") == "block":
+            elif r.status_code == 403 and r.headers.get("x-section-decision") == "block":
                 r.success()
             else:
                 r.failure(f"status={r.status_code}")
@@ -167,7 +167,7 @@ class StreamChatUser(HttpUser):
             stream=True,
         ) as r:
             if r.status_code != 200:
-                if r.status_code == 403 and r.headers.get("x-praesidio-decision") == "block":
+                if r.status_code == 403 and r.headers.get("x-section-decision") == "block":
                     r.success()
                 else:
                     r.failure(f"status={r.status_code}")

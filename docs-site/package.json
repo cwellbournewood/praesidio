@@ -1,9 +1,9 @@
 {
-  "name": "praesidio-docs-site",
+  "name": "section-docs-site",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Praesidio documentation site (Astro + Starlight).",
+  "description": "Section documentation site (Astro + Starlight).",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",

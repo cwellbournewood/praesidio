@@ -2,7 +2,7 @@
 /**
  * build-release — bundle the Web Store .zip, the signed .crx, the
  * updates.xml template, and INSTALL.md into a single
- * `praesidio-extension-release-<ver>.zip` for one-download distribution.
+ * `section-extension-release-<ver>.zip` for one-download distribution.
  *
  * Run after build:zip and build:crx (or with --auto to chain).
  * Uses the same hand-rolled zip writer as build-zip.mjs — no extra deps.
@@ -29,8 +29,8 @@ if (wantAuto) {
 }
 
 const entries = [
-  `praesidio-browser-extension-${version}.zip`,
-  `praesidio-browser-extension-${version}.crx`,
+  `section-browser-extension-${version}.zip`,
+  `section-browser-extension-${version}.crx`,
   `updates.xml`,
   `INSTALL.md`,
 ];
@@ -44,7 +44,7 @@ if (missing.length) {
   process.exit(1);
 }
 
-const releasePath = resolve(distZipDir, `praesidio-extension-release-${version}.zip`);
+const releasePath = resolve(distZipDir, `section-extension-release-${version}.zip`);
 
 function toDosDate(d) { return ((d.getFullYear() - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate(); }
 function toDosTime(d) { return (d.getHours() << 11) | (d.getMinutes() << 5) | Math.floor(d.getSeconds() / 2); }

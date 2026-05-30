@@ -4,12 +4,12 @@
 apiVersion: templates.gatekeeper.sh/v1
 kind: ConstraintTemplate
 metadata:
-  name: praesidiollmegressguard
+  name: sectionllmegressguard
 spec:
   crd:
     spec:
       names:
-        kind: PraesidioLlmEgressGuard
+        kind: SectionLlmEgressGuard
       validation:
         openAPIV3Schema:
           type: object
@@ -23,7 +23,7 @@ spec:
   targets:
     - target: admission.k8s.gatekeeper.sh
       rego: |
-        package praesidiollmegressguard
+        package sectionllmegressguard
 
         default mounts_cloud_creds := false
         default has_direct_llm_host := false
@@ -50,12 +50,12 @@ spec:
         }
 
         has_bypass {
-          input.review.object.metadata.annotations["praesidio.dev/admission-bypass"] == "true"
+          input.review.object.metadata.annotations["section.dev/admission-bypass"] == "true"
         }
 
         violation[{"msg": msg}] {
           not has_bypass
           mounts_cloud_creds
           has_direct_llm_host
-          msg := "Pod mounts cloud credentials and connects directly to an LLM provider; route through praesidio-gateway."
+          msg := "Pod mounts cloud credentials and connects directly to an LLM provider; route through section-gateway."
         }

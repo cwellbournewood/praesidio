@@ -1,8 +1,8 @@
 /**
- * Shared types for the Praesidio browser extension.
+ * Shared types for the Section browser extension.
  *
  * Mirror of the gateway's pydantic shapes in
- * `services/gateway/praesidio_gateway/api/v1/scan.py`.
+ * `services/gateway/section_gateway/api/v1/scan.py`.
  * Keep the wire format in lockstep — there is no codegen.
  */
 
@@ -152,7 +152,7 @@ export const DEFAULT_SETTINGS: Settings = {
     mistral: true,
   },
   oidcIssuer: '',
-  oidcClientId: 'praesidio-edge',
+  oidcClientId: 'section-edge',
   locale: null,
 };
 
@@ -193,7 +193,7 @@ export interface DecisionRecord {
  * isolated-world content script. The `tag` is a magic string both sides
  * check before parsing.
  */
-export const PAGE_BRIDGE_TAG = '__praesidio__' as const;
+export const PAGE_BRIDGE_TAG = '__section__' as const;
 
 export type PageBridgeMessage =
   | { tag: typeof PAGE_BRIDGE_TAG; kind: 'fetch.intercept'; id: string; url: string; method: string; body: string }

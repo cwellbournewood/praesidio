@@ -3,9 +3,9 @@
 import useSWR from 'swr';
 import { ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
-import { KpiCard } from '@/components/praesidio/KpiCard';
-import { EventRow } from '@/components/praesidio/EventRow';
-import { MetricSpark } from '@/components/praesidio/MetricSpark';
+import { KpiCard } from '@/components/section/KpiCard';
+import { EventRow } from '@/components/section/EventRow';
+import { MetricSpark } from '@/components/section/MetricSpark';
 import { Skeleton } from '@/components/ui/skeleton';
 import { swrFetcher } from '@/lib/api';
 import type { AuditEvent, DashboardKpis } from '@/lib/types';
@@ -217,7 +217,7 @@ export default function DashboardPage() {
           request id, or open a policy. The console is keyboard-first.
         </p>
         <span className="font-mono text-[9.5px] tracking-[0.14em] uppercase">
-          colophon · praesidio cp · v0.1
+          colophon · section cp · v0.1
         </span>
       </footer>
     </div>

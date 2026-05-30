@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Praesidio end-to-end demo.
+# Section end-to-end demo.
 #
 # Sends three illustrative requests through the gateway and validates that
 # each was handled per policy:
 #
 #   1. PII (person + email)  -> 200, transform (tokenised)
-#   2. AWS access key        -> 403, with X-Praesidio-Reason header
+#   2. AWS access key        -> 403, with X-Section-Reason header
 #   3. IBAN                  -> 200, redacted
 #
 # If OPENAI_API_KEY is unset, the upstream call assertion for request 1 is
@@ -22,7 +22,7 @@
 set -eu
 
 GATEWAY_URL="${1:-${GATEWAY_URL:-http://localhost:8080}}"
-API_KEY="${PRAESIDIO_API_KEYS:-praesidio-demo-key}"
+API_KEY="${SECTION_API_KEYS:-section-demo-key}"
 TIMEOUT="${TIMEOUT:-30}"
 
 pass=0
@@ -80,11 +80,11 @@ latest_decision() {
 }
 
 # Send a chat-completions request. Captures HTTP status and the
-# X-Praesidio-Reason header into globals: STATUS, REASON, BODY.
+# X-Section-Reason header into globals: STATUS, REASON, BODY.
 send_chat() {
   prompt="$1"
-  tmp_body=$(mktemp -t praesidio.XXXXXX)
-  tmp_head=$(mktemp -t praesidio.XXXXXX)
+  tmp_body=$(mktemp -t section.XXXXXX)
+  tmp_head=$(mktemp -t section.XXXXXX)
   STATUS=$(curl -sS -o "$tmp_body" -D "$tmp_head" -w '%{http_code}' \
     -H "Authorization: Bearer ${API_KEY}" \
     -H 'Content-Type: application/json' \
@@ -129,7 +129,7 @@ esac
 printf '\n%s\n' "$(color 1 ":: Test 2: AWS access key")"
 send_chat 'Use AWS access key AKIAIOSFODNN7EXAMPLE and secret wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY to upload'
 info "HTTP ${STATUS}"
-info "X-Praesidio-Reason: ${REASON:-<none>}"
+info "X-Section-Reason: ${REASON:-<none>}"
 decision=$(latest_decision || true)
 info "Latest decision: ${decision:-<none>}"
 case "$STATUS" in
@@ -137,9 +137,9 @@ case "$STATUS" in
   *)   bad "Expected 403, got ${STATUS}" ;;
 esac
 if [ -n "$REASON" ]; then
-  ok "X-Praesidio-Reason header present"
+  ok "X-Section-Reason header present"
 else
-  bad "X-Praesidio-Reason header missing"
+  bad "X-Section-Reason header missing"
 fi
 case "$decision" in
   block) ok "Decision was 'block'" ;;

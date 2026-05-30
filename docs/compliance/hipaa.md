@@ -1,10 +1,10 @@
-# HIPAA — Praesidio control mapping
+# HIPAA — Section control mapping
 
 HIPAA Security Rule (45 CFR §164.302–318) and Privacy Rule selected items.
-Praesidio is suitable as a control surface for covered entities and
+Section is suitable as a control surface for covered entities and
 business associates handling ePHI.
 
-| Safeguard | Specification | Praesidio control |
+| Safeguard | Specification | Section control |
 |---|---|---|
 | Administrative §164.308(a)(1) | Risk analysis & management | Policy bundles + audit + simulation |
 | Administrative §164.308(a)(3) | Workforce security | RBAC roles; OIDC; admin actions audited |

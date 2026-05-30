@@ -7,7 +7,7 @@
 #   SOAK_RPS           target requests per sec (default 100)
 #   SOAK_USERS         peak user count         (default 4 * RPS, capped 800)
 #   SOAK_SPAWN_RATE    users/sec to spawn      (default users/30)
-#   PRAESIDIO_API_KEY  X-API-Key value         (default praesidio-demo-key)
+#   SECTION_API_KEY  X-API-Key value         (default section-demo-key)
 #
 # Output:
 #   bench/soak/results/<utc>/{stats,history,failures,exceptions}.csv

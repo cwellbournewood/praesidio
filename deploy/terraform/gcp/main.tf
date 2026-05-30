@@ -1,5 +1,5 @@
 ################################################################################
-# Praesidio reference Terraform — GCP
+# Section reference Terraform — GCP
 #
 # !!! STUB QUALITY !!! Reference starting point, not turnkey production.
 ################################################################################
@@ -187,13 +187,13 @@ resource "google_sql_database_instance" "postgres" {
   deletion_protection = true
 }
 
-resource "google_sql_database" "praesidio" {
-  name     = "praesidio"
+resource "google_sql_database" "section" {
+  name     = "section"
   instance = google_sql_database_instance.postgres.name
 }
 
-resource "google_sql_user" "praesidio" {
-  name     = "praesidio"
+resource "google_sql_user" "section" {
+  name     = "section"
   instance = google_sql_database_instance.postgres.name
   password = random_password.postgres.result
 }
@@ -250,7 +250,7 @@ resource "google_container_cluster" "this" {
 
 resource "google_service_account" "gateway" {
   account_id   = "${local.name}-gateway"
-  display_name = "Praesidio gateway"
+  display_name = "Section gateway"
 }
 
 resource "google_kms_crypto_key_iam_member" "gateway_kms" {

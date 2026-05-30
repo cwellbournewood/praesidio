@@ -1,7 +1,7 @@
 # OIDC: Google Workspace
 
 Short walkthrough for using **Google Workspace** (Cloud Identity) as the
-identity provider for Praesidio. Google's OIDC endpoint does **not**
+identity provider for Section. Google's OIDC endpoint does **not**
 return group memberships by default — you'll need an extra integration
 step (see [Group claim](#group-claim)).
 
@@ -13,10 +13,10 @@ env var see [`oidc-okta.md#step-4-wire-the-ui`](oidc-okta.md).
 1. <https://console.cloud.google.com> → **APIs & Services → Credentials
    → Create credentials → OAuth client ID**.
 2. **Application type**: `Web application`.
-3. **Name**: `Praesidio`.
-4. **Authorized JavaScript origins**: `https://ui.praesidio.example`.
+3. **Name**: `Section`.
+4. **Authorized JavaScript origins**: `https://ui.section.example`.
 5. **Authorized redirect URIs**:
-   `https://ui.praesidio.example/api/auth/callback/google`.
+   `https://ui.section.example/api/auth/callback/google`.
 6. Click **Create**. Copy the **Client ID** and **Client secret**.
 
 ## 2. OAuth consent screen
@@ -53,11 +53,11 @@ Steps:
    Authorization: Bearer <service-account-jwt>
    ```
 
-3. Map the returned group emails (e.g. `praesidio-admins@example.com`)
-   to roles via `PRAESIDIO_RBAC_GROUP_MAP`:
+3. Map the returned group emails (e.g. `section-admins@example.com`)
+   to roles via `SECTION_RBAC_GROUP_MAP`:
 
    ```ini
-   PRAESIDIO_RBAC_GROUP_MAP={"praesidio-admins@example.com":["admin"],"praesidio-ops@example.com":["operator","viewer"],"praesidio-auditors@example.com":["auditor","viewer"],"praesidio-viewers@example.com":["viewer"]}
+   SECTION_RBAC_GROUP_MAP={"section-admins@example.com":["admin"],"section-ops@example.com":["operator","viewer"],"section-auditors@example.com":["auditor","viewer"],"section-viewers@example.com":["viewer"]}
    ```
 
 ### Option B — Static role per user via hosted domain
@@ -67,10 +67,10 @@ present on Workspace tokens) and grant `admin` to a hard-coded allowlist
 of email addresses. This is a stop-gap, not a production model.
 
 ```ini
-PRAESIDIO_ADMIN_EMAILS=alice@example.com,bob@example.com
+SECTION_ADMIN_EMAILS=alice@example.com,bob@example.com
 ```
 
-The UI reads this var and stamps `X-Praesidio-Scopes: admin` (or empty)
+The UI reads this var and stamps `X-Section-Scopes: admin` (or empty)
 on calls to the gateway accordingly.
 
 ## 4. UI env
@@ -80,7 +80,7 @@ OIDC_PROVIDER=google
 OIDC_ISSUER=https://accounts.google.com
 OIDC_CLIENT_ID=<client-id>.apps.googleusercontent.com
 OIDC_CLIENT_SECRET=<client-secret>
-OIDC_REDIRECT_URI=https://ui.praesidio.example/api/auth/callback/google
+OIDC_REDIRECT_URI=https://ui.section.example/api/auth/callback/google
 OIDC_SCOPES=openid email profile
 OIDC_GOOGLE_HD=example.com           # restrict to your Workspace domain
 ```
@@ -90,7 +90,7 @@ OIDC_GOOGLE_HD=example.com           # restrict to your Workspace domain
 ```bash
 CLIENT_ID=<client-id>.apps.googleusercontent.com
 CLIENT_SECRET=<client-secret>
-REDIRECT=https://ui.praesidio.example/api/auth/callback/google
+REDIRECT=https://ui.section.example/api/auth/callback/google
 CODE=<auth-code>
 
 curl -sS -X POST "https://oauth2.googleapis.com/token" \
@@ -109,5 +109,5 @@ curl -sS -X POST "https://oauth2.googleapis.com/token" \
   hand-rolled validators don't.
 * Tokens expire fast (1 hour). Use the refresh token (request
   `access_type=offline`) for headless workflows.
-* Google does not emit a `tenant_id` claim. For multi-tenant Praesidio
+* Google does not emit a `tenant_id` claim. For multi-tenant Section
   deployments use the email domain or a custom DB lookup.

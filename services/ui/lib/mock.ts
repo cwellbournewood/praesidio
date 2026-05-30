@@ -248,7 +248,7 @@ export function mockKpis(): DashboardKpis {
   };
 }
 
-const PII_STRICT_YAML = `apiVersion: praesidio/v1
+const PII_STRICT_YAML = `apiVersion: section/v1
 kind: Policy
 metadata:
   id: pii-strict
@@ -297,7 +297,7 @@ spec:
     severity_min: info
 `;
 
-const CODE_PROTECTION_YAML = `apiVersion: praesidio/v1
+const CODE_PROTECTION_YAML = `apiVersion: section/v1
 kind: Policy
 metadata:
   id: code-protection
@@ -334,7 +334,7 @@ spec:
   fail_mode: closed
 `;
 
-const HEALTHCARE_YAML = `apiVersion: praesidio/v1
+const HEALTHCARE_YAML = `apiVersion: section/v1
 kind: Policy
 metadata:
   id: healthcare-phi

@@ -1,25 +1,25 @@
 /**
- * "Praesidio: Toggle Local Proxy" — start or stop the
- * praesidio-edge-proxy child process.
+ * "Section: Toggle Local Proxy" — start or stop the
+ * section-edge-proxy child process.
  */
 
 import * as vscode from "vscode";
 
 import type { ProxyController } from "../proxy/controller.js";
 import type { AuthManager } from "../auth.js";
-import type { PraesidioSettings } from "../settings.js";
+import type { SectionSettings } from "../settings.js";
 
 export interface ToggleProxyDeps {
   controller: ProxyController;
   auth: AuthManager;
-  getSettings: () => PraesidioSettings;
+  getSettings: () => SectionSettings;
 }
 
 export function registerToggleProxy(
   deps: ToggleProxyDeps,
 ): vscode.Disposable {
   return vscode.commands.registerCommand(
-    "praesidio.toggleProxy",
+    "section.toggleProxy",
     async () => {
       const s = deps.getSettings();
       if (
@@ -28,7 +28,7 @@ export function registerToggleProxy(
       ) {
         await deps.controller.stop();
         void vscode.window.showInformationMessage(
-          "Praesidio: local proxy stopped.",
+          "Section: local proxy stopped.",
         );
         return;
       }
@@ -42,11 +42,11 @@ export function registerToggleProxy(
           bearerToken: cred.bearerToken ?? null,
         });
         void vscode.window.showInformationMessage(
-          `Praesidio: local proxy started on port ${s.proxy.port}. Set HTTPS_PROXY=http://localhost:${s.proxy.port}.`,
+          `Section: local proxy started on port ${s.proxy.port}. Set HTTPS_PROXY=http://localhost:${s.proxy.port}.`,
         );
       } catch (err) {
         void vscode.window.showErrorMessage(
-          `Praesidio: failed to start proxy — ${(err as Error).message}. Is praesidio-edge-proxy on PATH?`,
+          `Section: failed to start proxy — ${(err as Error).message}. Is section-edge-proxy on PATH?`,
         );
       }
     },

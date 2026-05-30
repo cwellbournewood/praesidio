@@ -17,6 +17,6 @@ terraform {
   #   resource_group_name  = "tfstate-rg"
   #   storage_account_name = "tfstateacct"
   #   container_name       = "tfstate"
-  #   key                  = "praesidio/azure/terraform.tfstate"
+  #   key                  = "section/azure/terraform.tfstate"
   # }
 }

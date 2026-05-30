@@ -1,4 +1,4 @@
-"""praesidio-policy CLI (G9).
+"""section-policy CLI (G9).
 
 Covers:
   * lint OK on a healthy bundle.
@@ -14,26 +14,26 @@ import json
 import tempfile
 from pathlib import Path
 
-from praesidio_gateway.cli.policy_cli import main
+from section_gateway.cli.policy_cli import main
 
 
 def _write_bundle(base: Path, policy_yaml: str, *, name: str = "0001.yaml") -> None:
     (base / "policies").mkdir(parents=True, exist_ok=True)
     (base / "manifest.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: Bundle\n"
+        "apiVersion: section/v1\nkind: Bundle\n"
         "metadata: {name: t, version: '0'}\nspec: {includes: []}\n"
     )
     (base / "models.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: ModelRegistry\nspec: {models: [], endpoints: []}\n"
+        "apiVersion: section/v1\nkind: ModelRegistry\nspec: {models: [], endpoints: []}\n"
     )
     (base / "routes.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: Routes\nspec: []\n"
+        "apiVersion: section/v1\nkind: Routes\nspec: []\n"
     )
     (base / "policies" / name).write_text(policy_yaml)
 
 
 _HEALTHY = """\
-apiVersion: praesidio/v1
+apiVersion: section/v1
 kind: Policy
 metadata: {id: p1, name: p1}
 spec:
@@ -59,7 +59,7 @@ def test_lint_clean_bundle(capsys) -> None:
 
 def test_lint_flags_transform_without_transforms(capsys) -> None:
     bad = """\
-apiVersion: praesidio/v1
+apiVersion: section/v1
 kind: Policy
 metadata: {id: p2, name: p2}
 spec:
@@ -92,7 +92,7 @@ def test_lint_flags_duplicate_ids(capsys) -> None:
 
 def test_lint_warns_on_unknown_detector(capsys) -> None:
     p = """\
-apiVersion: praesidio/v1
+apiVersion: section/v1
 kind: Policy
 metadata: {id: p3, name: p3}
 spec:
@@ -117,7 +117,7 @@ spec:
 
 def test_lint_warns_on_shadowed_allowlist(capsys) -> None:
     p = """\
-apiVersion: praesidio/v1
+apiVersion: section/v1
 kind: Policy
 metadata: {id: p4, name: p4}
 spec:
@@ -189,7 +189,7 @@ def test_test_subcommand_reports_failure(capsys) -> None:
 
 
 def test_cli_help_runs(capsys) -> None:
-    """`praesidio-policy --help` must not crash and must list both subcommands."""
+    """`section-policy --help` must not crash and must list both subcommands."""
     import pytest
 
     with pytest.raises(SystemExit) as e:

@@ -72,7 +72,7 @@
 {"id": "c072", "text": "# SPDX-License-Identifier: MIT — see LICENSE for the full text.", "labels": ["code.proprietary_marker"]}
 {"id": "c073", "text": "/* Copyright (c) 2025 Northwind LLC. All rights reserved. Licensed under BSD-3-Clause. */", "labels": ["code.proprietary_marker"]}
 {"id": "c074", "text": "// Copyright 2023 Globex Corp. Distributed under the GPL v3 with classpath exception.", "labels": ["code.proprietary_marker"]}
-{"id": "c075", "text": "# Copyright 2026 Praesidio Authors — Apache-2.0. See LICENSE for the full notice.", "labels": ["code.proprietary_marker"]}
+{"id": "c075", "text": "# Copyright 2026 Section Authors — Apache-2.0. See LICENSE for the full notice.", "labels": ["code.proprietary_marker"]}
 {"id": "c076", "text": "/* MIT License — Copyright (c) 2022 Polaris Systems. Permission is hereby granted... */", "labels": ["code.proprietary_marker"]}
 {"id": "c077", "text": "// SPDX-FileCopyrightText: 2024 Helix Labs <legal@helix.example> SPDX-License-Identifier: Apache-2.0", "labels": ["code.proprietary_marker"]}
 {"id": "c078", "text": "/* Source code header: Copyright (c) 2025 Vanguard Systems — Proprietary, all rights reserved. */", "labels": ["code.proprietary_marker"]}

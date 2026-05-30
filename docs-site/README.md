@@ -1,4 +1,4 @@
-# Praesidio docs site
+# Section docs site
 
 Static documentation site built with **Astro + Starlight**.
 

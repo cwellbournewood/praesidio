@@ -2,28 +2,28 @@
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 
-// Praesidio documentation site.
+// Section documentation site.
 // Source markdown lives in ../docs and is mirrored into src/content/docs/
 // by scripts/sync-docs.mjs (run automatically before build).
 export default defineConfig({
   outDir: "./dist",
   integrations: [
     starlight({
-      title: "Praesidio",
+      title: "Section",
       description:
         "Open-source AI Security Control Plane & Semantic Data Loss Prevention platform.",
       logo: {
-        src: "./src/assets/praesidio-mark.svg",
+        src: "./src/assets/section-mark.svg",
         replacesTitle: false,
       },
       social: {
-        github: "https://github.com/cwellbournewood/praesidio",
+        github: "https://github.com/cwellbournewood/section",
       },
       editLink: {
-        baseUrl: "https://github.com/cwellbournewood/praesidio/edit/main/docs/",
+        baseUrl: "https://github.com/cwellbournewood/section/edit/main/docs/",
       },
       lastUpdated: true,
-      customCss: ["./src/styles/praesidio.css"],
+      customCss: ["./src/styles/section.css"],
       defaultLocale: "en",
       sidebar: [
         {

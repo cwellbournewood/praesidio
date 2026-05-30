@@ -6,9 +6,9 @@ from pathlib import Path
 
 import yaml
 
-from praesidio_gateway.policy.engine import evaluate
-from praesidio_gateway.policy.loader import PolicyBundle
-from praesidio_gateway.policy.models import (
+from section_gateway.policy.engine import evaluate
+from section_gateway.policy.loader import PolicyBundle
+from section_gateway.policy.models import (
     DecisionContext,
     Finding,
     ModelRequestCtx,

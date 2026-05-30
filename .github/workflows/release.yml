@@ -170,8 +170,8 @@ jobs:
         id: pkg
         run: |
           mkdir -p dist
-          helm package deploy/helm/praesidio --destination dist
-          chart=$(ls dist/praesidio-*.tgz | head -1)
+          helm package deploy/helm/section --destination dist
+          chart=$(ls dist/section-*.tgz | head -1)
           echo "chart=${chart}" >> "$GITHUB_OUTPUT"
 
       - name: Log in to GHCR (OCI chart push)
@@ -189,13 +189,13 @@ jobs:
           # Capture the pushed digest for cosign signing.
           digest=$(echo "$out" | awk -F'Digest: ' 'NF>1{print $2}' | tr -d '\r')
           echo "digest=${digest}" >> "$GITHUB_OUTPUT"
-          version=$(basename "$CHART" .tgz | sed 's/^praesidio-//')
+          version=$(basename "$CHART" .tgz | sed 's/^section-//')
           echo "version=${version}" >> "$GITHUB_OUTPUT"
 
       - name: Cosign sign chart (keyless)
         if: steps.push.outputs.digest != ''
         env:
-          REF: ghcr.io/${{ github.repository_owner }}/charts/praesidio@${{ steps.push.outputs.digest }}
+          REF: ghcr.io/${{ github.repository_owner }}/charts/section@${{ steps.push.outputs.digest }}
         run: cosign sign --yes "$REF"
 
       - name: Upload chart tarball
@@ -236,23 +236,23 @@ jobs:
       - name: Compute checksums
         working-directory: dist
         run: |
-          sha256sum praesidio-*.tgz sbom-*.cdx.json > praesidio-release.sha256
+          sha256sum section-*.tgz sbom-*.cdx.json > section-release.sha256
 
       - name: Cosign sign checksums (blob, keyless)
         working-directory: dist
         run: |
-          cosign sign-blob --yes --output-signature praesidio-release.sha256.sig \
-              --output-certificate praesidio-release.sha256.pem \
-              praesidio-release.sha256
+          cosign sign-blob --yes --output-signature section-release.sha256.sig \
+              --output-certificate section-release.sha256.pem \
+              section-release.sha256
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
           files: |
-            dist/praesidio-*.tgz
+            dist/section-*.tgz
             dist/sbom-gateway.cdx.json
             dist/sbom-ui.cdx.json
-            dist/praesidio-release.sha256
-            dist/praesidio-release.sha256.sig
-            dist/praesidio-release.sha256.pem
+            dist/section-release.sha256
+            dist/section-release.sha256.sig
+            dist/section-release.sha256.pem

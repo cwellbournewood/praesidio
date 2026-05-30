@@ -1,6 +1,6 @@
 # OIDC integration
 
-Praesidio uses OpenID Connect for human authentication to the admin UI
+Section uses OpenID Connect for human authentication to the admin UI
 and the privileged `/admin/*` API. API keys remain the mechanism for
 data-plane traffic (LLM calls). This page documents the integration
 for the two most commonly deployed identity providers — **Keycloak**
@@ -8,29 +8,29 @@ for the two most commonly deployed identity providers — **Keycloak**
 
 ## Required claims
 
-Praesidio expects the following claims on the ID token / userinfo
+Section expects the following claims on the ID token / userinfo
 response, regardless of provider:
 
 | Claim | Type | Purpose |
 |---|---|---|
 | `sub` | string | Stable principal identifier; written to every audit row |
 | `email` | string | Display only |
-| `groups` | array of string | Mapped to Praesidio RBAC roles |
-| `tenant_id` | string | The active Praesidio tenant; gates row-level data access |
+| `groups` | array of string | Mapped to Section RBAC roles |
+| `tenant_id` | string | The active Section tenant; gates row-level data access |
 
-`groups` is mapped to roles via `PRAESIDIO_RBAC_GROUP_MAP`, a JSON
+`groups` is mapped to roles via `SECTION_RBAC_GROUP_MAP`, a JSON
 object like:
 
 ```json
 {
-  "praesidio-admins":   ["admin"],
-  "praesidio-ops":      ["operator", "viewer"],
-  "praesidio-auditors": ["auditor", "viewer"],
-  "praesidio-viewers":  ["viewer"]
+  "section-admins":   ["admin"],
+  "section-ops":      ["operator", "viewer"],
+  "section-auditors": ["auditor", "viewer"],
+  "section-viewers":  ["viewer"]
 }
 ```
 
-Praesidio's built-in roles:
+Section's built-in roles:
 
 | Role | Capability |
 |---|---|
@@ -61,7 +61,7 @@ added to the client), add it explicitly.
 ### Local dev (Docker Compose overlay)
 
 This repo ships a Keycloak overlay with a pre-seeded realm AND a custom
-`praesidio` login theme so you can exercise the full SSO flow without a
+`section` login theme so you can exercise the full SSO flow without a
 separate IdP install:
 
 ```bash
@@ -76,47 +76,47 @@ docker compose \
   up --build                  # the full stack
 ```
 
-The Keycloak container mounts `./deploy/keycloak/themes/praesidio` at
-`/opt/keycloak/themes/praesidio` (read-only). The realm export sets
-`loginTheme: praesidio`, so every authentication flow renders in the
+The Keycloak container mounts `./deploy/keycloak/themes/section` at
+`/opt/keycloak/themes/section` (read-only). The realm export sets
+`loginTheme: section`, so every authentication flow renders in the
 Instrument aesthetic (bone canvas + ink + vermillion, Instrument Serif
 headline, JetBrains Mono labels, hairline borders, signal squares).
-Edit the CSS at `deploy/keycloak/themes/praesidio/login/resources/css/login.css`
+Edit the CSS at `deploy/keycloak/themes/section/login/resources/css/login.css`
 and refresh — Keycloak picks up theme changes without a restart.
 
 | URL | Credentials |
 |---|---|
 | Keycloak admin: <http://localhost:8081> | `admin / admin` |
-| Pre-seeded realm: `praesidio` | imported from `deploy/keycloak/realm-export.json` |
+| Pre-seeded realm: `section` | imported from `deploy/keycloak/realm-export.json` |
 | Demo users | see realm file below |
 
 Pre-seeded users (passwords match usernames for dev convenience):
 
 | Username | Groups | Role mapped |
 |---|---|---|
-| `alice` | `praesidio-admins` | admin |
-| `bob` | `praesidio-ops` | operator |
-| `carol` | `praesidio-auditors` | auditor |
-| `dan` | `praesidio-viewers` | viewer |
+| `alice` | `section-admins` | admin |
+| `bob` | `section-ops` | operator |
+| `carol` | `section-auditors` | auditor |
+| `dan` | `section-viewers` | viewer |
 
 `.env` values for the gateway / UI when using this overlay:
 
 ```ini
-OIDC_ISSUER=http://keycloak:8080/realms/praesidio
-OIDC_CLIENT_ID=praesidio
-OIDC_CLIENT_SECRET=praesidio-demo-secret
+OIDC_ISSUER=http://keycloak:8080/realms/section
+OIDC_CLIENT_ID=section
+OIDC_CLIENT_SECRET=section-demo-secret
 OIDC_REDIRECT_URI=http://localhost:3000/api/auth/callback
-PRAESIDIO_RBAC_GROUP_MAP={"praesidio-admins":["admin"],"praesidio-ops":["operator","viewer"],"praesidio-auditors":["auditor","viewer"],"praesidio-viewers":["viewer"]}
+SECTION_RBAC_GROUP_MAP={"section-admins":["admin"],"section-ops":["operator","viewer"],"section-auditors":["auditor","viewer"],"section-viewers":["viewer"]}
 ```
 
 ### Production Keycloak
 
-1. Create a confidential client `praesidio` in your realm.
+1. Create a confidential client `section` in your realm.
 2. **Settings**:
    - Client type: `OpenID Connect`
    - Standard flow enabled, Direct access grants **disabled**.
-   - Valid redirect URIs: `https://ui.praesidio.example/api/auth/callback`
-   - Web origins: `https://ui.praesidio.example`
+   - Valid redirect URIs: `https://ui.section.example/api/auth/callback`
+   - Web origins: `https://ui.section.example`
 3. **Client scopes**: add `groups` (built-in or via the *groups*
    mapper). Make it `default`.
 4. **Mappers**: ensure a Group Membership mapper writes `groups`
@@ -130,18 +130,18 @@ PRAESIDIO_RBAC_GROUP_MAP={"praesidio-admins":["admin"],"praesidio-ops":["operato
 ## Microsoft Entra ID (Azure AD)
 
 1. **App registration** -> *New registration*.
-   - Name: `Praesidio`
-   - Redirect URI: Web, `https://ui.praesidio.example/api/auth/callback`
+   - Name: `Section`
+   - Redirect URI: Web, `https://ui.section.example/api/auth/callback`
 2. **Authentication** -> enable ID tokens. Disable implicit grant.
 3. **Certificates & secrets** -> New client secret. Copy to
    `OIDC_CLIENT_SECRET`.
 4. **Token configuration**:
    - Add optional claim: `groups` (Groups assigned to the user; emit
      as group **names**, not object IDs, if your AAD edition allows
-     — otherwise map IDs in `PRAESIDIO_RBAC_GROUP_MAP`).
-   - Add optional claim: `tid` (already present). Praesidio maps
+     — otherwise map IDs in `SECTION_RBAC_GROUP_MAP`).
+   - Add optional claim: `tid` (already present). Section maps
      `tid` (Azure tenant) to its own `tenant_id` claim via the
-     gateway-side `PRAESIDIO_OIDC_TENANT_CLAIM=tid` override.
+     gateway-side `SECTION_OIDC_TENANT_CLAIM=tid` override.
 5. **API permissions**: `openid`, `profile`, `email`,
    `User.Read`. Grant admin consent.
 6. **Env**:
@@ -149,8 +149,8 @@ PRAESIDIO_RBAC_GROUP_MAP={"praesidio-admins":["admin"],"praesidio-ops":["operato
    OIDC_ISSUER=https://login.microsoftonline.com/<tenant-uuid>/v2.0
    OIDC_CLIENT_ID=<application-id>
    OIDC_CLIENT_SECRET=<secret>
-   OIDC_REDIRECT_URI=https://ui.praesidio.example/api/auth/callback
-   PRAESIDIO_OIDC_TENANT_CLAIM=tid
+   OIDC_REDIRECT_URI=https://ui.section.example/api/auth/callback
+   SECTION_OIDC_TENANT_CLAIM=tid
    ```
 
 ### Group claim caveat (Entra ID)
@@ -175,9 +175,9 @@ e2e there are two approaches:
 
    ```bash
    TOKEN=$(curl -s -X POST \
-     "http://localhost:8081/realms/praesidio/protocol/openid-connect/token" \
-     -d "grant_type=password" -d "client_id=praesidio" \
-     -d "client_secret=praesidio-demo-secret" \
+     "http://localhost:8081/realms/section/protocol/openid-connect/token" \
+     -d "grant_type=password" -d "client_id=section" \
+     -d "client_secret=section-demo-secret" \
      -d "username=alice" -d "password=alice" \
      -d "scope=openid profile email groups" \
      | sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p')
@@ -187,7 +187,7 @@ e2e there are two approaches:
    ```
 
    The gateway must accept this token (role `admin` derived from
-   `groups: ["praesidio-admins"]`) and refuse the equivalent call
+   `groups: ["section-admins"]`) and refuse the equivalent call
    from `dan` (role `viewer`).
 
 2. **Playwright UI flow**. The lane-B UI tests include an opt-in

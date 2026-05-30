@@ -7,12 +7,12 @@ import pytest
 from fastapi import HTTPException
 from starlette.requests import Request
 
-from praesidio_gateway.auth import api_key_fingerprint, resolve_principal
-from praesidio_gateway.config import Settings
+from section_gateway.auth import api_key_fingerprint, resolve_principal
+from section_gateway.config import Settings
 
 
 def _settings(keys: str = "alpha-secret-1,beta-secret-2") -> Settings:
-    return Settings(praesidio_api_keys=keys)
+    return Settings(section_api_keys=keys)
 
 
 def _request() -> Request:

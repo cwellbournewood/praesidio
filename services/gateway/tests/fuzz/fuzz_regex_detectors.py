@@ -18,8 +18,8 @@ from __future__ import annotations
 import asyncio
 import sys
 
-from praesidio_gateway.dlp.detectors import regex as det_regex
-from praesidio_gateway.dlp.detectors import secrets as det_secrets
+from section_gateway.dlp.detectors import regex as det_regex
+from section_gateway.dlp.detectors import secrets as det_secrets
 
 _DETECTORS = [det_regex.detect, det_secrets.detect]
 

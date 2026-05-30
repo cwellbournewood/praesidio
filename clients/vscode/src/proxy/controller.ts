@@ -1,5 +1,5 @@
 /**
- * Manages a child `praesidio-edge-proxy` process.
+ * Manages a child `section-edge-proxy` process.
  *
  *  - `start()` spawns the binary with --gateway / --api-key / --port.
  *  - `stop()` sends SIGTERM (Windows: kill) and waits for exit (with
@@ -22,7 +22,7 @@ export interface ProxyControllerOpts {
   port: number;
   apiKey?: string | null;
   bearerToken?: string | null;
-  /** OutputChannel for stdout/stderr; defaults to a new "Praesidio Proxy" channel. */
+  /** OutputChannel for stdout/stderr; defaults to a new "Section Proxy" channel. */
   output?: vscode.OutputChannel;
 }
 
@@ -38,7 +38,7 @@ export class ProxyController {
     if (output) {
       this.output = output;
     } else {
-      this.output = vscode.window.createOutputChannel("Praesidio Proxy");
+      this.output = vscode.window.createOutputChannel("Section Proxy");
       this.ownsOutput = true;
     }
   }
@@ -79,7 +79,7 @@ export class ProxyController {
       this.setState("error");
       const m = err instanceof Error ? err.message : String(err);
       this.output.appendLine(`spawn failed: ${m}`);
-      throw new Error(`praesidio-edge-proxy could not be spawned: ${m}`);
+      throw new Error(`section-edge-proxy could not be spawned: ${m}`);
     }
 
     this.child = child;

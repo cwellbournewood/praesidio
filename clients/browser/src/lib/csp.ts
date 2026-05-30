@@ -2,7 +2,7 @@
  * Runtime CSP / origin checks for the gateway URL.
  *
  * The MV3 manifest declares `connect-src` for a known small set of
- * defaults (`localhost:8000`, `localhost:8080`, `*.praesidio.local`).
+ * defaults (`localhost:8000`, `localhost:8080`, `*.section.local`).
  * Operators who point the extension at a different gateway need to
  * either (a) self-build the extension with their host added, or
  * (b) confirm the URL falls into one of the declared origins.
@@ -19,7 +19,7 @@ export const DEFAULT_ALLOWED_HOSTS: ReadonlyArray<string> = [
 
 /** Glob-allowed wildcard hosts in the default manifest. */
 export const DEFAULT_ALLOWED_WILDCARDS: ReadonlyArray<string> = [
-  '*.praesidio.local',
+  '*.section.local',
 ];
 
 export interface GatewayUrlCheck {

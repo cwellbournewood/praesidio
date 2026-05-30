@@ -1,7 +1,7 @@
 // Human-readable display metadata for DLP labels.
 //
 // PYTHON IS THE SOURCE OF TRUTH:
-//   services/gateway/praesidio_gateway/dlp/display.py
+//   services/gateway/section_gateway/dlp/display.py
 // This file is the TypeScript twin. `scripts/check_label_display_sync.py`
 // runs in CI to ensure the two never drift. Update Python first, then
 // mirror here.

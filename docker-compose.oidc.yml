@@ -1,4 +1,4 @@
-# OIDC overlay: adds a Keycloak container with a pre-seeded "praesidio"
+# OIDC overlay: adds a Keycloak container with a pre-seeded "section"
 # realm for local dev. Stack the overlay on top of the root compose:
 #
 #   docker compose -f docker-compose.yml -f docker-compose.oidc.yml up
@@ -20,7 +20,7 @@ services:
       - ./deploy/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
       # Mount only our theme subdir so Keycloak's built-in themes
       # (keycloak / base / admin) stay visible underneath.
-      - ./deploy/keycloak/themes/praesidio:/opt/keycloak/themes/praesidio:ro
+      - ./deploy/keycloak/themes/section:/opt/keycloak/themes/section:ro
       - keycloakdata:/opt/keycloak/data
     ports:
       - "8081:8080"
@@ -32,25 +32,25 @@ services:
 
   gateway:
     environment:
-      OIDC_ISSUER: http://keycloak:8080/realms/praesidio
-      OIDC_CLIENT_ID: praesidio
-      OIDC_CLIENT_SECRET: praesidio-demo-secret
+      OIDC_ISSUER: http://keycloak:8080/realms/section
+      OIDC_CLIENT_ID: section
+      OIDC_CLIENT_SECRET: section-demo-secret
       OIDC_REDIRECT_URI: http://localhost:3000/api/auth/callback
-      PRAESIDIO_OIDC_TENANT_CLAIM: tenant_id
-      PRAESIDIO_RBAC_GROUP_MAP: |
-        {"praesidio-admins":["admin"],"praesidio-ops":["operator","viewer"],"praesidio-auditors":["auditor","viewer"],"praesidio-viewers":["viewer"]}
+      SECTION_OIDC_TENANT_CLAIM: tenant_id
+      SECTION_RBAC_GROUP_MAP: |
+        {"section-admins":["admin"],"section-ops":["operator","viewer"],"section-auditors":["auditor","viewer"],"section-viewers":["viewer"]}
     depends_on:
       keycloak:
         condition: service_healthy
 
   ui:
     environment:
-      OIDC_ISSUER: http://keycloak:8080/realms/praesidio
-      OIDC_CLIENT_ID: praesidio
-      OIDC_CLIENT_SECRET: praesidio-demo-secret
+      OIDC_ISSUER: http://keycloak:8080/realms/section
+      OIDC_CLIENT_ID: section
+      OIDC_CLIENT_SECRET: section-demo-secret
       OIDC_REDIRECT_URI: http://localhost:3000/api/auth/callback
       NEXTAUTH_URL: http://localhost:3000
-      NEXTAUTH_SECRET: praesidio-dev-nextauth-secret
+      NEXTAUTH_SECRET: section-dev-nextauth-secret
     depends_on:
       keycloak:
         condition: service_healthy

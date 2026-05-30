@@ -1,20 +1,20 @@
 {
-  "name": "praesidio-vscode",
-  "displayName": "Praesidio — AI Security",
+  "name": "section-vscode",
+  "displayName": "Section — AI Security",
   "version": "1.0.0",
-  "publisher": "praesidio",
-  "description": "Scan and mask sensitive data in your editor before it reaches Copilot Chat, Cursor, or any LLM. Backed by the Praesidio gateway.",
+  "publisher": "section",
+  "description": "Scan and mask sensitive data in your editor before it reaches Copilot Chat, Cursor, or any LLM. Backed by the Section gateway.",
   "license": "Apache-2.0",
   "private": false,
   "icon": "icon.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cwellbournewood/praesidio"
+    "url": "https://github.com/cwellbournewood/section"
   },
   "bugs": {
-    "url": "https://github.com/cwellbournewood/praesidio/issues"
+    "url": "https://github.com/cwellbournewood/section/issues"
   },
-  "homepage": "https://github.com/cwellbournewood/praesidio/tree/main/clients/vscode",
+  "homepage": "https://github.com/cwellbournewood/section/tree/main/clients/vscode",
   "categories": [
     "Other",
     "Linters",
@@ -26,7 +26,7 @@
     "ai",
     "llm",
     "copilot",
-    "praesidio",
+    "section",
     "redaction",
     "tokenisation"
   ],
@@ -37,11 +37,11 @@
   "main": "./out/extension.js",
   "activationEvents": [
     "onStartupFinished",
-    "onCommand:praesidio.scanSelection",
-    "onCommand:praesidio.tokeniseSelection",
-    "onCommand:praesidio.toggleProxy",
-    "onCommand:praesidio.signIn",
-    "onCommand:praesidio.openAudit",
+    "onCommand:section.scanSelection",
+    "onCommand:section.tokeniseSelection",
+    "onCommand:section.toggleProxy",
+    "onCommand:section.signIn",
+    "onCommand:section.openAudit",
     "onLanguage:plaintext",
     "onLanguage:markdown",
     "onLanguage:json",
@@ -65,106 +65,106 @@
   "contributes": {
     "commands": [
       {
-        "command": "praesidio.scanSelection",
-        "title": "Praesidio: Scan Selection",
-        "category": "Praesidio"
+        "command": "section.scanSelection",
+        "title": "Section: Scan Selection",
+        "category": "Section"
       },
       {
-        "command": "praesidio.tokeniseSelection",
-        "title": "Praesidio: Tokenise Selection",
-        "category": "Praesidio"
+        "command": "section.tokeniseSelection",
+        "title": "Section: Tokenise Selection",
+        "category": "Section"
       },
       {
-        "command": "praesidio.toggleProxy",
-        "title": "Praesidio: Toggle Local Proxy",
-        "category": "Praesidio"
+        "command": "section.toggleProxy",
+        "title": "Section: Toggle Local Proxy",
+        "category": "Section"
       },
       {
-        "command": "praesidio.signIn",
-        "title": "Praesidio: Sign In",
-        "category": "Praesidio"
+        "command": "section.signIn",
+        "title": "Section: Sign In",
+        "category": "Section"
       },
       {
-        "command": "praesidio.openAudit",
-        "title": "Praesidio: Open Audit Trail",
-        "category": "Praesidio"
+        "command": "section.openAudit",
+        "title": "Section: Open Audit Trail",
+        "category": "Section"
       },
       {
-        "command": "praesidio.signOut",
-        "title": "Praesidio: Sign Out",
-        "category": "Praesidio"
+        "command": "section.signOut",
+        "title": "Section: Sign Out",
+        "category": "Section"
       },
       {
-        "command": "praesidio.refreshDecisions",
-        "title": "Praesidio: Refresh Decisions",
-        "category": "Praesidio",
+        "command": "section.refreshDecisions",
+        "title": "Section: Refresh Decisions",
+        "category": "Section",
         "icon": "$(refresh)"
       },
       {
-        "command": "praesidio.clearDecisions",
-        "title": "Praesidio: Clear Decisions",
-        "category": "Praesidio",
+        "command": "section.clearDecisions",
+        "title": "Section: Clear Decisions",
+        "category": "Section",
         "icon": "$(clear-all)"
       }
     ],
     "menus": {
       "editor/context": [
         {
-          "command": "praesidio.scanSelection",
+          "command": "section.scanSelection",
           "when": "editorHasSelection",
-          "group": "praesidio@1"
+          "group": "section@1"
         },
         {
-          "command": "praesidio.tokeniseSelection",
+          "command": "section.tokeniseSelection",
           "when": "editorHasSelection",
-          "group": "praesidio@2"
+          "group": "section@2"
         }
       ],
       "view/title": [
         {
-          "command": "praesidio.refreshDecisions",
-          "when": "view == praesidio.decisions",
+          "command": "section.refreshDecisions",
+          "when": "view == section.decisions",
           "group": "navigation"
         },
         {
-          "command": "praesidio.clearDecisions",
-          "when": "view == praesidio.decisions",
+          "command": "section.clearDecisions",
+          "when": "view == section.decisions",
           "group": "navigation"
         }
       ]
     },
     "configuration": {
-      "title": "Praesidio",
+      "title": "Section",
       "properties": {
-        "praesidio.gateway.url": {
+        "section.gateway.url": {
           "type": "string",
           "default": "http://localhost:8080",
-          "description": "Base URL of the Praesidio gateway. The extension calls /v1/scan and /v1/restore on this host."
+          "description": "Base URL of the Section gateway. The extension calls /v1/scan and /v1/restore on this host."
         },
-        "praesidio.gateway.apiKey": {
+        "section.gateway.apiKey": {
           "type": "string",
           "default": "",
-          "description": "DEPRECATED: API keys are stored in VS Code SecretStorage. Use 'Praesidio: Sign In' instead. This setting is only for non-secret echo and should be left blank in production.",
-          "markdownDescription": "**Deprecated.** API keys are stored in VS Code SecretStorage via the `Praesidio: Sign In` command. This setting is only honoured for non-secret echo (e.g. development bootstrap) and **should be left blank in production**."
+          "description": "DEPRECATED: API keys are stored in VS Code SecretStorage. Use 'Section: Sign In' instead. This setting is only for non-secret echo and should be left blank in production.",
+          "markdownDescription": "**Deprecated.** API keys are stored in VS Code SecretStorage via the `Section: Sign In` command. This setting is only honoured for non-secret echo (e.g. development bootstrap) and **should be left blank in production**."
         },
-        "praesidio.gateway.tenantId": {
+        "section.gateway.tenantId": {
           "type": "string",
           "default": "",
-          "description": "Optional tenant id sent as the X-Praesidio-Tenant header. Ignored when signing in via OIDC (the JWT claim wins)."
+          "description": "Optional tenant id sent as the X-Section-Tenant header. Ignored when signing in via OIDC (the JWT claim wins)."
         },
-        "praesidio.diagnostics.enabled": {
+        "section.diagnostics.enabled": {
           "type": "boolean",
           "default": true,
           "description": "Surface DLP findings as warnings in open editors."
         },
-        "praesidio.diagnostics.debounceMs": {
+        "section.diagnostics.debounceMs": {
           "type": "number",
           "default": 800,
           "minimum": 100,
           "maximum": 10000,
           "description": "Debounce (ms) before rescanning an open document after edits."
         },
-        "praesidio.diagnostics.severity": {
+        "section.diagnostics.severity": {
           "type": "string",
           "enum": [
             "error",
@@ -175,49 +175,49 @@
           "default": "warning",
           "description": "VS Code severity for inline DLP findings."
         },
-        "praesidio.diagnostics.maxBytes": {
+        "section.diagnostics.maxBytes": {
           "type": "number",
           "default": 262144,
           "description": "Maximum bytes scanned per document. Larger documents are chunked."
         },
-        "praesidio.proxy.autoStart": {
+        "section.proxy.autoStart": {
           "type": "boolean",
           "default": false,
-          "description": "Start the local praesidio-edge-proxy whenever VS Code activates."
+          "description": "Start the local section-edge-proxy whenever VS Code activates."
         },
-        "praesidio.proxy.binaryPath": {
+        "section.proxy.binaryPath": {
           "type": "string",
-          "default": "praesidio-edge-proxy",
-          "description": "Path to the praesidio-edge-proxy executable. Defaults to looking it up on PATH."
+          "default": "section-edge-proxy",
+          "description": "Path to the section-edge-proxy executable. Defaults to looking it up on PATH."
         },
-        "praesidio.proxy.port": {
+        "section.proxy.port": {
           "type": "number",
           "default": 8889,
           "description": "Port the local proxy binds to."
         },
-        "praesidio.statusBar.enabled": {
+        "section.statusBar.enabled": {
           "type": "boolean",
           "default": true,
-          "description": "Show the Praesidio status bar item."
+          "description": "Show the Section status bar item."
         },
-        "praesidio.oidc.deviceCodeEndpoint": {
+        "section.oidc.deviceCodeEndpoint": {
           "type": "string",
           "default": "",
           "description": "OIDC device authorisation endpoint. If empty, falls back to the gateway's /oidc/device path."
         },
-        "praesidio.oidc.tokenEndpoint": {
+        "section.oidc.tokenEndpoint": {
           "type": "string",
           "default": "",
           "description": "OIDC token endpoint. If empty, falls back to the gateway's /oidc/token path."
         },
-        "praesidio.oidc.clientId": {
+        "section.oidc.clientId": {
           "type": "string",
-          "default": "praesidio-vscode",
+          "default": "section-vscode",
           "description": "OIDC client id for the device-code flow."
         },
-        "praesidio.oidc.scopes": {
+        "section.oidc.scopes": {
           "type": "string",
-          "default": "openid profile praesidio.edge",
+          "default": "openid profile section.edge",
           "description": "OIDC scopes requested."
         }
       }
@@ -225,25 +225,25 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "praesidio",
-          "title": "Praesidio",
+          "id": "section",
+          "title": "Section",
           "icon": "$(shield)"
         }
       ]
     },
     "views": {
-      "praesidio": [
+      "section": [
         {
-          "id": "praesidio.decisions",
+          "id": "section.decisions",
           "name": "Recent Decisions",
-          "contextualTitle": "Praesidio"
+          "contextualTitle": "Section"
         }
       ]
     },
     "viewsWelcome": [
       {
-        "view": "praesidio.decisions",
-        "contents": "No Praesidio decisions yet.\n[Sign In](command:praesidio.signIn)\n[Scan Selection](command:praesidio.scanSelection)\n[Open Audit](command:praesidio.openAudit)"
+        "view": "section.decisions",
+        "contents": "No Section decisions yet.\n[Sign In](command:section.signIn)\n[Scan Selection](command:section.scanSelection)\n[Open Audit](command:section.openAudit)"
       }
     ]
   },

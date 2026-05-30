@@ -5,7 +5,7 @@
 The model registry is part of the policy bundle (`models.yaml`):
 
 ```yaml
-apiVersion: praesidio/v1
+apiVersion: section/v1
 kind: ModelRegistry
 spec:
   models:
@@ -64,7 +64,7 @@ spec:
 overrides driven by the decision context:
 
 ```yaml
-apiVersion: praesidio/v1
+apiVersion: section/v1
 kind: Routes
 spec:
   - inbound:
@@ -92,7 +92,7 @@ spec:
 ```
 
 Rules are evaluated in order, first match wins. The router emits a header
-on outbound calls (`x-praesidio-route`) identifying the chosen model so
+on outbound calls (`x-section-route`) identifying the chosen model so
 downstream telemetry can correlate.
 
 ## Cost & latency steering

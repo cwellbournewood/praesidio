@@ -1,6 +1,6 @@
 # IDE extensions — install + operate
 
-Praesidio ships two IDE extensions:
+Section ships two IDE extensions:
 
 * **VS Code** (`clients/vscode/`) — covers VS Code itself, Cursor, Codium,
   and other VS Code forks.
@@ -26,13 +26,13 @@ Per-tool support: [`docs/edge-coverage-matrix.md`](../edge-coverage-matrix.md).
 Marketplace:
 
 ```
-ext install praesidio.praesidio-vscode
+ext install section.section-vscode
 ```
 
 Or sideload from GitHub releases:
 
 ```bash
-code --install-extension praesidio-vscode-<version>.vsix
+code --install-extension section-vscode-<version>.vsix
 ```
 
 ### Configure
@@ -41,38 +41,38 @@ code --install-extension praesidio-vscode-<version>.vsix
 
 ```json
 {
-  "praesidio.gateway.url": "https://gateway.your-corp.com",
-  "praesidio.diagnostics.enabled": true,
-  "praesidio.diagnostics.debounceMs": 800,
-  "praesidio.proxy.autoStart": true,
-  "praesidio.proxy.binaryPath": "praesidio-edge-proxy"
+  "section.gateway.url": "https://gateway.your-corp.com",
+  "section.diagnostics.enabled": true,
+  "section.diagnostics.debounceMs": 800,
+  "section.proxy.autoStart": true,
+  "section.proxy.binaryPath": "section-edge-proxy"
 }
 ```
 
 The API key is stored in `SecretStorage` (OS keychain) — set it via
-**Command Palette → Praesidio: Sign In** (interactive) or
-`praesidio.signIn`.
+**Command Palette → Section: Sign In** (interactive) or
+`section.signIn`.
 
 ### Use
 
 | Command | Default keybinding | Effect |
 |---|---|---|
-| `Praesidio: Scan Selection` | none | POST `/v1/scan` with the selected text; show diff if masked |
-| `Praesidio: Tokenise Selection` | none | Replace the selection with the sanitised version in place |
-| `Praesidio: Toggle Proxy` | none | Start/stop `praesidio-edge-proxy` |
-| `Praesidio: Sign In` | none | OIDC device-code flow |
-| `Praesidio: Open Audit Log` | none | Opens `<gateway>/admin/events` |
+| `Section: Scan Selection` | none | POST `/v1/scan` with the selected text; show diff if masked |
+| `Section: Tokenise Selection` | none | Replace the selection with the sanitised version in place |
+| `Section: Toggle Proxy` | none | Start/stop `section-edge-proxy` |
+| `Section: Sign In` | none | OIDC device-code flow |
+| `Section: Open Audit Log` | none | Opens `<gateway>/admin/events` |
 
 ### Status bar
 
-Bottom-left: `$(shield) Praesidio`. Tooltip shows gateway URL, last
+Bottom-left: `$(shield) Section`. Tooltip shows gateway URL, last
 decision, proxy state. Click for a quick-pick of all commands.
 
 ### Diagnostics
 
-When `praesidio.diagnostics.enabled` is true, every open document is
+When `section.diagnostics.enabled` is true, every open document is
 scanned (debounced) and findings appear as warning squiggles. A
-code-action "Praesidio: Tokenise" replaces the offending span with its
+code-action "Section: Tokenise" replaces the offending span with its
 placeholder.
 
 ## JetBrains
@@ -81,48 +81,48 @@ placeholder.
 
 Marketplace:
 
-**Settings → Plugins → Marketplace** → search "Praesidio" → **Install**.
+**Settings → Plugins → Marketplace** → search "Section" → **Install**.
 
 Or sideload from GitHub releases:
 
 **Settings → Plugins → Gear icon → Install Plugin from Disk** →
-`praesidio-jetbrains-<version>.zip`.
+`section-jetbrains-<version>.zip`.
 
 Compatible with IntelliJ Platform builds 232.0 through 252.* (covers
 IntelliJ IDEA 2023.2 through 2025.2).
 
 ### Configure
 
-**Settings → Tools → Praesidio**:
+**Settings → Tools → Section**:
 
 | Field | Default | Notes |
 |---|---|---|
 | Gateway URL | `https://localhost:8000` | Production: your corp gateway |
 | Sign in | (button) | Opens OIDC device-code in default browser |
 | Enable inspections | true | Surfaces sensitive data as Warning |
-| Proxy autostart | false | Spawn `praesidio-edge-proxy` on IDE start |
-| Proxy binary path | `praesidio-edge-proxy` | Resolved from PATH if relative |
+| Proxy autostart | false | Spawn `section-edge-proxy` on IDE start |
+| Proxy binary path | `section-edge-proxy` | Resolved from PATH if relative |
 
 The API key and OIDC refresh token are stored in
 `PasswordSafe.getInstance()` (the platform's secure credential store).
 
 ### Use
 
-Editor right-click menu and main **Tools → Praesidio** menu:
+Editor right-click menu and main **Tools → Section** menu:
 
-* **Praesidio: Scan Selection**
-* **Praesidio: Tokenise Selection**
-* **Praesidio: Toggle Proxy**
-* **Praesidio: Sign In**
+* **Section: Scan Selection**
+* **Section: Tokenise Selection**
+* **Section: Toggle Proxy**
+* **Section: Sign In**
 
 ### Tool window
 
-**View → Tool Windows → Praesidio** — shows the last 10 decisions,
+**View → Tool Windows → Section** — shows the last 10 decisions,
 gateway status, and a toggle for the proxy.
 
 ### Inspection
 
-The `Praesidio: Sensitive data in source` inspection runs on every open
+The `Section: Sensitive data in source` inspection runs on every open
 file (throttled). Quick-fix: **Tokenise** replaces the offending range
 with its placeholder.
 
@@ -131,7 +131,7 @@ with its placeholder.
 The IDE extensions complement the local CA proxy, they don't replace
 it. Typical fleet:
 
-1. MDM rolls out `praesidio-edge-proxy` and runs `install-ca` once per
+1. MDM rolls out `section-edge-proxy` and runs `install-ca` once per
    machine.
 2. MDM pushes the VS Code / JetBrains extension via the standard
    enterprise channels:
@@ -144,9 +144,9 @@ it. Typical fleet:
 
 ## Uninstall
 
-VS Code: `code --uninstall-extension praesidio.praesidio-vscode`.
+VS Code: `code --uninstall-extension section.section-vscode`.
 
-JetBrains: **Settings → Plugins → Installed → Praesidio → Uninstall**.
+JetBrains: **Settings → Plugins → Installed → Section → Uninstall**.
 
 Settings are removed automatically; secrets are removed from the OS
 keychain.

@@ -4,10 +4,10 @@ This document covers the catastrophic-loss scenarios that
 [`backup-restore.md`](backup-restore.md) does not — the cases where
 straightforward restore is not possible.
 
-## Scenario 1 — Vault key (`PRAESIDIO_VAULT_KEY`) is lost
+## Scenario 1 — Vault key (`SECTION_VAULT_KEY`) is lost
 
 The token vault stores `placeholder → AES-256-GCM(real-value)` mappings
-keyed by `PRAESIDIO_VAULT_KEY` (per-tenant HKDF). Loss of the master key
+keyed by `SECTION_VAULT_KEY` (per-tenant HKDF). Loss of the master key
 means every entry in the vault is **mathematically unreversible**. The
 operational impact:
 
@@ -20,7 +20,7 @@ operational impact:
 
 **Mitigation (before the loss):**
 
-* Store `PRAESIDIO_VAULT_KEY` in an HSM-backed KMS (AWS KMS with
+* Store `SECTION_VAULT_KEY` in an HSM-backed KMS (AWS KMS with
   HSM-backed keys, GCP Cloud HSM, Azure Dedicated HSM). The chart
   references it by `secrets.kmsRef` for auditability.
 * Replicate the key across at least two regions in the same KMS.
@@ -38,7 +38,7 @@ operational impact:
    - Generate a new vault key and rotate it in (see "Rotation procedure"
      below).
    - **Purge the vault**: `redis-cli -h $R DEL $(redis-cli -h $R --scan
-     --pattern 'praesidio:tok:*')`. Any cached placeholder lookups will
+     --pattern 'section:tok:*')`. Any cached placeholder lookups will
      fail loudly rather than returning ciphertext under the old key.
    - Mark the recovery point in the audit chain by emitting an
      `audit.event` with `decision=admin` and `reason="vault key rotated
@@ -50,21 +50,21 @@ operational impact:
 ## Scenario 2 — Postgres audit chain corruption / torn-tail after restore
 
 After a PITR restore that lands mid-write, the latest few chain links
-in some tenant may not validate. `praesidio-audit verify` will report
+in some tenant may not validate. `section-audit verify` will report
 the first broken link.
 
 **Response:**
 
 1. Truncate forward of the broken link in the affected tenant:
    `DELETE FROM audit_events WHERE tenant_id=... AND occurred_at > ...`.
-2. Re-run `praesidio-audit verify --tenant <id>`. Expect a clean chain.
+2. Re-run `section-audit verify --tenant <id>`. Expect a clean chain.
 3. Document the truncation in your incident report with the lost
    `request_id` range — those events did exist but the chain proof was
    torn.
 
 ## Scenario 3 — Region failure
 
-Praesidio has **no built-in cross-region replication**. The standard
+Section has **no built-in cross-region replication**. The standard
 pattern:
 
 * Active-active Postgres logical replication (or RDS cross-region
@@ -77,7 +77,7 @@ pattern:
   placeholders born in region A must be reversible in region B.
 
 When the primary region is lost, promote the replica Postgres + Redis,
-flip DNS, and run `praesidio-audit verify --tenant '*'` end-to-end before
+flip DNS, and run `section-audit verify --tenant '*'` end-to-end before
 allowing traffic.
 
 ## Scenario 4 — Compromise (signed-bundle CA, container image, or vault key)
@@ -100,9 +100,9 @@ Treat as a security incident first, DR second.
 
 ## Vault-key rotation procedure (planned, not emergency)
 
-Praesidio supports two-key rotation:
+Section supports two-key rotation:
 
-1. Stand up a second `PRAESIDIO_VAULT_KEY_NEXT` env var alongside the
+1. Stand up a second `SECTION_VAULT_KEY_NEXT` env var alongside the
    live one. The gateway encrypts new entries with `NEXT` and falls back
    to the legacy key on read.
 2. Run for ≥ max vault TTL (default 1h) so the legacy-key entries age

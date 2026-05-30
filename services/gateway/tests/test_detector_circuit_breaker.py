@@ -3,14 +3,14 @@
 After >5 errors in a 60s rolling window, the breaker opens for 30s. The
 next pipeline run skips the failing detector entirely, marks the result
 ``degraded=True`` and bumps the
-``praesidio_detector_breaker_opens_total`` counter.
+``section_detector_breaker_opens_total`` counter.
 """
 from __future__ import annotations
 
 import pytest
 
-from praesidio_gateway.dlp import pipeline as pl
-from praesidio_gateway.obs.metrics import DETECTOR_BREAKER_OPENS_TOTAL
+from section_gateway.dlp import pipeline as pl
+from section_gateway.obs.metrics import DETECTOR_BREAKER_OPENS_TOTAL
 
 
 @pytest.fixture(autouse=True)

@@ -1,11 +1,11 @@
-# Praesidio compliance report — `{{ m.tenant }}`
+# Section compliance report — `{{ m.tenant }}`
 
 **Generated**: {{ generated_at }}
 **Period**: {{ m.period_start }} → {{ m.period_end }}
 **Total audit events**: {{ "{:,}".format(m.total_events) }}
 
 > Generated automatically by `scripts/compliance_report.py`. The
-> underlying data is the Praesidio hash-chained audit log; this report
+> underlying data is the Section hash-chained audit log; this report
 > is a *summary* — the audit log itself is the system of record.
 
 ## 1. Decision summary
@@ -100,5 +100,5 @@ authoritative mapping.
 
 _This report is suitable as an evidence attachment in a SOC 2 Type II
 audit walk-through or a GDPR Art. 30 records-of-processing review.
-The Praesidio audit log itself remains the source of truth and is
-hash-chain verifiable via `praesidio-audit verify`._
+The Section audit log itself remains the source of truth and is
+hash-chain verifiable via `section-audit verify`._

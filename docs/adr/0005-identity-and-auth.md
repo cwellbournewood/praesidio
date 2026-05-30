@@ -15,7 +15,7 @@ broker).
 - **Admins**: OIDC only (no admin API keys). RBAC roles
   `viewer | analyst | policy-author | admin | tenant-admin` with ABAC
   attributes (tenant, region) overlaying.
-- **Services**: mTLS via SPIFFE-style identities (`spiffe://praesidio/...`).
+- **Services**: mTLS via SPIFFE-style identities (`spiffe://section/...`).
 
 Multi-tenancy is row-level in Postgres (RLS), key-prefixed in Redis, and
 policy-scoped in the gateway.

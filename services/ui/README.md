@@ -1,6 +1,6 @@
-# Praesidio Admin UI
+# Section Admin UI
 
-Next.js 14 (App Router) operator console for the Praesidio AI Security Control
+Next.js 14 (App Router) operator console for the Section AI Security Control
 Plane. Read-only by design: review events, browse policies, inspect lineage,
 and check the model registry.
 
@@ -25,7 +25,7 @@ NEXT_PUBLIC_MOCK=1 pnpm dev
 | Variable | Where read | Purpose |
 |---|---|---|
 | `NEXT_PUBLIC_GATEWAY_URL` | browser & server | Base URL for `/admin/*` endpoints (defaults to `http://localhost:8080`). |
-| `PRAESIDIO_GATEWAY_INTERNAL_URL` | server only | In-cluster service DNS, used by RSC fetches. |
+| `SECTION_GATEWAY_INTERNAL_URL` | server only | In-cluster service DNS, used by RSC fetches. |
 | `NEXT_PUBLIC_MOCK` | browser | When set to `1`, all API calls return synthetic data. |
 
 See `.env.example`.
@@ -58,7 +58,7 @@ services/ui/
 │   └── globals.css            # CSS variables for the design tokens
 ├── components/
 │   ├── ui/                    # primitives (Button, DataTable, Sheet, …)
-│   └── praesidio/             # domain (EventDetail, LineageGraph, …)
+│   └── section/             # domain (EventDetail, LineageGraph, …)
 ├── lib/
 │   ├── api.ts                 # SWR fetcher + admin API client
 │   ├── types.ts               # mirrors gateway pydantic models
@@ -72,8 +72,8 @@ services/ui/
 ## Adding a page
 
 1. Create `app/<route>/page.tsx`. If it needs SWR, mark it `'use client'`.
-2. Add it to `components/praesidio/Sidebar.tsx` if it should appear in the nav,
-   and to `components/praesidio/CommandPalette.tsx` so it's reachable via ⌘K.
+2. Add it to `components/section/Sidebar.tsx` if it should appear in the nav,
+   and to `components/section/CommandPalette.tsx` so it's reachable via ⌘K.
 3. Fetch data through `swrFetcher` from `lib/api.ts` — never `fetch()` the
    gateway directly, so mock mode keeps working.
 
@@ -89,7 +89,7 @@ services/ui/
 
 ## Design system
 
-The visual language ("Praesidio Instrument") is implemented directly in
+The visual language ("Section Instrument") is implemented directly in
 [`app/globals.css`](app/globals.css) and
 [`tailwind.config.ts`](tailwind.config.ts) — those files are the source of
 truth. In short:

@@ -1,4 +1,4 @@
--- Praesidio Gateway — initial schema (audit + lineage).
+-- Section Gateway — initial schema (audit + lineage).
 --
 -- *** CANONICAL SOURCE: alembic/versions/0001_initial_schema.py ***
 --
@@ -64,7 +64,7 @@ CREATE INDEX IF NOT EXISTS idx_audit_decision
 ALTER TABLE audit_events ENABLE ROW LEVEL SECURITY;
 ALTER TABLE audit_events FORCE ROW LEVEL SECURITY;
 
--- Default RLS policy: app role must SET praesidio.tenant_id per session.
+-- Default RLS policy: app role must SET section.tenant_id per session.
 -- The bypass role (DB owner) is unrestricted.
 DO $$
 BEGIN
@@ -75,8 +75,8 @@ BEGIN
     ) THEN
         CREATE POLICY tenant_isolation ON audit_events
             USING (
-                tenant_id = current_setting('praesidio.tenant_id', true)
-                OR current_setting('praesidio.tenant_id', true) = '*'
+                tenant_id = current_setting('section.tenant_id', true)
+                OR current_setting('section.tenant_id', true) = '*'
             );
     END IF;
 END$$;
@@ -111,8 +111,8 @@ BEGIN
     ) THEN
         CREATE POLICY tenant_isolation ON lineage_nodes
             USING (
-                tenant_id = current_setting('praesidio.tenant_id', true)
-                OR current_setting('praesidio.tenant_id', true) = '*'
+                tenant_id = current_setting('section.tenant_id', true)
+                OR current_setting('section.tenant_id', true) = '*'
             );
     END IF;
 END$$;

@@ -1,4 +1,4 @@
-# Praesidio gateway — soak report
+# Section gateway — soak report
 
 > Copy this file to `bench/soak/results/<utc>/REPORT.md`, fill in the blanks,
 > commit alongside the CSVs and the HTML report.

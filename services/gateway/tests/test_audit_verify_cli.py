@@ -1,4 +1,4 @@
-"""``praesidio-audit verify`` CLI tests (Task 5.3)."""
+"""``section-audit verify`` CLI tests (Task 5.3)."""
 from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
@@ -6,9 +6,9 @@ from datetime import UTC, datetime, timedelta
 import pytest
 from sqlalchemy.ext.asyncio import create_async_engine
 
-from praesidio_gateway.audit.chain import compute_chain_hash
-from praesidio_gateway.audit.models import Base
-from praesidio_gateway.cli.audit_verify import (
+from section_gateway.audit.chain import compute_chain_hash
+from section_gateway.audit.models import Base
+from section_gateway.cli.audit_verify import (
     _verify_async,
     parse_duration,
     verify_rows,
@@ -111,7 +111,7 @@ async def test_cli_verify_against_file_sqlite_round_trip(tmp_path):
     with the same code path the verifier will check, then asserts the CLI
     accepts the intact chain and rejects a tampered one.
     """
-    from praesidio_gateway.audit.writer import AuditWriter
+    from section_gateway.audit.writer import AuditWriter
 
     db_path = tmp_path / "audit.sqlite"
     dsn = f"sqlite+aiosqlite:///{db_path}"

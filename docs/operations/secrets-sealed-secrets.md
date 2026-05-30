@@ -32,25 +32,25 @@ kubectl -n kube-system get secret \
 # encrypted USB, KMS-wrapped object storage). Never commit it.
 ```
 
-## Step 2 — seal the Praesidio gateway Secret
+## Step 2 — seal the Section gateway Secret
 
 Compose the source Secret locally (do not commit this file):
 
 ```yaml
-# praesidio-gateway-raw.yaml — do NOT commit
+# section-gateway-raw.yaml — do NOT commit
 apiVersion: v1
 kind: Secret
 metadata:
-  name: praesidio-gateway
-  namespace: praesidio
+  name: section-gateway
+  namespace: section
 type: Opaque
 stringData:
-  PRAESIDIO_VAULT_KEY: "<base64 of 32 bytes>"
-  PRAESIDIO_FPE_KEY: "<hex 16 bytes>"
-  PRAESIDIO_FPE_TWEAK: "<hex 7 bytes>"
-  PRAESIDIO_API_KEYS: "<comma-separated bearer keys>"
-  DATABASE_URL: "postgresql+asyncpg://praesidio:...@pg/praesidio?sslmode=verify-full"
-  REDIS_URL: "rediss://praesidio:...@redis:6379/0"
+  SECTION_VAULT_KEY: "<base64 of 32 bytes>"
+  SECTION_FPE_KEY: "<hex 16 bytes>"
+  SECTION_FPE_TWEAK: "<hex 7 bytes>"
+  SECTION_API_KEYS: "<comma-separated bearer keys>"
+  DATABASE_URL: "postgresql+asyncpg://section:...@pg/section?sslmode=verify-full"
+  REDIS_URL: "rediss://section:...@redis:6379/0"
   OPENAI_API_KEY: "sk-..."
   ANTHROPIC_API_KEY: "sk-ant-..."
 ```
@@ -60,12 +60,12 @@ Seal it and commit the output:
 ```bash
 kubeseal --cert pub-sealed-secrets.pem \
     --format yaml \
-    < praesidio-gateway-raw.yaml \
-    > deploy/k8s/secrets/praesidio-gateway.sealed.yaml
+    < section-gateway-raw.yaml \
+    > deploy/k8s/secrets/section-gateway.sealed.yaml
 
-shred -u praesidio-gateway-raw.yaml
-git add deploy/k8s/secrets/praesidio-gateway.sealed.yaml
-git commit -m "secrets: rotate praesidio-gateway sealed secret"
+shred -u section-gateway-raw.yaml
+git add deploy/k8s/secrets/section-gateway.sealed.yaml
+git commit -m "secrets: rotate section-gateway sealed secret"
 ```
 
 ## Step 3 — disable the chart-emitted ExternalSecret
@@ -81,13 +81,13 @@ secrets:
 ## Step 4 — install / upgrade
 
 ```bash
-kubectl apply -f deploy/k8s/secrets/praesidio-gateway.sealed.yaml
+kubectl apply -f deploy/k8s/secrets/section-gateway.sealed.yaml
 # Wait for the SealedSecret to materialise the underlying Secret:
-kubectl -n praesidio get secret praesidio-gateway
+kubectl -n section get secret section-gateway
 
-helm upgrade --install praesidio deploy/helm/praesidio \
-    -n praesidio --create-namespace \
-    -f deploy/helm/praesidio/values.production.yaml \
+helm upgrade --install section deploy/helm/section \
+    -n section --create-namespace \
+    -f deploy/helm/section/values.production.yaml \
     -f my-site-values.yaml
 ```
 
@@ -98,7 +98,7 @@ expected name and keys works.
 ## Rotation
 
 Re-run Step 2 with the new values, commit, and `kubectl apply -f`. Then
-`kubectl rollout restart deploy/praesidio-gateway`.
+`kubectl rollout restart deploy/section-gateway`.
 
 ## Disaster recovery
 

@@ -1,16 +1,16 @@
-# Praesidio Edge Proxy
+# Section Edge Proxy
 
 > Local CA MITM proxy that routes LLM-API traffic from CLIs / IDEs
-> through the Praesidio gateway for scan, mask, and restore.
+> through the Section gateway for scan, mask, and restore.
 
-`praesidio-edge-proxy` runs as a local HTTPS proxy on `127.0.0.1:8888`
+`section-edge-proxy` runs as a local HTTPS proxy on `127.0.0.1:8888`
 (configurable) and intercepts requests to a fixed allowlist of LLM
 provider hosts. For each request, it:
 
 1. Extracts the prompt text from the provider-specific JSON body.
 2. POSTs the prompt to the gateway's `/v1/scan` endpoint.
 3. Replaces sensitive data with placeholder tokens (or blocks the
-   request entirely, returning the gateway's `praesidio_blocked` JSON
+   request entirely, returning the gateway's `section_blocked` JSON
    to the upstream client).
 4. Forwards the rewritten request to the real provider.
 5. On the response side, walks the body for placeholders and calls
@@ -50,12 +50,12 @@ Any other host is passed through unmodified.
 ### Windows
 
 ```powershell
-pip install praesidio-edge-proxy
+pip install section-edge-proxy
 # Open a NEW elevated PowerShell window:
-praesidio-edge-proxy install-ca
+section-edge-proxy install-ca
 ```
 
-`install-ca` mints a 4096-bit RSA root under `%LOCALAPPDATA%\Praesidio\`
+`install-ca` mints a 4096-bit RSA root under `%LOCALAPPDATA%\Section\`
 (private key with `0600` ACL via `O_CREAT|O_WRONLY|O_TRUNC` + mode
 `0600`; user-only by virtue of the path) and runs
 `certutil -addstore -f Root` to add it to the LocalMachine trust
@@ -64,22 +64,22 @@ store.
 ### macOS
 
 ```sh
-pip install praesidio-edge-proxy
-sudo praesidio-edge-proxy install-ca
+pip install section-edge-proxy
+sudo section-edge-proxy install-ca
 ```
 
-Stores the root under `~/Library/Application Support/Praesidio/` and
+Stores the root under `~/Library/Application Support/Section/` and
 adds it to the System keychain via `security add-trusted-cert`.
 
 ### Linux (Debian / Ubuntu / Fedora / RHEL / openSUSE)
 
 ```sh
-pip install praesidio-edge-proxy
-sudo praesidio-edge-proxy install-ca
+pip install section-edge-proxy
+sudo section-edge-proxy install-ca
 ```
 
-Stores the root under `$XDG_DATA_HOME/praesidio/` (default
-`~/.local/share/praesidio/`) and either:
+Stores the root under `$XDG_DATA_HOME/section/` (default
+`~/.local/share/section/`) and either:
 
 * copies into `/usr/local/share/ca-certificates/` + runs `update-ca-certificates`
   (Debian-family), or
@@ -89,9 +89,9 @@ Stores the root under `$XDG_DATA_HOME/praesidio/` (default
 ## Run
 
 ```sh
-praesidio-edge-proxy start \
+section-edge-proxy start \
     --gateway https://gateway.local:8000 \
-    --api-key "$PRAESIDIO_API_KEY" \
+    --api-key "$SECTION_API_KEY" \
     --listen 127.0.0.1:8888
 ```
 
@@ -100,7 +100,7 @@ Then point any CLI / IDE that respects `HTTPS_PROXY` at the proxy:
 ```sh
 export HTTPS_PROXY=http://127.0.0.1:8888
 export HTTP_PROXY=http://127.0.0.1:8888
-# Now this goes through Praesidio:
+# Now this goes through Section:
 aider --model claude-3-5-sonnet "explain ./auth.py"
 ```
 
@@ -112,12 +112,12 @@ Manual proxy configuration`.
 ## Sample log output
 
 ```
-$ praesidio-edge-proxy start --gateway https://gateway.local:8000 --api-key sk-...
-Praesidio edge proxy v0.1.0
+$ section-edge-proxy start --gateway https://gateway.local:8000 --api-key sk-...
+Section edge proxy v0.1.0
   listening on 127.0.0.1:8888
   gateway     https://gateway.local:8000
   hosts       api.openai.com, api.anthropic.com, generativelanguage.googleapis.com, api.cohere.ai, api.mistral.ai, api.perplexity.ai, api.groq.com, api.deepseek.com
-  status      /home/op/.local/share/praesidio/edge-proxy-status.json
+  status      /home/op/.local/share/section/edge-proxy-status.json
 
 Proxy server listening at *:8888
 [127.0.0.1:51220] HTTP(S) connect to api.openai.com:443
@@ -131,7 +131,7 @@ Proxy server listening at *:8888
 ## Status / stop
 
 ```sh
-$ praesidio-edge-proxy status | jq
+$ section-edge-proxy status | jq
 {
   "running": true,
   "pid": 12345,
@@ -145,7 +145,7 @@ $ praesidio-edge-proxy status | jq
   "last_decision": {"host": "api.openai.com", "action": "mask", "request_id": "9b2c..."}
 }
 
-$ praesidio-edge-proxy stop
+$ section-edge-proxy stop
 ```
 
 ## Uninstall
@@ -153,7 +153,7 @@ $ praesidio-edge-proxy stop
 ```sh
 # (Windows: from elevated PowerShell)
 # (macOS / Linux: with sudo)
-praesidio-edge-proxy uninstall-ca
+section-edge-proxy uninstall-ca
 ```
 
 This removes the cert from the trust store and deletes the on-disk
@@ -166,18 +166,18 @@ Operators who want the gateway and proxy as a single sidecar can build
 the included `Dockerfile`:
 
 ```sh
-docker build -t praesidio-edge-proxy:dev .
+docker build -t section-edge-proxy:dev .
 docker run --rm -p 8888:8888 \
-    -e PRAESIDIO_EDGE_GATEWAY_URL=https://gateway.local:8000 \
-    -e PRAESIDIO_EDGE_API_KEY="$PRAESIDIO_API_KEY" \
-    -e PRAESIDIO_EDGE_LISTEN_HOST=0.0.0.0 \
-    -v praesidio-ca:/data \
-    praesidio-edge-proxy:dev
+    -e SECTION_EDGE_GATEWAY_URL=https://gateway.local:8000 \
+    -e SECTION_EDGE_API_KEY="$SECTION_API_KEY" \
+    -e SECTION_EDGE_LISTEN_HOST=0.0.0.0 \
+    -v section-ca:/data \
+    section-edge-proxy:dev
 ```
 
 The container expects the CA to be mounted in (`/data`) — in production
 the operator generates the CA on a build-host or jumpbox and copies
-just `praesidio-ca.crt` + `praesidio-ca.key` into the named volume.
+just `section-ca.crt` + `section-ca.key` into the named volume.
 
 ## Development
 

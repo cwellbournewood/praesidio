@@ -1,4 +1,4 @@
-# Alembic migrations — Praesidio gateway
+# Alembic migrations — Section gateway
 
 This directory contains the canonical schema history for the gateway's
 audit + lineage tables. Alembic is the source of truth for ongoing schema
@@ -45,7 +45,7 @@ alembic upgrade head --sql
 `alembic/env.py` resolves the connection URL in this order:
 
 1. `-x url=postgresql://...` on the command line.
-2. `PRAESIDIO_DATABASE_URL` env var.
+2. `SECTION_DATABASE_URL` env var.
 3. `DATABASE_URL` env var.
 4. The placeholder in `alembic.ini` (a local SQLite file).
 
@@ -55,7 +55,7 @@ so the gateway's runtime `DATABASE_URL` value can be reused verbatim.
 ## Container behaviour
 
 The gateway Dockerfile runs `alembic upgrade head` at container start before
-launching uvicorn. Set `PRAESIDIO_AUTO_MIGRATE=0` to skip (useful for
+launching uvicorn. Set `SECTION_AUTO_MIGRATE=0` to skip (useful for
 local debugging or when running migrations out-of-band from a `Job`).
 
 ## Helm
@@ -67,7 +67,7 @@ the gateway image — track via the chart's release notes.
 
 ## Authoring a new migration
 
-1. Make your ORM change in `praesidio_gateway/audit/models.py`.
+1. Make your ORM change in `section_gateway/audit/models.py`.
 2. Run `alembic revision --autogenerate -m "describe change"`.
 3. Open the generated file under `alembic/versions/`, **review** the
    `upgrade()` / `downgrade()` bodies, and add anything autogenerate

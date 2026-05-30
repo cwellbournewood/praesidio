@@ -19,7 +19,7 @@ terraform {
   # State backend — uncomment and configure for your environment.
   # backend "s3" {
   #   bucket         = "my-tf-state"
-  #   key            = "praesidio/aws/terraform.tfstate"
+  #   key            = "section/aws/terraform.tfstate"
   #   region         = "us-east-1"
   #   dynamodb_table = "tf-lock"
   #   encrypt        = true

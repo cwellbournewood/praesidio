@@ -1,6 +1,6 @@
 # Secrets — AWS Secrets Manager (via External Secrets Operator)
 
-End-to-end walkthrough for delivering Praesidio's runtime secrets from AWS
+End-to-end walkthrough for delivering Section's runtime secrets from AWS
 Secrets Manager into the Kubernetes namespace where the gateway runs, using
 the [External Secrets Operator (ESO)](https://external-secrets.io).
 
@@ -8,15 +8,15 @@ the [External Secrets Operator (ESO)](https://external-secrets.io).
 
 | Secret key in Secrets Manager | Env var injected | Purpose |
 |---|---|---|
-| `praesidio/gateway/vault-key` | `PRAESIDIO_VAULT_KEY` | AES-256 master key for the reversible-tokenisation vault. Base64-encoded 32 bytes. |
-| `praesidio/gateway/fpe-key` | `PRAESIDIO_FPE_KEY` | FF3-1 key (16 hex bytes / AES-128). |
-| `praesidio/gateway/fpe-tweak` | `PRAESIDIO_FPE_TWEAK` | FF3-1 tweak (7 hex bytes). |
-| `praesidio/gateway/api-keys` | `PRAESIDIO_API_KEYS` | Comma-separated bearer keys allowed at the gateway edge. |
-| `praesidio/gateway/database-url` | `DATABASE_URL` | Postgres DSN, including `?sslmode=verify-full`. |
-| `praesidio/gateway/redis-url` | `REDIS_URL` | Redis URL, TLS-enabled. |
-| `praesidio/upstream/openai` | `OPENAI_API_KEY` | Optional upstream key. |
-| `praesidio/upstream/anthropic` | `ANTHROPIC_API_KEY` | Optional upstream key. |
-| `praesidio/upstream/azure-openai` | `AZURE_OPENAI_API_KEY` | Optional upstream key. |
+| `section/gateway/vault-key` | `SECTION_VAULT_KEY` | AES-256 master key for the reversible-tokenisation vault. Base64-encoded 32 bytes. |
+| `section/gateway/fpe-key` | `SECTION_FPE_KEY` | FF3-1 key (16 hex bytes / AES-128). |
+| `section/gateway/fpe-tweak` | `SECTION_FPE_TWEAK` | FF3-1 tweak (7 hex bytes). |
+| `section/gateway/api-keys` | `SECTION_API_KEYS` | Comma-separated bearer keys allowed at the gateway edge. |
+| `section/gateway/database-url` | `DATABASE_URL` | Postgres DSN, including `?sslmode=verify-full`. |
+| `section/gateway/redis-url` | `REDIS_URL` | Redis URL, TLS-enabled. |
+| `section/upstream/openai` | `OPENAI_API_KEY` | Optional upstream key. |
+| `section/upstream/anthropic` | `ANTHROPIC_API_KEY` | Optional upstream key. |
+| `section/upstream/azure-openai` | `AZURE_OPENAI_API_KEY` | Optional upstream key. |
 
 All entries are stored as **SecretString** JSON with a single `value` field —
 this is the simplest layout ESO understands. Adapt as your platform conventions
@@ -44,25 +44,25 @@ kubectl get crd | grep external-secrets.io
 
 ## Step 2 — IRSA (or Workload Identity / Pod Identity) for ESO
 
-ESO needs an IAM identity that can read the Praesidio secrets. The simplest
+ESO needs an IAM identity that can read the Section secrets. The simplest
 clean pattern is IRSA on the ESO ServiceAccount.
 
 1. Create the IAM policy (least-privilege, prefix-scoped):
 
    ```bash
-   cat > praesidio-secrets-read.json <<'JSON'
+   cat > section-secrets-read.json <<'JSON'
    {
      "Version": "2012-10-17",
      "Statement": [
        {
-         "Sid": "ReadPraesidioSecrets",
+         "Sid": "ReadSectionSecrets",
          "Effect": "Allow",
          "Action": [
            "secretsmanager:GetSecretValue",
            "secretsmanager:DescribeSecret"
          ],
          "Resource": [
-           "arn:aws:secretsmanager:us-east-1:111122223333:secret:praesidio/*"
+           "arn:aws:secretsmanager:us-east-1:111122223333:secret:section/*"
          ]
        },
        {
@@ -75,8 +75,8 @@ clean pattern is IRSA on the ESO ServiceAccount.
    }
    JSON
 
-   aws iam create-policy --policy-name PraesidioSecretsRead \
-       --policy-document file://praesidio-secrets-read.json
+   aws iam create-policy --policy-name SectionSecretsRead \
+       --policy-document file://section-secrets-read.json
    ```
 
 2. Create the IRSA role and bind to the ESO ServiceAccount
@@ -87,7 +87,7 @@ clean pattern is IRSA on the ESO ServiceAccount.
        --cluster <your-cluster> \
        --namespace external-secrets \
        --name external-secrets \
-       --attach-policy-arn arn:aws:iam::111122223333:policy/PraesidioSecretsRead \
+       --attach-policy-arn arn:aws:iam::111122223333:policy/SectionSecretsRead \
        --override-existing-serviceaccounts \
        --approve
    ```
@@ -101,11 +101,11 @@ clean pattern is IRSA on the ESO ServiceAccount.
 ## Step 3 — ClusterSecretStore
 
 ```yaml
-# clustersecretstore-praesidio.yaml
+# clustersecretstore-section.yaml
 apiVersion: external-secrets.io/v1beta1
 kind: ClusterSecretStore
 metadata:
-  name: praesidio
+  name: section
 spec:
   provider:
     aws:
@@ -115,8 +115,8 @@ spec:
 ```
 
 ```bash
-kubectl apply -f clustersecretstore-praesidio.yaml
-kubectl get clustersecretstore praesidio -o yaml | grep -A2 conditions:
+kubectl apply -f clustersecretstore-section.yaml
+kubectl get clustersecretstore section -o yaml | grep -A2 conditions:
 # Expect: Ready=True
 ```
 
@@ -129,16 +129,16 @@ emits a `Kind: ExternalSecret` that pulls each entry under
 `<release>-gateway`. Confirm after the upgrade:
 
 ```bash
-kubectl -n praesidio get externalsecret praesidio-gateway -o yaml | grep -A3 status:
-kubectl -n praesidio get secret praesidio-gateway -o yaml | grep -E "^(  )?[A-Z_]+:" | head -20
+kubectl -n section get externalsecret section-gateway -o yaml | grep -A3 status:
+kubectl -n section get secret section-gateway -o yaml | grep -E "^(  )?[A-Z_]+:" | head -20
 ```
 
 ## Step 5 — `helm upgrade --install`
 
 ```bash
-helm upgrade --install praesidio deploy/helm/praesidio \
-    -n praesidio --create-namespace \
-    -f deploy/helm/praesidio/values.production.yaml \
+helm upgrade --install section deploy/helm/section \
+    -n section --create-namespace \
+    -f deploy/helm/section/values.production.yaml \
     -f my-site-values.yaml
 
 # my-site-values.yaml typically only overrides:
@@ -156,21 +156,21 @@ helm upgrade --install praesidio deploy/helm/praesidio \
 
 ```bash
 # All pods Ready
-kubectl -n praesidio get pods
+kubectl -n section get pods
 
 # Gateway healthy
-kubectl -n praesidio port-forward svc/praesidio-gateway 8080:8080 &
+kubectl -n section port-forward svc/section-gateway 8080:8080 &
 curl -sf http://localhost:8080/healthz && echo OK
 
 # Secret was actually populated by ESO (not just an empty stub)
-kubectl -n praesidio get secret praesidio-gateway \
-    -o jsonpath='{.data.PRAESIDIO_VAULT_KEY}' | base64 -d | wc -c
+kubectl -n section get secret section-gateway \
+    -o jsonpath='{.data.SECTION_VAULT_KEY}' | base64 -d | wc -c
 # Expect: 44 (base64 of 32 bytes)
 
 # Run a tokenisation request through the gateway
 curl -sf http://localhost:8080/v1/chat/completions \
-    -H "Authorization: Bearer $(kubectl -n praesidio get secret praesidio-gateway \
-            -o jsonpath='{.data.PRAESIDIO_API_KEYS}' | base64 -d | cut -d, -f1)" \
+    -H "Authorization: Bearer $(kubectl -n section get secret section-gateway \
+            -o jsonpath='{.data.SECTION_API_KEYS}' | base64 -d | cut -d, -f1)" \
     -H 'content-type: application/json' \
     -d '{"model":"gpt-4o-mini","messages":[{"role":"user","content":"mail a@b.com"}]}'
 ```
@@ -182,17 +182,17 @@ Update the secret value in AWS Secrets Manager. ESO re-fetches every
 an immediate refresh:
 
 ```bash
-kubectl -n praesidio annotate externalsecret praesidio-gateway \
+kubectl -n section annotate externalsecret section-gateway \
     force-sync="$(date +%s)" --overwrite
 ```
 
 Then trigger a rolling restart so the gateway pods pick up the new env values:
 
 ```bash
-kubectl -n praesidio rollout restart deploy/praesidio-gateway
+kubectl -n section rollout restart deploy/section-gateway
 ```
 
-> **Vault-key rotation is special.** Rotating `PRAESIDIO_VAULT_KEY` makes the
+> **Vault-key rotation is special.** Rotating `SECTION_VAULT_KEY` makes the
 > existing token vault entries unrecoverable. Use the documented two-key
 > rotation procedure in `docs/operations/disaster-recovery.md` before
 > changing this value in production.

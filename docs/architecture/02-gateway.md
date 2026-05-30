@@ -15,7 +15,7 @@ real upstream chosen by policy.
 ## Module layout
 
 ```
-services/gateway/praesidio_gateway/
+services/gateway/section_gateway/
 ├── main.py             FastAPI app, middleware, lifespan
 ├── config.py           pydantic-settings (env + file)
 ├── auth.py             API-key + OIDC + mTLS principal resolution
@@ -91,7 +91,7 @@ Per-route `fail_mode: open | closed` in policy controls behaviour when:
 - token vault unreachable,
 - upstream LLM 5xx.
 
-`closed` returns `503 praesidio_unavailable` with an explanation header.
+`closed` returns `503 section_unavailable` with an explanation header.
 `open` forwards the original request and **emits a high-severity audit
 event marked `degraded`**. Even fail-open is observable.
 

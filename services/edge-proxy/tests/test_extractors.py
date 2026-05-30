@@ -6,7 +6,7 @@ into the same JSON path without disturbing other fields.
 """
 from __future__ import annotations
 
-from praesidio_edge_proxy import extractors
+from section_edge_proxy import extractors
 
 # --- OpenAI ----------------------------------------------------------------
 

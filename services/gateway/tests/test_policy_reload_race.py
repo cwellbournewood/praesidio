@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 
-from praesidio_gateway.policy.loader import (
+from section_gateway.policy.loader import (
     PolicyReloadError,
     PolicyStore,
     load_bundle,
@@ -24,17 +24,17 @@ from praesidio_gateway.policy.loader import (
 def _write_minimal_bundle(base: Path, *, policy_id: str = "p1") -> None:
     (base / "policies").mkdir(parents=True, exist_ok=True)
     (base / "manifest.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: Bundle\n"
+        "apiVersion: section/v1\nkind: Bundle\n"
         "metadata: {name: t, version: '0'}\nspec: {includes: []}\n"
     )
     (base / "models.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: ModelRegistry\nspec: {models: [], endpoints: []}\n"
+        "apiVersion: section/v1\nkind: ModelRegistry\nspec: {models: [], endpoints: []}\n"
     )
     (base / "routes.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: Routes\nspec: []\n"
+        "apiVersion: section/v1\nkind: Routes\nspec: []\n"
     )
     (base / "policies" / "0001-p.yaml").write_text(
-        "apiVersion: praesidio/v1\n"
+        "apiVersion: section/v1\n"
         "kind: Policy\n"
         f"metadata: {{id: {policy_id}, name: {policy_id}}}\n"
         "spec:\n"
@@ -126,8 +126,8 @@ async def test_parse_error_keeps_last_good_and_raises() -> None:
 
 @pytest.mark.asyncio
 async def test_reload_metric_updates_on_success() -> None:
-    """``praesidio_policy_active_version`` must reflect the loaded bundle."""
-    from praesidio_gateway.obs.metrics import POLICY_ACTIVE_VERSION, POLICY_RELOAD_TOTAL
+    """``section_policy_active_version`` must reflect the loaded bundle."""
+    from section_gateway.obs.metrics import POLICY_ACTIVE_VERSION, POLICY_RELOAD_TOTAL
 
     with tempfile.TemporaryDirectory() as tmp:
         base = Path(tmp)
@@ -149,7 +149,7 @@ async def test_reload_metric_updates_on_success() -> None:
 
 @pytest.mark.asyncio
 async def test_reload_metric_increments_err_on_parse_error() -> None:
-    from praesidio_gateway.obs.metrics import POLICY_RELOAD_TOTAL
+    from section_gateway.obs.metrics import POLICY_RELOAD_TOTAL
 
     with tempfile.TemporaryDirectory() as tmp:
         base = Path(tmp)

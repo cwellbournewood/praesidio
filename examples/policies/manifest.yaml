@@ -1,7 +1,7 @@
-apiVersion: praesidio/v1
+apiVersion: section/v1
 kind: Bundle
 metadata:
-  name: praesidio-default
+  name: section-default
   version: 0.1.0
 spec:
   # The default bundle is intentionally industry-agnostic. Every tenant

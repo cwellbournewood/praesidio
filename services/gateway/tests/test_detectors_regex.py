@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import pytest
 
-from praesidio_gateway.dlp.detectors import regex as det_regex
+from section_gateway.dlp.detectors import regex as det_regex
 
 
 @pytest.mark.asyncio

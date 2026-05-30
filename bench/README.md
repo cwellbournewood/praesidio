@@ -1,4 +1,4 @@
-# Praesidio benchmarks
+# Section benchmarks
 
 Three independent benchmark suites under one roof:
 

@@ -1,4 +1,4 @@
-// ESLint v9 flat config for the Praesidio VS Code extension.
+// ESLint v9 flat config for the Section VS Code extension.
 import js from "@eslint/js";
 import tseslint from "@typescript-eslint/eslint-plugin";
 import tsparser from "@typescript-eslint/parser";

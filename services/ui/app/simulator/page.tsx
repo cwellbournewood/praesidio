@@ -26,14 +26,14 @@ import { Select } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Tag } from '@/components/ui/tag';
 import { Skeleton } from '@/components/ui/skeleton';
-import { DecisionBadge } from '@/components/praesidio/DecisionBadge';
-import { FindingChip } from '@/components/praesidio/FindingChip';
+import { DecisionBadge } from '@/components/section/DecisionBadge';
+import { FindingChip } from '@/components/section/FindingChip';
 import { api, swrFetcher } from '@/lib/api';
 import { lookup } from '@/lib/labels';
 import type { Policy, SimulateResponse, Finding } from '@/lib/types';
 import { cn, decisionClasses, decisionLabel, formatMs } from '@/lib/utils';
 
-const HISTORY_KEY = 'praesidio.simulator.recent';
+const HISTORY_KEY = 'section.simulator.recent';
 const MAX_HISTORY = 5;
 
 const SAMPLE_PROMPTS = [

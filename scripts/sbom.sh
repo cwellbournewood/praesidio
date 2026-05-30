@@ -5,14 +5,14 @@
 #         dist/sbom-ui.cdx.json
 #
 # Usage:
-#   scripts/sbom.sh                                # uses ghcr.io/praesidio/{gateway,ui}:latest
+#   scripts/sbom.sh                                # uses ghcr.io/section/{gateway,ui}:latest
 #   GATEWAY_IMAGE=foo:1.2 UI_IMAGE=bar:1.2 scripts/sbom.sh
 
 set -eu
 
 OUT_DIR="${OUT_DIR:-dist}"
-GATEWAY_IMAGE="${GATEWAY_IMAGE:-ghcr.io/praesidio/gateway:latest}"
-UI_IMAGE="${UI_IMAGE:-ghcr.io/praesidio/ui:latest}"
+GATEWAY_IMAGE="${GATEWAY_IMAGE:-ghcr.io/section/gateway:latest}"
+UI_IMAGE="${UI_IMAGE:-ghcr.io/section/ui:latest}"
 
 if ! command -v syft >/dev/null 2>&1; then
   cat <<'EOF' >&2

@@ -1,12 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://praesidio.dev/schema/mode.schema.json",
-  "title": "Praesidio Mode",
-  "description": "Schema for mode.yaml — the manifest of a Praesidio mode bundle.",
+  "$id": "https://section.dev/schema/mode.schema.json",
+  "title": "Section Mode",
+  "description": "Schema for mode.yaml — the manifest of a Section mode bundle.",
   "type": "object",
   "required": ["apiVersion", "kind", "metadata", "spec"],
   "properties": {
-    "apiVersion": { "const": "praesidio/v1" },
+    "apiVersion": { "const": "section/v1" },
     "kind":       { "const": "Mode" },
     "metadata": {
       "type": "object",

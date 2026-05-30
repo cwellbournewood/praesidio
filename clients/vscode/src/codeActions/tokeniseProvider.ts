@@ -1,8 +1,8 @@
 /**
- * CodeActionProvider that offers "Praesidio: Tokenise" as a quick-fix
+ * CodeActionProvider that offers "Section: Tokenise" as a quick-fix
  * for any diagnostic emitted by the document scanner.
  *
- * When invoked, the action runs `praesidio.tokeniseSelection` with the
+ * When invoked, the action runs `section.tokeniseSelection` with the
  * diagnostic's range. The actual /v1/scan + replace logic lives in
  * `commands/tokeniseSelection.ts`.
  */
@@ -21,22 +21,22 @@ export class TokeniseCodeActionProvider
     range: vscode.Range,
     context: vscode.CodeActionContext,
   ): vscode.CodeAction[] {
-    const praesidioDiags = context.diagnostics.filter(
-      (d) => d.source === "praesidio",
+    const sectionDiags = context.diagnostics.filter(
+      (d) => d.source === "section",
     );
-    if (praesidioDiags.length === 0) return [];
+    if (sectionDiags.length === 0) return [];
 
     const actions: vscode.CodeAction[] = [];
-    for (const diag of praesidioDiags) {
+    for (const diag of sectionDiags) {
       const a = new vscode.CodeAction(
-        `Praesidio: Tokenise ${diag.code ?? "sensitive data"}`,
+        `Section: Tokenise ${diag.code ?? "sensitive data"}`,
         vscode.CodeActionKind.QuickFix,
       );
       a.diagnostics = [diag];
-      a.isPreferred = praesidioDiags.length === 1;
+      a.isPreferred = sectionDiags.length === 1;
       a.command = {
-        command: "praesidio.tokeniseSelection",
-        title: "Praesidio: Tokenise",
+        command: "section.tokeniseSelection",
+        title: "Section: Tokenise",
         arguments: [
           { uri: document.uri.toString(), range: serialiseRange(diag.range) },
         ],
@@ -44,15 +44,15 @@ export class TokeniseCodeActionProvider
       actions.push(a);
     }
     // Also offer a single "tokenise all findings in this range" command.
-    if (praesidioDiags.length > 1) {
+    if (sectionDiags.length > 1) {
       const all = new vscode.CodeAction(
-        `Praesidio: Tokenise ${praesidioDiags.length} findings`,
+        `Section: Tokenise ${sectionDiags.length} findings`,
         vscode.CodeActionKind.QuickFix,
       );
-      all.diagnostics = praesidioDiags;
+      all.diagnostics = sectionDiags;
       all.command = {
-        command: "praesidio.tokeniseSelection",
-        title: "Praesidio: Tokenise",
+        command: "section.tokeniseSelection",
+        title: "Section: Tokenise",
         arguments: [
           { uri: document.uri.toString(), range: serialiseRange(range) },
         ],

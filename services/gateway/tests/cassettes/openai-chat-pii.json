@@ -10,7 +10,7 @@
   "client_request": {
     "headers": {
       "x-api-key": "test-key",
-      "x-praesidio-tenant": "default",
+      "x-section-tenant": "default",
       "content-type": "application/json"
     },
     "body": {

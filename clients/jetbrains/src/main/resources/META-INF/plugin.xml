@@ -1,5 +1,5 @@
 <!--
-  Praesidio JetBrains plugin descriptor.
+  Section JetBrains plugin descriptor.
 
   See https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html
   for the schema. Identity here MUST match build.gradle.kts (group/name/version
@@ -7,12 +7,12 @@
   time — the values below are placeholders for IDE-side dev.)
 -->
 <idea-plugin>
-    <id>io.praesidio.edge</id>
-    <name>Praesidio — Semantic DLP for AI Coding Tools</name>
-    <vendor url="https://github.com/cwellbournewood/praesidio">Praesidio</vendor>
+    <id>io.section.edge</id>
+    <name>Section — Semantic DLP for AI Coding Tools</name>
+    <vendor url="https://github.com/cwellbournewood/section">Section</vendor>
 
     <description><![CDATA[
-        <p><strong>Praesidio</strong> brings semantic data-loss prevention to
+        <p><strong>Section</strong> brings semantic data-loss prevention to
         your JetBrains IDE.</p>
 
         <p>Anything you paste into Copilot Chat, AI Assistant, Cody, Continue,
@@ -22,13 +22,13 @@
 
         <ul>
           <li><strong>Scan selection.</strong> Right-click any selection →
-            "Praesidio: Scan Selection" to inspect it before sending.</li>
+            "Section: Scan Selection" to inspect it before sending.</li>
           <li><strong>Tokenise selection.</strong> Replace sensitive spans
             in-place with reversible placeholders the model can reason
             about safely.</li>
           <li><strong>Sensitive-data inspection.</strong> Findings surface
             as IDE warnings in any open file with a "Tokenise" quick-fix.</li>
-          <li><strong>Local proxy.</strong> Toggle the Praesidio edge proxy
+          <li><strong>Local proxy.</strong> Toggle the Section edge proxy
             to MITM AI-tool traffic on the loopback interface — covers
             Cursor, Claude Code, Continue, aider, and Copilot CLI.</li>
           <li><strong>Tool window.</strong> See your recent gateway decisions,
@@ -60,7 +60,7 @@
     <idea-version since-build="232.0" until-build="252.*"/>
     <depends>com.intellij.modules.platform</depends>
 
-    <resource-bundle>messages.PraesidioBundle</resource-bundle>
+    <resource-bundle>messages.SectionBundle</resource-bundle>
 
     <!-- =================================================================
          Application-level services
@@ -69,22 +69,22 @@
 
         <!-- Persistent settings (gateway URL, toggles). -->
         <applicationService
-            serviceImplementation="io.praesidio.edge.settings.PraesidioSettings"/>
+            serviceImplementation="io.section.edge.settings.SectionSettings"/>
 
-        <!-- Settings panel surfaced under Settings → Tools → Praesidio. -->
+        <!-- Settings panel surfaced under Settings → Tools → Section. -->
         <applicationConfigurable
             parentId="tools"
-            id="io.praesidio.edge.settings.PraesidioConfigurable"
-            displayName="Praesidio"
-            instance="io.praesidio.edge.settings.PraesidioConfigurable"/>
+            id="io.section.edge.settings.SectionConfigurable"
+            displayName="Section"
+            instance="io.section.edge.settings.SectionConfigurable"/>
 
         <!-- Tool window — right anchor, opens on demand. -->
         <toolWindow
-            id="Praesidio"
+            id="Section"
             anchor="right"
-            icon="/icons/praesidioToolWindow.svg"
+            icon="/icons/sectionToolWindow.svg"
             secondary="false"
-            factoryClass="io.praesidio.edge.toolwindow.PraesidioToolWindowFactory"/>
+            factoryClass="io.section.edge.toolwindow.SectionToolWindowFactory"/>
 
         <!--
           Sensitive-data inspection. Plain-text language ID means it runs
@@ -93,17 +93,17 @@
         -->
         <localInspection
             language=""
-            implementationClass="io.praesidio.edge.inspections.SensitiveDataInspection"
-            displayName="Praesidio sensitive data"
-            groupKey="praesidio.inspection.group"
+            implementationClass="io.section.edge.inspections.SensitiveDataInspection"
+            displayName="Section sensitive data"
+            groupKey="section.inspection.group"
             enabledByDefault="true"
             level="WARNING"
-            bundle="messages.PraesidioBundle"
-            shortName="PraesidioSensitiveData"/>
+            bundle="messages.SectionBundle"
+            shortName="SectionSensitiveData"/>
 
         <!-- Notification group — used for toast messages on errors. -->
         <notificationGroup
-            id="Praesidio"
+            id="Section"
             displayType="BALLOON"
             isLogByDefault="true"/>
 
@@ -113,55 +113,55 @@
           ApplicationInitializedListener instead.
         -->
         <applicationService
-            serviceImplementation="io.praesidio.edge.PraesidioApp"/>
+            serviceImplementation="io.section.edge.SectionApp"/>
 
         <postStartupActivity
-            implementation="io.praesidio.edge.PraesidioStartupActivity"/>
+            implementation="io.section.edge.SectionStartupActivity"/>
     </extensions>
 
     <!-- =================================================================
          Actions
          ================================================================= -->
     <actions>
-        <group id="io.praesidio.edge.MainMenuGroup"
-               text="_Praesidio"
-               description="Praesidio: semantic DLP for AI tools"
+        <group id="io.section.edge.MainMenuGroup"
+               text="_Section"
+               description="Section: semantic DLP for AI tools"
                popup="true">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
 
-            <action id="io.praesidio.edge.actions.ScanSelectionAction"
-                    class="io.praesidio.edge.actions.ScanSelectionAction"
+            <action id="io.section.edge.actions.ScanSelectionAction"
+                    class="io.section.edge.actions.ScanSelectionAction"
                     text="Scan _Selection"
-                    description="Scan the current editor selection for sensitive data via the Praesidio gateway"
+                    description="Scan the current editor selection for sensitive data via the Section gateway"
                     icon="AllIcons.Actions.Find"/>
 
-            <action id="io.praesidio.edge.actions.TokeniseSelectionAction"
-                    class="io.praesidio.edge.actions.TokeniseSelectionAction"
+            <action id="io.section.edge.actions.TokeniseSelectionAction"
+                    class="io.section.edge.actions.TokeniseSelectionAction"
                     text="_Tokenise Selection"
                     description="Replace sensitive spans in the selection with reversible placeholders"
                     icon="AllIcons.Actions.Replace"/>
 
             <separator/>
 
-            <action id="io.praesidio.edge.actions.ToggleProxyAction"
-                    class="io.praesidio.edge.actions.ToggleProxyAction"
+            <action id="io.section.edge.actions.ToggleProxyAction"
+                    class="io.section.edge.actions.ToggleProxyAction"
                     text="Toggle Edge _Proxy"
-                    description="Start or stop the local praesidio-edge-proxy"/>
+                    description="Start or stop the local section-edge-proxy"/>
 
-            <action id="io.praesidio.edge.actions.SignInAction"
-                    class="io.praesidio.edge.actions.SignInAction"
+            <action id="io.section.edge.actions.SignInAction"
+                    class="io.section.edge.actions.SignInAction"
                     text="Sign _In…"
                     description="Authenticate with the gateway via OIDC device code"/>
         </group>
 
         <!-- Right-click editor menu — only the two operations a user
              would actually invoke in flight from inside an editor. -->
-        <group id="io.praesidio.edge.EditorPopupGroup"
-               text="Praesidio"
+        <group id="io.section.edge.EditorPopupGroup"
+               text="Section"
                popup="true">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-            <reference ref="io.praesidio.edge.actions.ScanSelectionAction"/>
-            <reference ref="io.praesidio.edge.actions.TokeniseSelectionAction"/>
+            <reference ref="io.section.edge.actions.ScanSelectionAction"/>
+            <reference ref="io.section.edge.actions.TokeniseSelectionAction"/>
         </group>
     </actions>
 
@@ -170,7 +170,7 @@
          ================================================================= -->
     <applicationListeners>
         <listener
-            class="io.praesidio.edge.PraesidioAppLifecycleListener"
+            class="io.section.edge.SectionAppLifecycleListener"
             topic="com.intellij.ide.AppLifecycleListener"/>
     </applicationListeners>
 

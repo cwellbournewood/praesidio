@@ -4,11 +4,11 @@
 
 The "AI security" category is genuinely new — the first specialist vendors
 appeared 2022-2023, and the category is still being shaped. Buyers
-typically evaluate Praesidio-shaped solutions alongside the following:
+typically evaluate Section-shaped solutions alongside the following:
 
 ### 1. Enterprise-platform plays (existing DLP/CASB players extending into AI)
 
-| Vendor | Strengths | Gaps Praesidio addresses |
+| Vendor | Strengths | Gaps Section addresses |
 |---|---|---|
 | **Microsoft Purview (incl. Insider Risk + Defender for Cloud Apps AI Hub)** | Deep M365 integration, identity (Entra), classification at scale, certified for many regs | Generally Microsoft-shop only; coverage of non-Azure LLMs and OSS agent frameworks is shallower; policy is clickops in Compliance Manager |
 | **Netskope GenAI Security** | Strong CASB/SWG inline position; large catalogue of AI apps | Mostly traffic-level controls; semantic + reversible anonymisation is shallow |
@@ -28,23 +28,23 @@ not the architectural centre.
 | **Protect AI (Guardian, Rebuff, NB Defense)** | MLSecOps for the model lifecycle; OSS-adjacent (acquired several OSS tools) |
 | **Prompt Security** | Browser extension + proxy for "shadow AI"; quick wins on visibility |
 | **Nightfall AI** | Started in SaaS DLP, now strong on AI prompt DLP; entity-rich detectors |
-| **CalypsoAI** | Enterprise LLM control plane; close to the Praesidio category, leans heavier on classifier-driven scanning |
+| **CalypsoAI** | Enterprise LLM control plane; close to the Section category, leans heavier on classifier-driven scanning |
 | **WitnessAI** | Identity-centric LLM observability + DLP; close adjacency |
 | **Hidden Layer** | Adversarial ML detection; model-side focus |
 | **Robust Intelligence** | (Now Cisco) — pre-deploy + runtime guardrails |
 
 ### 3. Open-source projects we live alongside (and integrate with)
 
-| Project | What it is | How Praesidio relates |
+| Project | What it is | How Section relates |
 |---|---|---|
 | **Microsoft Presidio** | PII detection & anonymisation library | **Used directly** as one detector lane |
 | **NVIDIA NeMo Guardrails** | Programmable rails (Colang) embedded in apps | Different design point — guardrails in the app code vs. a gateway. Complementary. |
 | **Guardrails AI (guardrails-ai)** | Structured-output validation library | Complementary; used in-app, not at the network edge |
-| **LLM-Guard** (Laiyer / Protect AI) | Prompt input/output scanner; OSS | Overlap on detection; Praesidio adds policy engine, gateway, audit chain, agent broker |
-| **LiteLLM** | Multi-provider proxy | Adjacent — Praesidio's provider adapters serve a similar purpose but with policy/DLP first |
+| **LLM-Guard** (Laiyer / Protect AI) | Prompt input/output scanner; OSS | Overlap on detection; Section adds policy engine, gateway, audit chain, agent broker |
+| **LiteLLM** | Multi-provider proxy | Adjacent — Section's provider adapters serve a similar purpose but with policy/DLP first |
 | **OPA / Gatekeeper** | Policy engine for K8s/services | Influence on policy-as-code; we use CEL instead of Rego for the gateway's hot path |
 
-## Where Praesidio wins
+## Where Section wins
 
 1. **Drop-in OpenAI/Anthropic compatibility**. Existing SDKs work by
    changing one env var. Most specialists ask for SDK integration; most
@@ -63,7 +63,7 @@ not the architectural centre.
    and sandboxed tool execution are architected up front rather than
    retrofitted.
 7. **Light-first, calm UI**. Most competitor UIs are dark dashboards
-   with threat-hunter chrome; an analyst spending a day in Praesidio
+   with threat-hunter chrome; an analyst spending a day in Section
    finds it less fatiguing.
 
 ## Where we deliberately don't compete
@@ -77,7 +77,7 @@ not the architectural centre.
 
 ## Reference benchmarks
 
-| Capability | Praesidio | Typical incumbent | Typical specialist |
+| Capability | Section | Typical incumbent | Typical specialist |
 |---|---|---|---|
 | OpenAI-compatible surface | ✅ | ❌ | mixed |
 | Reversible tokenisation w/ vault | ✅ | rare | mixed |
@@ -93,7 +93,7 @@ not the architectural centre.
 
 ## Buyer personas and their first question
 
-| Persona | First question | Praesidio's answer |
+| Persona | First question | Section's answer |
 |---|---|---|
 | CISO | "Will this stop our IP leaving on a prompt?" | DLP + anonymisation + audit; live demo in 5 min via `bash scripts/demo.sh` |
 | Data protection officer | "Show me GDPR Art. 30 evidence" | Audit export pack |

@@ -14,9 +14,9 @@ import {
   type Settings,
 } from './types.js';
 
-const SETTINGS_KEY = 'praesidio.settings';
-const SECRETS_KEY = 'praesidio.secrets';
-const DECISIONS_KEY = 'praesidio.decisions';
+const SETTINGS_KEY = 'section.settings';
+const SECRETS_KEY = 'section.secrets';
+const DECISIONS_KEY = 'section.decisions';
 
 const MAX_DECISIONS = 10;
 

@@ -2,7 +2,7 @@
 
 Covers:
   * Default price book values for common models;
-  * Override via PRAESIDIO_PRICE_BOOK_JSON;
+  * Override via SECTION_PRICE_BOOK_JSON;
   * Unknown model returns 0.0 cost (and warns once);
   * extract_usage understands OpenAI / Anthropic / Bedrock / Ollama shapes;
   * record_usage_from_payload bumps the three Prometheus counters.
@@ -13,12 +13,12 @@ import importlib
 
 import pytest
 
-from praesidio_gateway.obs import prices as prices_mod
-from praesidio_gateway.obs.metering import (
+from section_gateway.obs import prices as prices_mod
+from section_gateway.obs.metering import (
     extract_usage,
     record_usage_from_payload,
 )
-from praesidio_gateway.obs.metrics import (
+from section_gateway.obs.metrics import (
     COST_USD_TOTAL,
     TOKENS_IN_TOTAL,
     TOKENS_OUT_TOTAL,
@@ -69,7 +69,7 @@ def test_estimate_cost_math() -> None:
 
 def test_price_book_json_override(monkeypatch) -> None:
     monkeypatch.setenv(
-        "PRAESIDIO_PRICE_BOOK_JSON",
+        "SECTION_PRICE_BOOK_JSON",
         '{"my-private-model": {"input_per_1k": 0.5, "output_per_1k": 1.0}}',
     )
     # Force reload so the module re-reads the env.
@@ -83,7 +83,7 @@ def test_price_book_json_override(monkeypatch) -> None:
 
 
 def test_price_book_malformed_json_ignored(monkeypatch, caplog) -> None:
-    monkeypatch.setenv("PRAESIDIO_PRICE_BOOK_JSON", "{not json")
+    monkeypatch.setenv("SECTION_PRICE_BOOK_JSON", "{not json")
     with caplog.at_level("WARNING"):
         importlib.reload(prices_mod)
     # Default catalogue still works.

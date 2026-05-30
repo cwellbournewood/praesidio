@@ -1,6 +1,6 @@
 {
   "extName": {
-    "message": "Praesidio — AI prompt DLP",
+    "message": "Section — AI prompt DLP",
     "description": "Extension name shown in chrome://extensions."
   },
   "extDescription": {
@@ -8,7 +8,7 @@
     "description": "Extension description shown in chrome://extensions and the Web Store listing."
   },
   "actionTitle": {
-    "message": "Praesidio",
+    "message": "Section",
     "description": "Tooltip on the toolbar action icon."
   }
 }

@@ -12,9 +12,9 @@ from __future__ import annotations
 
 import copy
 
-from praesidio_gateway.obs.metrics import TOOL_CALLS_BLOCKED_TOTAL
-from praesidio_gateway.policy.models import ToolAllowlist
-from praesidio_gateway.policy.tool_calls import (
+from section_gateway.obs.metrics import TOOL_CALLS_BLOCKED_TOTAL
+from section_gateway.policy.models import ToolAllowlist
+from section_gateway.policy.tool_calls import (
     enforce_tool_calls,
     extract_anthropic_tool_names,
     extract_openai_tool_names,

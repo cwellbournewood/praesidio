@@ -1,7 +1,7 @@
 {
-  "$schema": "https://praesidio.dev/schemas/redteam-cases.v1.json",
+  "$schema": "https://section.dev/schemas/redteam-cases.v1.json",
   "version": 1,
-  "description": "Praesidio red-team test cases. Each case is POSTed through the gateway. The actual decision and the union of finding categories from /admin/events?limit=1 are asserted against the expectations. Derived from docs/redteam/playbook.md.",
+  "description": "Section red-team test cases. Each case is POSTed through the gateway. The actual decision and the union of finding categories from /admin/events?limit=1 are asserted against the expectations. Derived from docs/redteam/playbook.md.",
   "cases": [
     {
       "name": "pii-zero-width-ssn",

@@ -6,9 +6,9 @@ import secrets
 
 import pytest
 
-os.environ.setdefault("PRAESIDIO_ENV", "development")
-os.environ.setdefault("PRAESIDIO_VAULT_KEY", "")
-os.environ.setdefault("PRAESIDIO_FPE_KEY", "")
+os.environ.setdefault("SECTION_ENV", "development")
+os.environ.setdefault("SECTION_VAULT_KEY", "")
+os.environ.setdefault("SECTION_FPE_KEY", "")
 os.environ.setdefault("DATABASE_URL", "sqlite+aiosqlite:///:memory:")
 os.environ.setdefault("REDIS_URL", "")  # forces in-memory vault backend
 

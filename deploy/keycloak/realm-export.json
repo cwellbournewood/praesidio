@@ -1,9 +1,9 @@
 {
-  "realm": "praesidio",
+  "realm": "section",
   "enabled": true,
-  "displayName": "Praesidio (dev)",
-  "displayNameHtml": "<em>Praesidio</em>",
-  "loginTheme": "praesidio",
+  "displayName": "Section (dev)",
+  "displayNameHtml": "<em>Section</em>",
+  "loginTheme": "section",
   "sslRequired": "none",
   "registrationAllowed": false,
   "loginWithEmailAllowed": true,
@@ -17,10 +17,10 @@
   "defaultRoles": ["offline_access", "uma_authorization"],
   "requiredCredentials": ["password"],
   "groups": [
-    { "name": "praesidio-admins" },
-    { "name": "praesidio-ops" },
-    { "name": "praesidio-auditors" },
-    { "name": "praesidio-viewers" }
+    { "name": "section-admins" },
+    { "name": "section-ops" },
+    { "name": "section-auditors" },
+    { "name": "section-viewers" }
   ],
   "clientScopes": [
     {
@@ -80,12 +80,12 @@
   "defaultOptionalClientScopes": ["offline_access", "address", "phone"],
   "clients": [
     {
-      "clientId": "praesidio",
-      "name": "Praesidio",
+      "clientId": "section",
+      "name": "Section",
       "enabled": true,
       "protocol": "openid-connect",
       "publicClient": false,
-      "secret": "praesidio-demo-secret",
+      "secret": "section-demo-secret",
       "redirectUris": [
         "http://localhost:3000/*",
         "http://localhost:3010/*",
@@ -110,46 +110,46 @@
   "users": [
     {
       "username": "alice",
-      "email": "alice@praesidio.dev",
+      "email": "alice@section.dev",
       "firstName": "Alice",
       "lastName": "Admin",
       "enabled": true,
       "emailVerified": true,
       "credentials": [{ "type": "password", "value": "alice", "temporary": false }],
-      "groups": ["praesidio-admins"],
+      "groups": ["section-admins"],
       "attributes": { "tenant_id": ["default"] }
     },
     {
       "username": "bob",
-      "email": "bob@praesidio.dev",
+      "email": "bob@section.dev",
       "firstName": "Bob",
       "lastName": "Operator",
       "enabled": true,
       "emailVerified": true,
       "credentials": [{ "type": "password", "value": "bob", "temporary": false }],
-      "groups": ["praesidio-ops"],
+      "groups": ["section-ops"],
       "attributes": { "tenant_id": ["default"] }
     },
     {
       "username": "carol",
-      "email": "carol@praesidio.dev",
+      "email": "carol@section.dev",
       "firstName": "Carol",
       "lastName": "Auditor",
       "enabled": true,
       "emailVerified": true,
       "credentials": [{ "type": "password", "value": "carol", "temporary": false }],
-      "groups": ["praesidio-auditors"],
+      "groups": ["section-auditors"],
       "attributes": { "tenant_id": ["default"] }
     },
     {
       "username": "dan",
-      "email": "dan@praesidio.dev",
+      "email": "dan@section.dev",
       "firstName": "Dan",
       "lastName": "Viewer",
       "enabled": true,
       "emailVerified": true,
       "credentials": [{ "type": "password", "value": "dan", "temporary": false }],
-      "groups": ["praesidio-viewers"],
+      "groups": ["section-viewers"],
       "attributes": { "tenant_id": ["acme"] }
     }
   ]

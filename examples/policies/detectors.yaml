@@ -1,4 +1,4 @@
-# Praesidio detector catalogue
+# Section detector catalogue
 # --------------------------------------------------------------------------
 # Single source of truth that maps every stable detector ID (used in policy
 # rules, vault profiles, and audit events) to a human-readable display name,
@@ -26,10 +26,10 @@
 #     example:             one short illustrative snippet            (optional)
 # --------------------------------------------------------------------------
 
-apiVersion: praesidio/v1
+apiVersion: section/v1
 kind: DetectorCatalogue
 metadata:
-  name: praesidio-detector-catalogue
+  name: section-detector-catalogue
   version: 0.1.0
 
 # --------------------------------------------------------------------------

@@ -1,8 +1,8 @@
 /**
- * HTTP client for the Praesidio gateway.
+ * HTTP client for the Section gateway.
  *
  * Targets `POST /v1/scan` and `POST /v1/restore` defined in
- * `services/gateway/praesidio_gateway/api/v1/scan.py`. Uses the global
+ * `services/gateway/section_gateway/api/v1/scan.py`. Uses the global
  * `fetch` polyfilled by Node 18+/undici (VS Code 1.85 ships Node 20).
  *
  * Auth: caller supplies a credential blob — either an API key (sent as
@@ -120,7 +120,7 @@ export class GatewayClient {
   ): Promise<Response> {
     const headers: Record<string, string> = {
       Accept: "application/json",
-      "User-Agent": "praesidio-vscode/1.1",
+      "User-Agent": "section-vscode/1.1",
     };
     if (body !== null && body !== undefined) {
       headers["Content-Type"] = "application/json";
@@ -131,7 +131,7 @@ export class GatewayClient {
       headers["Authorization"] = `Bearer ${cred.bearerToken}`;
     }
     if (cred.tenantId) {
-      headers["X-Praesidio-Tenant"] = cred.tenantId;
+      headers["X-Section-Tenant"] = cred.tenantId;
     }
 
     const url = `${this.baseUrl}${path}`;

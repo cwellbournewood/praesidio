@@ -8,7 +8,7 @@ const nextConfig = {
   },
   async rewrites() {
     const gateway =
-      process.env.PRAESIDIO_GATEWAY_URL ?? 'http://localhost:8080';
+      process.env.SECTION_GATEWAY_URL ?? 'http://localhost:8080';
     return [
       {
         source: '/api/gateway/:path*',

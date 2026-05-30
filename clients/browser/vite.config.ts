@@ -18,7 +18,7 @@ const CONTENT_ENTRIES = [
 ] as const;
 
 /**
- * Praesidio browser extension build config.
+ * Section browser extension build config.
  *
  * Produces:
  *   dist/
@@ -40,13 +40,13 @@ export default defineConfig({
       // extension-relative asset paths. Also builds each content script
       // as a single-file IIFE so they work as MV3 content_scripts
       // (which don't support ESM imports).
-      name: 'praesidio-mv3-assets',
+      name: 'section-mv3-assets',
       async closeBundle() {
         const outDir = resolve(__dirname, 'dist');
         // Reentry guard — the per-content-script inner builds defined
         // below would trigger this hook again (Vite reuses the parent
         // plugin instance). Bail out cleanly the second time.
-        const flag = '__praesidio_mv3_assets_done';
+        const flag = '__section_mv3_assets_done';
         if ((globalThis as Record<string, unknown>)[flag]) return;
         (globalThis as Record<string, unknown>)[flag] = true;
         mkdirSync(outDir, { recursive: true });
@@ -147,7 +147,7 @@ export default defineConfig({
               sourcemap: false,
               lib: {
                 entry: resolve(__dirname, entry.input),
-                name: `Praesidio_${fileBase}`,
+                name: `Section_${fileBase}`,
                 formats: ['iife'],
                 fileName: () => `${fileBase}.js`,
               },

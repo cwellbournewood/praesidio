@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Praesidio compliance report generator.
+Section compliance report generator.
 
 Reads the gateway's audit log directly from Postgres (read-only role) and
 renders a Markdown + (optional) PDF report mapped to SOC 2 Common Criteria
@@ -18,9 +18,9 @@ Outputs:
 
 Environment:
     DATABASE_URL          full DSN (psycopg2 / asyncpg-compatible). If unset,
-                          PRAESIDIO_REPORT_DSN is consulted, then a default
+                          SECTION_REPORT_DSN is consulted, then a default
                           read-only role on the local stack.
-    PRAESIDIO_COMPLIANCE_DOCS  override path to docs/compliance/ (default:
+    SECTION_COMPLIANCE_DOCS  override path to docs/compliance/ (default:
                           ./docs/compliance)
 
 Exit codes:
@@ -58,7 +58,7 @@ except ImportError:
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = REPO_ROOT / "scripts" / "templates"
-DEFAULT_DSN = "postgresql://praesidio_reporter:praesidio_reporter@localhost:5432/praesidio"
+DEFAULT_DSN = "postgresql://section_reporter:section_reporter@localhost:5432/section"
 
 
 @dataclass
@@ -107,7 +107,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--out", type=Path, default=Path("dist/compliance/report"),
                    help="Output path prefix (no extension).")
     p.add_argument("--dsn", default=os.environ.get("DATABASE_URL")
-                   or os.environ.get("PRAESIDIO_REPORT_DSN") or DEFAULT_DSN,
+                   or os.environ.get("SECTION_REPORT_DSN") or DEFAULT_DSN,
                    help="Postgres DSN (default: from env / read-only role).")
     p.add_argument("--no-pdf", action="store_true",
                    help="Skip PDF rendering even if weasyprint is installed.")

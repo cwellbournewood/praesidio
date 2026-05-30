@@ -1,4 +1,4 @@
-# Praesidio — GCP reference Terraform
+# Section — GCP reference Terraform
 
 **Stub quality.** Reference *starting point*, not a turnkey production
 deployment.
@@ -14,7 +14,7 @@ What it creates:
 - Memorystore Redis (Standard HA, TLS, AUTH)
 - GKE Autopilot (Workload Identity enabled)
 - Google service account for the gateway + Workload Identity binding to the
-  `praesidio/praesidio` Kubernetes ServiceAccount
+  `section/section` Kubernetes ServiceAccount
 
 ## Apply
 
@@ -47,7 +47,7 @@ serviceAccount:
     iam.gke.io/gcp-service-account: "<terraform output gateway_service_account_email>"
 postgres:
   embedded: false
-  externalDSN: "postgresql+asyncpg://praesidio:<password>@<private_ip>:5432/praesidio"
+  externalDSN: "postgresql+asyncpg://section:<password>@<private_ip>:5432/section"
 redis:
   embedded: false
   externalURL: "rediss://:<auth_string>@<redis_host>:6379/0"

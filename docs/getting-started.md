@@ -19,8 +19,8 @@ are only needed for local source-level development.
 ## 1. Clone and copy the env template
 
 ```bash
-git clone https://github.com/cwellbournewood/praesidio.git
-cd praesidio
+git clone https://github.com/cwellbournewood/section.git
+cd section
 cp .env.example .env
 ```
 
@@ -59,7 +59,7 @@ bash scripts/demo.sh
 
 You should see three test cases pass: a PII prompt is transformed
 (tokenised), an AWS access key is blocked with an
-`X-Praesidio-Reason` header, and an IBAN is redacted. The script
+`X-Section-Reason` header, and an IBAN is redacted. The script
 exits `0` on success and non-zero otherwise — that's the assertion
 the [`quickstart` workflow](../.github/workflows/quickstart.yml) makes
 on every pull request.
@@ -80,25 +80,25 @@ there:
 
 ## 5. Try the admin API directly (optional)
 
-The gateway exposes a small admin surface (the `praesidio-audit verify`
+The gateway exposes a small admin surface (the `section-audit verify`
 CLI uses these too):
 
 ```bash
 # Replay a stored prompt through current policy, without side effects
 curl -X POST http://localhost:8080/admin/simulate \
-  -H "Authorization: Bearer praesidio-demo-key" \
+  -H "Authorization: Bearer section-demo-key" \
   -H "Content-Type: application/json" \
   -d '{"prompt":"email me at jane@acme.com"}'
 
 # Reverse a placeholder back to its original (privileged, audited)
 curl -X POST http://localhost:8080/admin/detokenise \
-  -H "Authorization: Bearer praesidio-demo-key" \
+  -H "Authorization: Bearer section-demo-key" \
   -H "Content-Type: application/json" \
   -d '{"placeholder":"<EMAIL_a1b2>","reason":"investigation"}'
 
 # Hot-reload the policy bundle
 curl -X POST http://localhost:8080/admin/policy/reload \
-  -H "Authorization: Bearer praesidio-demo-key"
+  -H "Authorization: Bearer section-demo-key"
 ```
 
 ## 6. Tear down

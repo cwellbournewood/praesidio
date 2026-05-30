@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Praesidio will be documented in this file.
+All notable changes to Section will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -13,7 +13,7 @@ _Nothing yet — first commit after 1.0.0._
 
 ## [1.0.0] — 2026-05-28
 
-The first stable release of Praesidio. Server-side gateway, layered DLP,
+The first stable release of Section. Server-side gateway, layered DLP,
 reversible anonymisation, signed audit chain, K8s admission, signed release
 pipeline, **and** edge coverage (browser extension, VS Code / JetBrains
 plugins, local CA edge-proxy) shipping together.
@@ -34,7 +34,7 @@ are `pii`, `financial`, `healthcare`, `credential`, `network`, `code`,
   `<US_DRIVER_LICENSE_xxxx>` → `<US_DRIVERS_LICENSE_xxxx>`. All other
   shorts unchanged (`<EMAIL_xxxx>`, `<PHONE_xxxx>`, `<PERSON_xxxx>`,
   `<IBAN_xxxx>`, `<JWT_xxxx>`, `<UUID_xxxx>`, `<DATE_xxxx>`, etc.).
-- **Source of truth: `services/gateway/praesidio_gateway/dlp/display.py`**
+- **Source of truth: `services/gateway/section_gateway/dlp/display.py`**
   — a single Python module that owns every label's wire id, human name,
   placeholder short, category, default severity, description, and an
   optional example. The TypeScript twin
@@ -87,7 +87,7 @@ are `pii`, `financial`, `healthcare`, `credential`, `network`, `code`,
   response-side inverse — tenant + request_id are AAD-bound at the vault
   layer so cross-tenant lookups fail. Tests: `tests/test_v1_scan.py`
   (6 passing).
-- **`services/edge-proxy/`** — `praesidio-edge-proxy` — a local CA MITM
+- **`services/edge-proxy/`** — `section-edge-proxy` — a local CA MITM
   proxy. Auto-generates per-machine 4096-bit RSA root CA on first
   `install-ca`, intercepts 8 upstream LLM provider hosts, scan-rewrites
   bodies via `/v1/scan`, restores via `/v1/restore`. Single feature that
@@ -153,10 +153,10 @@ are `pii`, `financial`, `healthcare`, `credential`, `network`, `code`,
   driven by JSON fixtures in `services/gateway/tests/cassettes/`.
   Wired into `.github/workflows/e2e.yml`.
 - **Alembic** schema migrations under `services/gateway/alembic/`, with
-  auto-upgrade at container start (`PRAESIDIO_AUTO_MIGRATE=1`, default).
+  auto-upgrade at container start (`SECTION_AUTO_MIGRATE=1`, default).
   Legacy SQL retained under `services/gateway/migrations/` only as the
   Postgres `docker-entrypoint-initdb.d` fallback.
-- Production-shaped Helm overlay `deploy/helm/praesidio/values.production.yaml`.
+- Production-shaped Helm overlay `deploy/helm/section/values.production.yaml`.
 - Operations runbooks:
   - `docs/operations/secrets-aws-secrets-manager.md` (External Secrets + IRSA)
   - `docs/operations/secrets-vault.md` (External Secrets + HashiCorp Vault)
@@ -175,7 +175,7 @@ are `pii`, `financial`, `healthcare`, `credential`, `network`, `code`,
     OPA Gatekeeper `ConstraintTemplate` + `Constraint`.
   - Blocks Pods that mount cloud credentials AND set an env var pointing
     at a known LLM provider hostname (bypass via
-    `praesidio.dev/admission-bypass=true`).
+    `section.dev/admission-bypass=true`).
   - Smoke-tested in CI by `.github/workflows/admission.yml` on kind v1.30.
 - GitHub Actions workflows:
   - `.github/workflows/codeql.yml` (Python + JS/TS + Actions, security-extended)
@@ -215,6 +215,6 @@ shadow mode, SIEM webhook, signed policy bundles, Helm chart, Terraform
 modules, docs site, observability overlay, Keycloak OIDC overlay,
 red-team harness, compliance report generator, kind smoke CI.
 
-[Unreleased]: https://github.com/cwellbournewood/praesidio/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/cwellbournewood/praesidio/releases/tag/v1.0.0
-[0.1.0]: https://github.com/cwellbournewood/praesidio/releases/tag/v0.1.0
+[Unreleased]: https://github.com/cwellbournewood/section/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/cwellbournewood/section/releases/tag/v1.0.0
+[0.1.0]: https://github.com/cwellbournewood/section/releases/tag/v0.1.0

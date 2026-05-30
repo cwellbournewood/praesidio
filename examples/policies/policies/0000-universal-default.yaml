@@ -1,9 +1,9 @@
-apiVersion: praesidio/v1
+apiVersion: section/v1
 kind: Policy
 metadata:
   id: universal-default
   name: "Universal default"
-  owner: praesidio@acme.example
+  owner: section@acme.example
   description: |
     The policy every tenant gets out of the box. It is industry-agnostic:
     every detector is on, decisions are keyed off the sensitivity tier

@@ -15,7 +15,7 @@ from starlette.responses import PlainTextResponse
 from starlette.routing import Route
 from starlette.testclient import TestClient
 
-from praesidio_gateway.middleware.rate_limit import (
+from section_gateway.middleware.rate_limit import (
     RateLimitMiddleware,
     _InMemoryLimiter,
 )
@@ -88,13 +88,13 @@ def test_request_path_model_hint_429s_when_drained() -> None:
         "/echo",
         headers={
             "X-API-Key": "k",
-            "X-Praesidio-Tenant": "tA",
-            "X-Praesidio-Model-Hint": "gpt-4o",
+            "X-Section-Tenant": "tA",
+            "X-Section-Model-Hint": "gpt-4o",
         },
     )
     assert r.status_code == 429
-    assert r.headers.get("X-Praesidio-RateLimit-Scope") == "model"
-    assert r.headers.get("X-Praesidio-RateLimit-Model") == "gpt-4o"
+    assert r.headers.get("X-Section-RateLimit-Scope") == "model"
+    assert r.headers.get("X-Section-RateLimit-Model") == "gpt-4o"
     body = r.json()["error"]
     assert body["scope"] == "model"
     assert "tpm" in body["message"].lower()
@@ -107,7 +107,7 @@ def test_request_path_no_hint_skips_model_check() -> None:
     client = TestClient(app)
     r = client.get(
         "/echo",
-        headers={"X-API-Key": "k", "X-Praesidio-Tenant": "tA"},
+        headers={"X-API-Key": "k", "X-Section-Tenant": "tA"},
     )
     assert r.status_code == 200
 
@@ -129,12 +129,12 @@ async def test_consume_tpm_helper_is_noop_when_no_middleware() -> None:
     """``consume_tpm_after_upstream`` must not raise when middleware absent."""
     from starlette.requests import Request
 
-    from praesidio_gateway.middleware.rate_limit import consume_tpm_after_upstream
+    from section_gateway.middleware.rate_limit import consume_tpm_after_upstream
 
     # Build a minimal Starlette scope with no rate_limiter attached.
     scope = {
         "type": "http",
-        "headers": [(b"x-praesidio-tenant", b"tA")],
+        "headers": [(b"x-section-tenant", b"tA")],
         "method": "POST",
         "path": "/x",
     }

@@ -1,10 +1,10 @@
-# GDPR — Praesidio control mapping
+# GDPR — Section control mapping
 
-Regulation (EU) 2016/679. Praesidio is a *processor* of personal data when
+Regulation (EU) 2016/679. Section is a *processor* of personal data when
 it inspects prompts. Mapping below is to the most commonly cited articles
 in DPIA contexts.
 
-| Article | Obligation | Praesidio control |
+| Article | Obligation | Section control |
 |---|---|---|
 | Art. 5(1)(a) Lawfulness, fairness, transparency | Lawful basis recorded | Per-route policy carries lawful basis annotation; surfaced in audit |
 | Art. 5(1)(c) Data minimisation | Process only what is necessary | Anonymiser strips/tokenises before forwarding upstream |
@@ -17,11 +17,11 @@ in DPIA contexts.
 | Art. 30 Records of processing | RoPA | Audit log + policy bundle digest = RoPA evidence |
 | Art. 32 Security of processing | Technical & organisational measures | See `docs/threat-model.md` |
 | Art. 33-34 Breach notification | Detect + notify | Output DLP detects regurgitation; SIEM sinks for SOC |
-| Art. 35 DPIA | Required for high-risk processing | Praesidio supplies the inventory of processing operations and impacts |
+| Art. 35 DPIA | Required for high-risk processing | Section supplies the inventory of processing operations and impacts |
 | Art. 44-49 International transfers | SCCs, adequacy, etc. | Model router enforces jurisdiction-based routing (EU prompts → EU upstreams) |
 
 ## Sub-processor model
 
-When Praesidio routes a prompt to an upstream LLM (OpenAI, Anthropic,
+When Section routes a prompt to an upstream LLM (OpenAI, Anthropic,
 Azure), that upstream is a sub-processor. The audit log records which
 sub-processor saw which (sanitised) payload, enabling per-vendor reporting.

@@ -3,7 +3,7 @@
 These are the Prometheus / PromQL queries operators run during and after a
 soak window to confirm the gateway is healthy and to fill in the
 [report template](report-template.md). All metric names below are emitted
-by `praesidio_gateway.obs.metrics`.
+by `section_gateway.obs.metrics`.
 
 ## Health (overall)
 
@@ -15,7 +15,7 @@ sum by (route) (rate(request_total[5m]))
 sum(rate(request_total{status=~"5.."}[5m]))
   / clamp_min(sum(rate(request_total[5m])), 1e-9)
 
-# Praesidio-decision breakdown (allow / transform / block / shadow)
+# Section-decision breakdown (allow / transform / block / shadow)
 sum by (decision) (rate(decision_total[5m]))
 ```
 
@@ -64,11 +64,11 @@ sum by (tenant, route) (rate(rate_limit_blocked_total[5m]))
 ```promql
 # Gateway container CPU (cores)
 sum by (pod) (rate(container_cpu_usage_seconds_total{
-  namespace="praesidio", container="gateway"}[5m]))
+  namespace="section", container="gateway"}[5m]))
 
 # Gateway container RSS (MiB)
 sum by (pod) (container_memory_working_set_bytes{
-  namespace="praesidio", container="gateway"}) / 1024 / 1024
+  namespace="section", container="gateway"}) / 1024 / 1024
 ```
 
 ## Goroutines-equivalent for Python: asyncio task count

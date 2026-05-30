@@ -2,7 +2,7 @@
 /**
  * Build + package the extension into a .vsix file using @vscode/vsce.
  *
- * Output: praesidio-vscode-<version>.vsix in the repo root for this
+ * Output: section-vscode-<version>.vsix in the repo root for this
  * client. The Makefile picks the artefact up via `make vscode-package`.
  */
 

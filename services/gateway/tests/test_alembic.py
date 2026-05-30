@@ -26,7 +26,7 @@ def _config_for(db_path: Path) -> Config:
     cfg.set_main_option("script_location", str(REPO_ROOT / "alembic"))
     cfg.set_main_option("sqlalchemy.url", f"sqlite:///{db_path.as_posix()}")
     # Force env.py's URL resolution to pick the test DB.
-    os.environ["PRAESIDIO_DATABASE_URL"] = f"sqlite:///{db_path.as_posix()}"
+    os.environ["SECTION_DATABASE_URL"] = f"sqlite:///{db_path.as_posix()}"
     return cfg
 
 

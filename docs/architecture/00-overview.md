@@ -1,8 +1,8 @@
 # 00 · Architecture Overview
 
-## 1. What Praesidio is
+## 1. What Section is
 
-Praesidio is an **AI Security Control Plane**: a policy decision point and policy
+Section is an **AI Security Control Plane**: a policy decision point and policy
 enforcement point that sits on the path between users / applications / agents and
 the LLMs, embeddings stores, and tools they want to use.
 
@@ -120,7 +120,7 @@ It is deliberately *not* a model. It is the layer that decides, in real time:
 
 ```
   ┌─ untrusted ─────────────────┐    ┌─ semi-trusted ──────────────┐
-  │ user, browser, IDE, agent   │ ── │ Praesidio Gateway           │
+  │ user, browser, IDE, agent   │ ── │ Section Gateway           │
   └─────────────────────────────┘    │  (TLS termination,          │
                                      │   identity binding,         │
   ┌─ trusted ──────┐                 │   DLP, vault)               │

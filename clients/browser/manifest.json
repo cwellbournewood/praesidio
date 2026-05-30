@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Praesidio — AI prompt DLP",
-  "short_name": "Praesidio",
+  "name": "Section — AI prompt DLP",
+  "short_name": "Section",
   "version": "1.1.0",
   "description": "Scan and mask sensitive data in prompts to consumer AI sites before they leave your browser.",
   "default_locale": "en",
@@ -14,7 +14,7 @@
     "128": "icons/128.png"
   },
   "action": {
-    "default_title": "Praesidio",
+    "default_title": "Section",
     "default_popup": "popup/index.html",
     "default_icon": {
       "16": "icons/16.png",
@@ -47,7 +47,7 @@
     "http://localhost:8080/*",
     "https://localhost:8000/*",
     "https://localhost:8080/*",
-    "https://*.praesidio.local/*"
+    "https://*.section.local/*"
   ],
   "content_scripts": [
     {
@@ -103,6 +103,6 @@
     }
   ],
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://localhost:8000 http://localhost:8000 https://localhost:8080 http://localhost:8080 https://*.praesidio.local"
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://localhost:8000 http://localhost:8000 https://localhost:8080 http://localhost:8080 https://*.section.local"
   }
 }

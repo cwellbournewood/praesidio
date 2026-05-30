@@ -9,8 +9,8 @@ from collections.abc import AsyncIterator
 
 import pytest
 
-from praesidio_gateway.anonymize.stream import RestoreStream
-from praesidio_gateway.anonymize.tokenizer import ReversalEntry, ReversalMap
+from section_gateway.anonymize.stream import RestoreStream
+from section_gateway.anonymize.tokenizer import ReversalEntry, ReversalMap
 
 
 def _reversal(pairs: dict[str, str]) -> ReversalMap:

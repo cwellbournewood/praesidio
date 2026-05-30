@@ -16,7 +16,7 @@
  *
  * "Resume submission" is the trickiest part: we can't `dispatchEvent` a
  * fake click because React swallows non-trusted events. Instead, we
- * stamp a `data-praesidio-pass="<id>"` on the event we'd like to allow,
+ * stamp a `data-section-pass="<id>"` on the event we'd like to allow,
  * and when our hook sees that stamp on a subsequent event it bypasses.
  */
 import type { SiteId, ScanResponse } from '../../lib/types.js';
@@ -46,8 +46,8 @@ export interface InterceptConfig {
   writeText?: (input: HTMLElement, text: string) => void;
 }
 
-const PASS_ATTR = 'data-praesidio-pass';
-const SESSION_ATTR = 'data-praesidio-session';
+const PASS_ATTR = 'data-section-pass';
+const SESSION_ATTR = 'data-section-session';
 
 /**
  * Mint or reuse a stable session id for this tab. Stable across
@@ -120,7 +120,7 @@ export function installSubmitHook(cfg: InterceptConfig): () => void {
     if (!input) return true;
     const text = read(input);
     if (!text || !text.trim()) return true;
-    if (text === '__praesidio_heartbeat__') return true; // never re-scan our own probe
+    if (text === '__section_heartbeat__') return true; // never re-scan our own probe
 
     e.preventDefault();
     e.stopPropagation();

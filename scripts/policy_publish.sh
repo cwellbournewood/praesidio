@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Praesidio — package, sign, and publish a policy bundle to an OCI registry.
+# Section — package, sign, and publish a policy bundle to an OCI registry.
 #
 # Usage:
 #   scripts/policy_publish.sh [-d DIR] [-r REGISTRY/REPO] [-t TAG] [--no-sign]
 #
 #   -d DIR        Source policy directory (default: ./examples/policies)
-#   -r REGISTRY   Target OCI repo (default: ${PRAESIDIO_POLICY_REPO:-ghcr.io/praesidio/policies})
+#   -r REGISTRY   Target OCI repo (default: ${SECTION_POLICY_REPO:-ghcr.io/section/policies})
 #   -t TAG        Tag to publish (default: timestamp; recommended: semver)
 #   --no-sign     Skip cosign signing (NOT RECOMMENDED — for local dry runs only)
 #
@@ -17,7 +17,7 @@
 #   1. Validate the bundle locally via scripts/seed_policies.py --no-reload.
 #   2. Tar the directory into a deterministic archive (sorted, mtime=0).
 #   3. oras push the archive as an OCI artefact with media type
-#      application/vnd.praesidio.policy-bundle.v1+tar.
+#      application/vnd.section.policy-bundle.v1+tar.
 #   4. cosign sign --yes (keyless via Fulcio by default; or COSIGN_KEY for KMS).
 #   5. Print the published reference (registry/repo:tag@sha256:...) and the
 #      verification one-liner.
@@ -25,7 +25,7 @@
 set -euo pipefail
 
 SRC_DIR="./examples/policies"
-REPO="${PRAESIDIO_POLICY_REPO:-ghcr.io/praesidio/policies}"
+REPO="${SECTION_POLICY_REPO:-ghcr.io/section/policies}"
 TAG="$(date -u +%Y%m%d%H%M%S)"
 SIGN="1"
 
@@ -71,7 +71,7 @@ else
   echo "   (skipping seed validation — python or seed_policies.py not available)"
 fi
 
-WORK="$(mktemp -d -t praesidio-bundle.XXXXXX)"
+WORK="$(mktemp -d -t section-bundle.XXXXXX)"
 trap 'rm -rf "$WORK"' EXIT
 
 ARCHIVE="$WORK/bundle.tar"
@@ -92,8 +92,8 @@ REF="${REPO}:${TAG}"
 echo ":: pushing to ${REF}"
 ( cd "$WORK" && \
   oras push "$REF" \
-    --artifact-type application/vnd.praesidio.policy-bundle.v1 \
-    "bundle.tar:application/vnd.praesidio.policy-bundle.v1+tar" )
+    --artifact-type application/vnd.section.policy-bundle.v1 \
+    "bundle.tar:application/vnd.section.policy-bundle.v1+tar" )
 
 # Resolve immutable digest reference for signing.
 RESOLVED="$(oras manifest fetch --descriptor "$REF" 2>/dev/null | \
@@ -122,7 +122,7 @@ Published policy bundle.
   Archive:    bundle.tar  (sha256: ${DIGEST#sha256:})
 
 To consume from the gateway:
-  PRAESIDIO_POLICY_BUNDLE=oci://${SIGN_REF}
+  SECTION_POLICY_BUNDLE=oci://${SIGN_REF}
 
 To verify manually (keyless Fulcio):
   cosign verify-blob \\

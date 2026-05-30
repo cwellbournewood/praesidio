@@ -1,14 +1,14 @@
 /**
- * Settings reader for the Praesidio VS Code extension.
+ * Settings reader for the Section VS Code extension.
  *
- * Wraps `vscode.workspace.getConfiguration("praesidio")` with a typed
+ * Wraps `vscode.workspace.getConfiguration("section")` with a typed
  * facade. All callers should go through this module so test mocks can
  * stub a single boundary.
  */
 
 import * as vscode from "vscode";
 
-export interface PraesidioSettings {
+export interface SectionSettings {
   gateway: {
     url: string;
     apiKeyEcho: string;
@@ -36,8 +36,8 @@ export interface PraesidioSettings {
   };
 }
 
-export function readSettings(): PraesidioSettings {
-  const c = vscode.workspace.getConfiguration("praesidio");
+export function readSettings(): SectionSettings {
+  const c = vscode.workspace.getConfiguration("section");
   return {
     gateway: {
       url: c.get<string>("gateway.url", "http://localhost:8080").trim(),
@@ -55,7 +55,7 @@ export function readSettings(): PraesidioSettings {
     },
     proxy: {
       autoStart: c.get<boolean>("proxy.autoStart", false),
-      binaryPath: c.get<string>("proxy.binaryPath", "praesidio-edge-proxy"),
+      binaryPath: c.get<string>("proxy.binaryPath", "section-edge-proxy"),
       port: c.get<number>("proxy.port", 8889),
     },
     statusBar: {
@@ -64,8 +64,8 @@ export function readSettings(): PraesidioSettings {
     oidc: {
       deviceCodeEndpoint: c.get<string>("oidc.deviceCodeEndpoint", "").trim(),
       tokenEndpoint: c.get<string>("oidc.tokenEndpoint", "").trim(),
-      clientId: c.get<string>("oidc.clientId", "praesidio-vscode"),
-      scopes: c.get<string>("oidc.scopes", "openid profile praesidio.edge"),
+      clientId: c.get<string>("oidc.clientId", "section-vscode"),
+      scopes: c.get<string>("oidc.scopes", "openid profile section.edge"),
     },
   };
 }
@@ -87,13 +87,13 @@ export function toVscodeSeverity(
 
 /**
  * Subscribe to configuration changes; invokes `cb` whenever any
- * `praesidio.*` setting changes. Returns the disposable.
+ * `section.*` setting changes. Returns the disposable.
  */
 export function onSettingsChanged(
-  cb: (next: PraesidioSettings) => void,
+  cb: (next: SectionSettings) => void,
 ): vscode.Disposable {
   return vscode.workspace.onDidChangeConfiguration((e) => {
-    if (e.affectsConfiguration("praesidio")) {
+    if (e.affectsConfiguration("section")) {
       cb(readSettings());
     }
   });

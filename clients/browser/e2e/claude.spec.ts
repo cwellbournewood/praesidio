@@ -21,7 +21,7 @@ test.describe('claude fixture intercept', () => {
         return editor.innerText ?? editor.textContent ?? '';
       };
       newBtn.addEventListener('click', () => {
-        if (newBtn.dataset.praesidioPass) {
+        if (newBtn.dataset.sectionPass) {
           setTimeout(() => {
             out.textContent = `Assistant: I received ${readText()}`;
           }, 50);
@@ -36,9 +36,9 @@ test.describe('claude fixture intercept', () => {
         const p = document.createElement('p');
         p.textContent = sanitised;
         editor.appendChild(p);
-        newBtn.dataset.praesidioPass = '1';
+        newBtn.dataset.sectionPass = '1';
         newBtn.click();
-        delete newBtn.dataset.praesidioPass;
+        delete newBtn.dataset.sectionPass;
       });
     });
 
@@ -66,10 +66,10 @@ test.describe('claude fixture intercept', () => {
         document.addEventListener('click', (e) => {
           const btn = e.target && e.target.closest && e.target.closest('[aria-label="Send Message"]');
           if (!btn) return;
-          // Simulate Praesidio block: prevent default and mark.
+          // Simulate Section block: prevent default and mark.
           e.preventDefault();
           e.stopImmediatePropagation();
-          document.body.setAttribute('data-praesidio-blocked', '1');
+          document.body.setAttribute('data-section-blocked', '1');
         }, true);
       `,
     });
@@ -79,6 +79,6 @@ test.describe('claude fixture intercept', () => {
 
     // The fixture's response container should be untouched.
     await expect(page.locator('#response')).toHaveText('');
-    await expect(page.locator('body')).toHaveAttribute('data-praesidio-blocked', '1');
+    await expect(page.locator('body')).toHaveAttribute('data-section-blocked', '1');
   });
 });

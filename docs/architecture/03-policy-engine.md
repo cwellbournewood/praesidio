@@ -31,7 +31,7 @@ bundle/
 ## Schema (abbreviated)
 
 ```yaml
-apiVersion: praesidio/v1
+apiVersion: section/v1
 kind: Policy
 metadata:
   id: pii-strict

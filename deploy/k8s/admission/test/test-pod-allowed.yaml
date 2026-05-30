@@ -1,12 +1,12 @@
 # Positive fixture — this Pod MUST be admitted. Identical to the blocked
-# pod except OPENAI_BASE_URL points at the in-cluster Praesidio gateway
+# pod except OPENAI_BASE_URL points at the in-cluster Section gateway
 # instead of directly at api.openai.com.
 apiVersion: v1
 kind: Pod
 metadata:
-  name: praesidio-admission-allowed
+  name: section-admission-allowed
   labels:
-    app.kubernetes.io/managed-by: praesidio-admission-test
+    app.kubernetes.io/managed-by: section-admission-test
 spec:
   restartPolicy: Never
   volumes:
@@ -20,7 +20,7 @@ spec:
       command: ["sh", "-c", "sleep 1"]
       env:
         - name: OPENAI_BASE_URL
-          value: http://praesidio-gateway.praesidio.svc.cluster.local:8080/v1
+          value: http://section-gateway.section.svc.cluster.local:8080/v1
         - name: AWS_REGION
           value: us-east-1
       volumeMounts:

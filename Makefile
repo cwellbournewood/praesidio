@@ -6,7 +6,7 @@
         edge-build edge-test
 
 help:
-	@echo "Praesidio — common tasks"
+	@echo "Section — common tasks"
 	@echo "  make dev               — bring up full stack via docker compose"
 	@echo "  make up                — alias for dev"
 	@echo "  make down              — stop the stack"
@@ -29,7 +29,7 @@ help:
 	@echo "  make compliance-report — generate Markdown+PDF report (TENANT=acme DAYS=90)"
 	@echo "  make edge-build        — build edge-proxy + browser + vscode + jetbrains"
 	@echo "  make edge-test         — run all edge-client test suites"
-	@echo "  make edge-proxy-build  — build praesidio-edge-proxy wheel"
+	@echo "  make edge-proxy-build  — build section-edge-proxy wheel"
 	@echo "  make browser-build     — build the MV3 browser extension (.zip + .crx)"
 	@echo "  make vscode-build      — package the VS Code .vsix"
 	@echo "  make jetbrains-build   — gradle buildPlugin (requires jdk 17+, gradle)"
@@ -48,7 +48,7 @@ build:
 	docker compose build
 
 gateway:
-	cd services/gateway && uv run uvicorn praesidio_gateway.main:app --reload --port 8080
+	cd services/gateway && uv run uvicorn section_gateway.main:app --reload --port 8080
 
 ui:
 	cd services/ui && pnpm dev

@@ -2,7 +2,7 @@
 
 Status: tool-call allowlist is enforced today; the capability-token broker
 and sandboxed tool executor are architected here. This document specifies
-the contract Praesidio exposes to agent frameworks (AutoGen, CrewAI,
+the contract Section exposes to agent frameworks (AutoGen, CrewAI,
 LangGraph, custom) and to MCP servers.
 
 ## Threat picture
@@ -29,7 +29,7 @@ inside the tenant's perimeter.
               │  every tool call goes through:
               ▼
    ┌──────────────────────────────────────────────────────┐
-   │ Praesidio Agent Broker (sidecar or in-process SDK)   │
+   │ Section Agent Broker (sidecar or in-process SDK)   │
    │                                                      │
    │  1. capability check (signed token, scope, TTL)      │
    │  2. argument DLP (same pipeline as gateway)          │
@@ -50,9 +50,9 @@ when an agent run is authorised.
 
 ```json
 {
-  "iss": "praesidio.control-plane",
+  "iss": "section.control-plane",
   "sub": "agent:run:01HZ...",
-  "aud": "praesidio.agent-broker",
+  "aud": "section.agent-broker",
   "exp": 1735680000,
   "nbf": 1735679400,
   "principal": { "user": "alice", "tenant": "acme" },
@@ -73,7 +73,7 @@ token whose `sub` appears.
 
 ## MCP tool registry
 
-Praesidio maintains a registry of approved MCP servers with:
+Section maintains a registry of approved MCP servers with:
 
 | Field | |
 |---|---|
@@ -123,7 +123,7 @@ content.
 
 ## Reference SDK
 
-`praesidio_agent` (Python) and `@praesidio/agent` (TypeScript) ship thin
+`section_agent` (Python) and `@section/agent` (TypeScript) ship thin
 wrappers for AutoGen, CrewAI, LangGraph, and the Anthropic + OpenAI
 function-calling APIs. Wrapping a tool with the SDK forwards every call
 through the broker.

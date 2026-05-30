@@ -1,4 +1,4 @@
-# Observability overlay for Praesidio.
+# Observability overlay for Section.
 #
 # Adds Tempo (traces), Loki + Promtail (logs), Prometheus (metrics),
 # and Grafana (pre-provisioned dashboards) to the root compose stack.
@@ -22,16 +22,16 @@ services:
     environment:
       OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4317
       OTEL_EXPORTER_OTLP_PROTOCOL: grpc
-      OTEL_SERVICE_NAME: praesidio-gateway
-      OTEL_RESOURCE_ATTRIBUTES: deployment.environment=local,service.namespace=praesidio
+      OTEL_SERVICE_NAME: section-gateway
+      OTEL_RESOURCE_ATTRIBUTES: deployment.environment=local,service.namespace=section
     labels:
       logging: "promtail"
-      logging_jobname: "praesidio-gateway"
+      logging_jobname: "section-gateway"
 
   ui:
     labels:
       logging: "promtail"
-      logging_jobname: "praesidio-ui"
+      logging_jobname: "section-ui"
 
   prometheus:
     image: prom/prometheus:v2.54.1
@@ -107,7 +107,7 @@ services:
     volumes:
       - ./deploy/observability/grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml:ro
       - ./deploy/observability/grafana/dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml:ro
-      - ./deploy/grafana/dashboards:/var/lib/grafana/dashboards/praesidio:ro
+      - ./deploy/grafana/dashboards:/var/lib/grafana/dashboards/section:ro
       - grafanadata:/var/lib/grafana
     ports:
       - "3001:3000"

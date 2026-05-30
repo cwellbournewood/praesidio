@@ -1,4 +1,4 @@
-apiVersion: praesidio/v1
+apiVersion: section/v1
 kind: Policy
 metadata:
   id: code-protection

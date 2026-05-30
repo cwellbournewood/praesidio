@@ -43,9 +43,9 @@ export async function mountAxe(): Promise<void> {
       rules: [{ id: 'page-has-heading-one', enabled: true }],
     });
     // eslint-disable-next-line no-console
-    console.info('[praesidio] axe-core mounted (dev). Violations will print here.');
+    console.info('[section] axe-core mounted (dev). Violations will print here.');
   } catch (err) {
     // eslint-disable-next-line no-console
-    console.warn('[praesidio] axe-core failed to mount:', err);
+    console.warn('[section] axe-core failed to mount:', err);
   }
 }

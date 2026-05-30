@@ -6,14 +6,14 @@ on:
     paths:
       - 'services/edge-proxy/**'
       - 'clients/**'
-      - 'services/gateway/praesidio_gateway/api/v1/scan.py'
+      - 'services/gateway/section_gateway/api/v1/scan.py'
       - 'docs/edge-coverage-matrix.md'
       - '.github/workflows/edge.yml'
   pull_request:
     paths:
       - 'services/edge-proxy/**'
       - 'clients/**'
-      - 'services/gateway/praesidio_gateway/api/v1/scan.py'
+      - 'services/gateway/section_gateway/api/v1/scan.py'
       - '.github/workflows/edge.yml'
 
 concurrency:
@@ -58,7 +58,7 @@ jobs:
       - name: Upload wheel
         uses: actions/upload-artifact@v4
         with:
-          name: praesidio-edge-proxy-wheel
+          name: section-edge-proxy-wheel
           path: services/edge-proxy/dist/*.whl
 
   browser:
@@ -102,7 +102,7 @@ jobs:
       - name: Upload zip
         uses: actions/upload-artifact@v4
         with:
-          name: praesidio-browser-extension
+          name: section-browser-extension
           path: clients/browser/dist-zip/*.zip
 
   vscode:
@@ -129,13 +129,13 @@ jobs:
         run: npm test
 
       - name: Package
-        run: npx --yes @vscode/vsce package -o praesidio-vscode.vsix
+        run: npx --yes @vscode/vsce package -o section-vscode.vsix
 
       - name: Upload vsix
         uses: actions/upload-artifact@v4
         with:
-          name: praesidio-vscode-vsix
-          path: clients/vscode/praesidio-vscode.vsix
+          name: section-vscode-vsix
+          path: clients/vscode/section-vscode.vsix
 
   jetbrains:
     name: jetbrains plugin
@@ -171,7 +171,7 @@ jobs:
       - name: Upload plugin zip
         uses: actions/upload-artifact@v4
         with:
-          name: praesidio-jetbrains-plugin
+          name: section-jetbrains-plugin
           path: clients/jetbrains/build/distributions/*.zip
 
   gateway-scan-endpoints:

@@ -1,4 +1,4 @@
-# Praesidio — Azure reference Terraform
+# Section — Azure reference Terraform
 
 **Stub quality.** Reference *starting point*, not a turnkey production
 deployment.
@@ -12,7 +12,7 @@ What it creates:
 - Azure Cache for Redis (TLS-only)
 - AKS cluster with OIDC issuer + Workload Identity enabled, Cilium network policy
 - User-assigned managed identity + federated credential mapped to the
-  `praesidio/praesidio` Kubernetes ServiceAccount, with Key Vault Secrets
+  `section/section` Kubernetes ServiceAccount, with Key Vault Secrets
   User, Key Vault Crypto User, and Storage Blob Data Contributor roles
 
 ## Apply
@@ -46,7 +46,7 @@ serviceAccount:
     azure.workload.identity/client-id: "<terraform output gateway_workload_identity_client_id>"
 postgres:
   embedded: false
-  externalDSN: "postgresql+asyncpg://praesidio:<password>@<fqdn>:5432/praesidio?ssl=require"
+  externalDSN: "postgresql+asyncpg://section:<password>@<fqdn>:5432/section?ssl=require"
 redis:
   embedded: false
   externalURL: "rediss://:<key>@<hostname>:6380/0"

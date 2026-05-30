@@ -5,7 +5,7 @@
 | Mode | Description |
 |---|---|
 | **Docker Compose** | `make dev` — single host, gateway + ui + postgres + redis + (optional) ollama |
-| **Kubernetes (Helm)** | `deploy/helm/praesidio` — HA, HPA, NetworkPolicies, PDBs |
+| **Kubernetes (Helm)** | `deploy/helm/section` — HA, HPA, NetworkPolicies, PDBs |
 | **Air-gapped** | Helm chart with all images bundled; policy bundle delivered via offline media; local models via Ollama or vLLM |
 | **Hosted (SaaS)** | Multi-tenant gateway behind a managed LB; per-tenant policy bundles; KMS-backed keys |
 | **Hybrid** | Control plane in one region; data planes regional (gateway runs near data, control plane fans out policy bundles) |
@@ -14,13 +14,13 @@
 
 ```
                      ┌──────────────────────────────┐
-   ingress (NLB)  ──►│ praesidio-gateway (HPA 3-N)  │──► upstream LLMs
+   ingress (NLB)  ──►│ section-gateway (HPA 3-N)  │──► upstream LLMs
                      └──────────┬───────────────────┘
                                 │
                   ┌─────────────┼───────────────────────┐
                   ▼             ▼                       ▼
             ┌─────────┐   ┌──────────┐         ┌─────────────────┐
-            │ Postgres│   │ Redis    │         │ praesidio-ui    │
+            │ Postgres│   │ Redis    │         │ section-ui    │
             │ primary │   │ (vault + │         │ (Next.js)       │
             │  + ro   │   │  cache)  │         └─────────────────┘
             └─────────┘   └──────────┘
@@ -33,8 +33,8 @@ Redis. UI egress restricted to gateway admin API only.
 
 ```yaml
 image:
-  gateway: { repository: ghcr.io/praesidio/gateway, tag: "{{ .Chart.AppVersion }}" }
-  ui:      { repository: ghcr.io/praesidio/ui,      tag: "{{ .Chart.AppVersion }}" }
+  gateway: { repository: ghcr.io/section/gateway, tag: "{{ .Chart.AppVersion }}" }
+  ui:      { repository: ghcr.io/section/ui,      tag: "{{ .Chart.AppVersion }}" }
 
 replicas:
   gateway: 3
@@ -51,7 +51,7 @@ autoscaling:
 policyBundle:
   source: configmap          # or 'http' or 's3' or 'git'
   signatureVerification: cosign
-  publicKeyRef: praesidio-bundle-signing-pubkey
+  publicKeyRef: section-bundle-signing-pubkey
 
 secrets:
   externalSecrets: true      # uses external-secrets-operator

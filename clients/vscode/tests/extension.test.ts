@@ -87,7 +87,7 @@ describe("DecisionStore", () => {
 describe("decodeTenantClaim", () => {
   it("extracts a tenant claim from a JWT payload", () => {
     const header = base64url(JSON.stringify({ alg: "none" }));
-    const payload = base64url(JSON.stringify({ praesidio_tenant: "acme" }));
+    const payload = base64url(JSON.stringify({ section_tenant: "acme" }));
     const jwt = `${header}.${payload}.sig`;
     assert.equal(decodeTenantClaim(jwt), "acme");
   });

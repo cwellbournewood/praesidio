@@ -10,8 +10,8 @@
  * replaces older ones. Banners auto-dismiss after a few seconds; the
  * block banner stays until the user clicks Dismiss.
  */
-const CONTAINER_ID = 'praesidio-overlay-root';
-const STYLE_ID = 'praesidio-overlay-style';
+const CONTAINER_ID = 'section-overlay-root';
+const STYLE_ID = 'section-overlay-style';
 
 const STYLES = `
   #${CONTAINER_ID} {
@@ -24,7 +24,7 @@ const STYLES = `
     pointer-events: none;
     font-family: 'Geist', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
-  #${CONTAINER_ID} .praesidio-card {
+  #${CONTAINER_ID} .section-card {
     pointer-events: auto;
     background: #FAFAF7;
     color: #181818;
@@ -35,26 +35,26 @@ const STYLES = `
     font-size: 13px;
     line-height: 1.5;
     letter-spacing: -0.005em;
-    animation: praesidio-fade 140ms cubic-bezier(0.2, 0, 0, 1);
+    animation: section-fade 140ms cubic-bezier(0.2, 0, 0, 1);
   }
   @media (prefers-color-scheme: dark) {
-    #${CONTAINER_ID} .praesidio-card {
+    #${CONTAINER_ID} .section-card {
       background: #111;
       color: #f7f7f4;
       border-color: #f7f7f4;
       box-shadow: 0 1px 0 #f7f7f4;
     }
   }
-  #${CONTAINER_ID} .praesidio-card[data-variant="block"] {
+  #${CONTAINER_ID} .section-card[data-variant="block"] {
     border-left: 3px solid #b73a3a;
   }
-  #${CONTAINER_ID} .praesidio-card[data-variant="mask"] {
+  #${CONTAINER_ID} .section-card[data-variant="mask"] {
     border-left: 3px solid #4F46E5;
   }
-  #${CONTAINER_ID} .praesidio-card[data-variant="error"] {
+  #${CONTAINER_ID} .section-card[data-variant="error"] {
     border-left: 3px solid #d97706;
   }
-  #${CONTAINER_ID} .praesidio-title {
+  #${CONTAINER_ID} .section-title {
     font-weight: 600;
     margin-bottom: 4px;
     display: flex;
@@ -62,21 +62,21 @@ const STYLES = `
     justify-content: space-between;
     gap: 12px;
   }
-  #${CONTAINER_ID} .praesidio-eyebrow {
+  #${CONTAINER_ID} .section-eyebrow {
     text-transform: uppercase;
     letter-spacing: 0.14em;
     font-size: 10px;
     color: #4F46E5;
     font-weight: 500;
   }
-  #${CONTAINER_ID} .praesidio-body {
+  #${CONTAINER_ID} .section-body {
     color: #4a4a4a;
     margin: 4px 0 0 0;
   }
   @media (prefers-color-scheme: dark) {
-    #${CONTAINER_ID} .praesidio-body { color: #c5c5c2; }
+    #${CONTAINER_ID} .section-body { color: #c5c5c2; }
   }
-  #${CONTAINER_ID} .praesidio-actions {
+  #${CONTAINER_ID} .section-actions {
     margin-top: 10px;
     display: flex;
     gap: 8px;
@@ -100,7 +100,7 @@ const STYLES = `
     outline: 2px solid #4F46E5;
     outline-offset: 2px;
   }
-  @keyframes praesidio-fade {
+  @keyframes section-fade {
     from { opacity: 0; transform: translateY(-4px); }
     to   { opacity: 1; transform: translateY(0); }
   }
@@ -125,7 +125,7 @@ function ensureRoot(): HTMLElement {
 }
 
 function clearCards(root: HTMLElement, variant?: string): void {
-  const sel = variant ? `.praesidio-card[data-variant="${variant}"]` : '.praesidio-card';
+  const sel = variant ? `.section-card[data-variant="${variant}"]` : '.section-card';
   root.querySelectorAll(sel).forEach((c) => c.remove());
 }
 
@@ -140,14 +140,14 @@ function mountCard(opts: {
   const root = ensureRoot();
   clearCards(root, opts.variant);
   const card = document.createElement('div');
-  card.className = 'praesidio-card';
+  card.className = 'section-card';
   card.dataset.variant = opts.variant;
   card.setAttribute('role', opts.variant === 'block' ? 'alertdialog' : 'status');
 
   const titleBar = document.createElement('div');
-  titleBar.className = 'praesidio-title';
+  titleBar.className = 'section-title';
   const eyebrow = document.createElement('span');
-  eyebrow.className = 'praesidio-eyebrow';
+  eyebrow.className = 'section-eyebrow';
   eyebrow.textContent = opts.eyebrow;
   const titleEl = document.createElement('span');
   titleEl.textContent = opts.title;
@@ -156,13 +156,13 @@ function mountCard(opts: {
   card.appendChild(titleBar);
 
   const body = document.createElement('p');
-  body.className = 'praesidio-body';
+  body.className = 'section-body';
   body.textContent = opts.body;
   card.appendChild(body);
 
   if (opts.actions && opts.actions.length > 0) {
     const actionRow = document.createElement('div');
-    actionRow.className = 'praesidio-actions';
+    actionRow.className = 'section-actions';
     for (const a of opts.actions) {
       const btn = document.createElement('button');
       btn.textContent = a.label;
@@ -184,7 +184,7 @@ function mountCard(opts: {
 export function renderBlockOverlay(o: { reason: string; severity: string }): void {
   mountCard({
     variant: 'block',
-    eyebrow: 'PRAESIDIO',
+    eyebrow: 'SECTION',
     title: 'This prompt was blocked',
     body: `${o.reason} · severity: ${o.severity}`,
     actions: [{ label: 'Dismiss', onClick: () => undefined }],
@@ -194,7 +194,7 @@ export function renderBlockOverlay(o: { reason: string; severity: string }): voi
 export function renderMaskBanner(o: { count: number }): void {
   mountCard({
     variant: 'mask',
-    eyebrow: 'PRAESIDIO',
+    eyebrow: 'SECTION',
     title: 'Sensitive data masked',
     body:
       o.count === 1
@@ -210,7 +210,7 @@ export function renderErrorOverlay(o: {
 }): void {
   mountCard({
     variant: 'error',
-    eyebrow: 'PRAESIDIO',
+    eyebrow: 'SECTION',
     title: 'Could not scan this prompt',
     body: `Gateway error: ${o.message}. Click retry to try again.`,
     actions: [{ label: 'Retry', primary: true, onClick: () => void o.onRetry() }],

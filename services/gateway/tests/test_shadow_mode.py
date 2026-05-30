@@ -12,12 +12,12 @@ from httpx import ASGITransport
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
-from praesidio_gateway.audit.models import AuditEvent
+from section_gateway.audit.models import AuditEvent
 
-os.environ["PRAESIDIO_ENV"] = "development"
+os.environ["SECTION_ENV"] = "development"
 os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///:memory:"
 os.environ["REDIS_URL"] = ""
-os.environ["PRAESIDIO_API_KEYS"] = "test-key"
+os.environ["SECTION_API_KEYS"] = "test-key"
 os.environ["OPENAI_API_KEY"] = "sk-test"
 
 
@@ -25,10 +25,10 @@ def _shadow_bundle(tmp: Path) -> Path:
     bundle = tmp / "bundle"
     (bundle / "policies").mkdir(parents=True)
     (bundle / "manifest.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: Bundle\nmetadata: {name: t, version: '0'}\nspec: {includes: []}\n"
+        "apiVersion: section/v1\nkind: Bundle\nmetadata: {name: t, version: '0'}\nspec: {includes: []}\n"
     )
     (bundle / "models.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: ModelRegistry\nspec:\n"
+        "apiVersion: section/v1\nkind: ModelRegistry\nspec:\n"
         "  models:\n"
         "    - id: openai/gpt-4o-mini\n"
         "      provider: openai\n"
@@ -39,13 +39,13 @@ def _shadow_bundle(tmp: Path) -> Path:
         "      auth: {type: env, var: OPENAI_API_KEY}\n"
     )
     (bundle / "routes.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: Routes\nspec:\n"
+        "apiVersion: section/v1\nkind: Routes\nspec:\n"
         "  - inbound: {path: /v1/chat/completions, requested_model: gpt-4o-mini}\n"
         "    upstream: openai/gpt-4o-mini\n"
     )
     # mode: shadow — block decision logged but request forwarded.
     (bundle / "policies" / "0001-shadow.yaml").write_text(
-        "apiVersion: praesidio/v1\n"
+        "apiVersion: section/v1\n"
         "kind: Policy\n"
         "metadata: {id: shadow-sec, name: shadow-sec}\n"
         "spec:\n"
@@ -69,11 +69,11 @@ def _shadow_bundle(tmp: Path) -> Path:
 async def test_shadow_mode_block_forwards_and_logs_decision():
     tmp = Path(tempfile.mkdtemp())
     bundle = _shadow_bundle(tmp)
-    os.environ["PRAESIDIO_POLICY_BUNDLE"] = str(bundle)
-    from praesidio_gateway.config import get_settings
+    os.environ["SECTION_POLICY_BUNDLE"] = str(bundle)
+    from section_gateway.config import get_settings
 
     get_settings.cache_clear()
-    from praesidio_gateway.main import create_app
+    from section_gateway.main import create_app
 
     upstream_called: dict[str, bool] = {"hit": False}
 
@@ -111,7 +111,7 @@ async def test_shadow_mode_block_forwards_and_logs_decision():
                 },
             )
             # Drain the audit queue so the row is flushed before we read.
-            state = app.state.praesidio
+            state = app.state.section
             import asyncio as _asyncio
 
             for _ in range(100):
@@ -129,11 +129,11 @@ async def test_shadow_mode_block_forwards_and_logs_decision():
     assert r.status_code == 200, r.text
     assert upstream_called["hit"] is True
     # Informational decision header still surfaces "block" (annotated for shadow).
-    decision_hdr = r.headers.get("x-praesidio-decision", "")
+    decision_hdr = r.headers.get("x-section-decision", "")
     assert "block" in decision_hdr
     assert "shadow" in decision_hdr  # we emit "block-shadow"
     # Mode is reflected in the response header for observability.
-    assert r.headers.get("x-praesidio-mode") == "shadow"
+    assert r.headers.get("x-section-mode") == "shadow"
     # Audit row mode column says "shadow".
     assert rows
     assert rows[0].mode == "shadow"

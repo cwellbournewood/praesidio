@@ -89,7 +89,7 @@ describe("GatewayClient", () => {
     assert.equal(seen[0]!.url, "http://gw.test/v1/scan");
     const headers = seen[0]!.init.headers as Record<string, string>;
     assert.equal(headers["X-API-Key"], "praes_key");
-    assert.equal(headers["X-Praesidio-Tenant"], "acme");
+    assert.equal(headers["X-Section-Tenant"], "acme");
     assert.equal(headers["Content-Type"], "application/json");
     assert.equal(resp.request_id, "req-1");
     assert.equal(resp.action, "mask");

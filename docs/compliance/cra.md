@@ -1,8 +1,8 @@
-# EU Cyber Resilience Act — Praesidio mapping
+# EU Cyber Resilience Act — Section mapping
 
-Regulation (EU) 2024/2847. Praesidio is "a product with digital elements".
+Regulation (EU) 2024/2847. Section is "a product with digital elements".
 
-| Obligation | Praesidio |
+| Obligation | Section |
 |---|---|
 | Essential cybersecurity requirements (Annex I) | Threat model + secure-by-default config + signed bundles |
 | Vulnerability handling (Art. 13) | `SECURITY.md` with coordinated disclosure; CVE process; SBOM published with each release |

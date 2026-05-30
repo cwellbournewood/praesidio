@@ -30,8 +30,8 @@ goals are: every release is reproducible, verifiable, and reversible.
    |---|---|
    | `services/gateway/pyproject.toml` | `[project] version = "x.y.z"` |
    | `services/ui/package.json` | `"version": "x.y.z"` |
-   | `deploy/helm/praesidio/Chart.yaml` | `version: x.y.z` and `appVersion: "x.y.z"` |
-   | `services/gateway/praesidio_gateway/main.py` | `FastAPI(... version="x.y.z" ...)` |
+   | `deploy/helm/section/Chart.yaml` | `version: x.y.z` and `appVersion: "x.y.z"` |
+   | `services/gateway/section_gateway/main.py` | `FastAPI(... version="x.y.z" ...)` |
 
 4. **Manually run** `bash scripts/demo.sh` against `docker compose up`
    from the release candidate commit. The 6/6 PASS line must show.
@@ -47,7 +47,7 @@ goals are: every release is reproducible, verifiable, and reversible.
 ```bash
 git checkout main
 git pull
-git tag -s "v$VERSION" -m "Praesidio v$VERSION"
+git tag -s "v$VERSION" -m "Section v$VERSION"
 git push origin "v$VERSION"
 ```
 
@@ -67,11 +67,11 @@ extra ground-truth.
 4. Generates SLSA-3 build provenance per image
    (`slsa-framework/slsa-github-generator`).
 5. Packages the Helm chart and pushes it to
-   `oci://ghcr.io/cwellbournewood/charts/praesidio:vX.Y.Z`, cosign-signed.
+   `oci://ghcr.io/cwellbournewood/charts/section:vX.Y.Z`, cosign-signed.
 6. Creates the GitHub Release with:
    - chart `.tgz`
    - per-image SBOM
-   - `praesidio-release.sha256` checksum manifest
+   - `section-release.sha256` checksum manifest
    - cosign-blob signature + cert for the manifest
    - auto-generated release notes (PRs since the previous tag)
 
@@ -80,9 +80,9 @@ extra ground-truth.
 1. **Smoke-test the published images** on a real cluster (kind is fine):
 
    ```bash
-   helm install praesidio oci://ghcr.io/cwellbournewood/charts/praesidio \
-       --version "$VERSION" -n praesidio --create-namespace \
-       -f deploy/helm/praesidio/values.production.yaml
+   helm install section oci://ghcr.io/cwellbournewood/charts/section \
+       --version "$VERSION" -n section --create-namespace \
+       -f deploy/helm/section/values.production.yaml
    ```
 
 2. **Verify the cosign signatures** following
@@ -119,7 +119,7 @@ For patches against an older minor:
 ```bash
 git switch -c hotfix/0.2.x v0.2.4
 # cherry-pick the fix
-git tag -s v0.2.5 -m "Praesidio v0.2.5 (hotfix)"
+git tag -s v0.2.5 -m "Section v0.2.5 (hotfix)"
 git push origin v0.2.5 hotfix/0.2.x
 ```
 

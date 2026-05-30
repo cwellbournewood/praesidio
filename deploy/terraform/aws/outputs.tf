@@ -12,7 +12,7 @@ output "eks_oidc_issuer" {
 }
 
 output "kms_key_arn" {
-  value = aws_kms_key.praesidio.arn
+  value = aws_kms_key.section.arn
 }
 
 output "audit_bucket_name" {

@@ -11,10 +11,10 @@ import pytest
 import respx
 from httpx import ASGITransport
 
-os.environ["PRAESIDIO_ENV"] = "development"
+os.environ["SECTION_ENV"] = "development"
 os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///:memory:"
 os.environ["REDIS_URL"] = ""
-os.environ["PRAESIDIO_API_KEYS"] = "test-key"
+os.environ["SECTION_API_KEYS"] = "test-key"
 os.environ["ANTHROPIC_API_KEY"] = "sk-test-ant"
 
 
@@ -22,10 +22,10 @@ def _bundle(tmp: Path, *, policy_yaml: str | None = None) -> Path:
     bundle = tmp / "bundle"
     (bundle / "policies").mkdir(parents=True)
     (bundle / "manifest.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: Bundle\nmetadata: {name: t, version: '0'}\nspec: {includes: []}\n"
+        "apiVersion: section/v1\nkind: Bundle\nmetadata: {name: t, version: '0'}\nspec: {includes: []}\n"
     )
     (bundle / "models.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: ModelRegistry\nspec:\n"
+        "apiVersion: section/v1\nkind: ModelRegistry\nspec:\n"
         "  models:\n"
         "    - id: anthropic/claude-3-haiku-20240307\n"
         "      provider: anthropic\n"
@@ -36,14 +36,14 @@ def _bundle(tmp: Path, *, policy_yaml: str | None = None) -> Path:
         "      auth: {type: env, var: ANTHROPIC_API_KEY}\n"
     )
     (bundle / "routes.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: Routes\nspec:\n"
+        "apiVersion: section/v1\nkind: Routes\nspec:\n"
         "  - inbound: {path: /anthropic/v1/messages, requested_model: claude-3-haiku-20240307}\n"
         "    upstream: anthropic/claude-3-haiku-20240307\n"
     )
     (bundle / "policies" / "0001-pii.yaml").write_text(
         policy_yaml
         or (
-            "apiVersion: praesidio/v1\n"
+            "apiVersion: section/v1\n"
             "kind: Policy\n"
             "metadata: {id: pii, name: pii}\n"
             "spec:\n"
@@ -64,8 +64,8 @@ def _bundle(tmp: Path, *, policy_yaml: str | None = None) -> Path:
 
 
 def _reload(bundle: Path) -> None:
-    os.environ["PRAESIDIO_POLICY_BUNDLE"] = str(bundle)
-    from praesidio_gateway.config import get_settings
+    os.environ["SECTION_POLICY_BUNDLE"] = str(bundle)
+    from section_gateway.config import get_settings
 
     get_settings.cache_clear()
 
@@ -74,7 +74,7 @@ def _reload(bundle: Path) -> None:
 async def test_anthropic_email_round_trip():
     bundle = _bundle(Path(tempfile.mkdtemp()))
     _reload(bundle)
-    from praesidio_gateway.main import create_app
+    from section_gateway.main import create_app
 
     captured: dict[str, str] = {}
 
@@ -130,7 +130,7 @@ async def test_anthropic_response_side_dlp_redacts_new_email():
     # Use a policy that doesn't anonymise; we want the response scan to fire
     # on a fresh email that wasn't part of any reversal map.
     policy = (
-        "apiVersion: praesidio/v1\n"
+        "apiVersion: section/v1\n"
         "kind: Policy\n"
         "metadata: {id: pii, name: pii}\n"
         "spec:\n"
@@ -144,7 +144,7 @@ async def test_anthropic_response_side_dlp_redacts_new_email():
     )
     bundle = _bundle(Path(tempfile.mkdtemp()), policy_yaml=policy)
     _reload(bundle)
-    from praesidio_gateway.main import create_app
+    from section_gateway.main import create_app
 
     async def _ant_handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(
@@ -180,7 +180,7 @@ async def test_anthropic_response_side_dlp_redacts_new_email():
     text = body["content"][0]["text"]
     assert "secret@hidden.com" not in text
     assert "[REDACTED_EMAIL]" in text
-    assert r.headers.get("x-praesidio-response-findings") == "1"
+    assert r.headers.get("x-section-response-findings") == "1"
 
 
 @pytest.mark.asyncio
@@ -188,7 +188,7 @@ async def test_anthropic_tool_use_input_scanned():
     """Anthropic ``content[].type=='tool_use'`` ``input`` dict must be scanned
     and any PII leaf redacted."""
     policy = (
-        "apiVersion: praesidio/v1\n"
+        "apiVersion: section/v1\n"
         "kind: Policy\n"
         "metadata: {id: pii, name: pii}\n"
         "spec:\n"
@@ -202,7 +202,7 @@ async def test_anthropic_tool_use_input_scanned():
     )
     bundle = _bundle(Path(tempfile.mkdtemp()), policy_yaml=policy)
     _reload(bundle)
-    from praesidio_gateway.main import create_app
+    from section_gateway.main import create_app
 
     async def _ant_handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(

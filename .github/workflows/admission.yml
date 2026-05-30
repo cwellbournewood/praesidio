@@ -1,6 +1,6 @@
 name: admission
 
-# Smoke-tests the Praesidio admission policy on a kind cluster:
+# Smoke-tests the Section admission policy on a kind cluster:
 #   1. install ValidatingAdmissionPolicy
 #   2. apply test/test-pod-allowed.yaml — expect SUCCESS
 #   3. apply test/test-pod-blocked.yaml — expect FAILURE
@@ -36,13 +36,13 @@ jobs:
         with:
           version: v0.23.0
           node_image: kindest/node:v1.30.0
-          cluster_name: praesidio-admission
+          cluster_name: section-admission
 
       - name: Apply ValidatingAdmissionPolicy
         run: |
           kubectl apply -f deploy/k8s/admission/validating-admission-policy.yaml
           kubectl wait --for=jsonpath='{.status.observedGeneration}'=1 \
-              validatingadmissionpolicy/praesidio-llm-egress-guard --timeout=60s || true
+              validatingadmissionpolicy/section-llm-egress-guard --timeout=60s || true
 
       - name: Allowed pod must be admitted
         run: |
@@ -52,7 +52,7 @@ jobs:
             echo "::error::test-pod-allowed.yaml was rejected but should be admitted"
             exit 1
           fi
-          kubectl -n test-vap delete pod praesidio-admission-allowed --ignore-not-found
+          kubectl -n test-vap delete pod section-admission-allowed --ignore-not-found
 
       - name: Blocked pod must be rejected
         run: |
@@ -63,11 +63,11 @@ jobs:
           set -e
           if [ "$rc" -eq 0 ]; then
             echo "::error::test-pod-blocked.yaml was admitted but must be rejected"
-            kubectl -n test-vap delete pod praesidio-admission-blocked --ignore-not-found
+            kubectl -n test-vap delete pod section-admission-blocked --ignore-not-found
             exit 1
           fi
-          echo "$out" | grep -qiE "praesidio|gateway|forbidden" || {
-            echo "::error::Rejection message did not mention Praesidio guard"
+          echo "$out" | grep -qiE "section|gateway|forbidden" || {
+            echo "::error::Rejection message did not mention Section guard"
             exit 1
           }
 
@@ -83,7 +83,7 @@ jobs:
         with:
           version: v0.23.0
           node_image: kindest/node:v1.30.0
-          cluster_name: praesidio-gk
+          cluster_name: section-gk
 
       - name: Install Gatekeeper
         run: |
@@ -98,7 +98,7 @@ jobs:
           kubectl apply -f deploy/k8s/admission/gatekeeper-constraint-template.yaml
           # Gatekeeper needs a few seconds to compile and register the CRD.
           for i in $(seq 1 30); do
-            if kubectl get crd praesidiollmegressguard.constraints.gatekeeper.sh >/dev/null 2>&1; then
+            if kubectl get crd sectionllmegressguard.constraints.gatekeeper.sh >/dev/null 2>&1; then
               break
             fi
             sleep 2
@@ -110,7 +110,7 @@ jobs:
         run: |
           kubectl create namespace test-gk
           kubectl -n test-gk apply -f deploy/k8s/admission/test/test-pod-allowed.yaml
-          kubectl -n test-gk delete pod praesidio-admission-allowed --ignore-not-found
+          kubectl -n test-gk delete pod section-admission-allowed --ignore-not-found
 
       - name: Blocked pod must be rejected
         run: |
@@ -121,6 +121,6 @@ jobs:
           set -e
           if [ "$rc" -eq 0 ]; then
             echo "::error::Gatekeeper admitted the blocked pod"
-            kubectl -n test-gk delete pod praesidio-admission-blocked --ignore-not-found
+            kubectl -n test-gk delete pod section-admission-blocked --ignore-not-found
             exit 1
           fi

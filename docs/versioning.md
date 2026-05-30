@@ -1,6 +1,6 @@
 # Versioning & deprecation policy
 
-Praesidio follows [Semantic Versioning 2.0.0](https://semver.org). This
+Section follows [Semantic Versioning 2.0.0](https://semver.org). This
 document defines what counts as **stable surface** (and therefore what
 counts as a "breaking change" under SemVer), and the deprecation window
 operators can rely on.
@@ -24,10 +24,10 @@ For each route the contract is:
 
 * HTTP method.
 * URL path (including path parameters).
-* Required headers (`Authorization`, `x-api-key`, `x-praesidio-tenant`).
+* Required headers (`Authorization`, `x-api-key`, `x-section-tenant`).
 * Request JSON schema (named fields, types, required-vs-optional).
 * Response JSON schema for HTTP 2xx and 4xx classes.
-* Response headers prefixed `x-praesidio-*` (see "Response headers"
+* Response headers prefixed `x-section-*` (see "Response headers"
   below).
 
 **Non-breaking changes** (allowed in minor releases):
@@ -41,29 +41,29 @@ For each route the contract is:
 
 ### 2. Policy YAML `apiVersion`
 
-* `apiVersion: praesidio/v1` is the stable surface.
+* `apiVersion: section/v1` is the stable surface.
 * Breaking changes to any policy/route/model field land under
-  `apiVersion: praesidio/v2` with a parallel loader, and both versions
+  `apiVersion: section/v2` with a parallel loader, and both versions
   are accepted for the full deprecation window.
 
 ### 3. OpenTelemetry attribute names
 
 Every attribute on a gateway span or metric whose name starts with
-`praesidio.*` is stable. Examples:
+`section.*` is stable. Examples:
 
-* `praesidio.tenant_id`, `praesidio.principal_id`,
-  `praesidio.route`, `praesidio.upstream`,
-  `praesidio.decision`, `praesidio.policy.id`,
-  `praesidio.policy.version`, `praesidio.bundle.digest`,
-  `praesidio.dlp.findings_count`.
+* `section.tenant_id`, `section.principal_id`,
+  `section.route`, `section.upstream`,
+  `section.decision`, `section.policy.id`,
+  `section.policy.version`, `section.bundle.digest`,
+  `section.dlp.findings_count`.
 
 Renaming or removing one of these is a breaking change. Adding new
-`praesidio.*` attributes is not.
+`section.*` attributes is not.
 
 ### 4. Environment variables
 
 Every env var the gateway reads at startup whose name starts with
-`PRAESIDIO_`, plus the conventional cross-ecosystem names
+`SECTION_`, plus the conventional cross-ecosystem names
 (`DATABASE_URL`, `REDIS_URL`, `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`,
 `AZURE_OPENAI_*`, `OLLAMA_BASE_URL`, `OTEL_EXPORTER_OTLP_ENDPOINT`,
 `OTEL_SERVICE_NAME`), is stable. Renaming or removing one is a breaking
@@ -71,15 +71,15 @@ change; adding new ones is not.
 
 ### 5. Response headers
 
-Headers emitted by the gateway whose name starts with `x-praesidio-`
-are stable. Current set (non-exhaustive): `x-praesidio-decision`,
-`x-praesidio-reason`, `x-praesidio-severity`,
-`x-praesidio-latency-ms`, `x-praesidio-response-findings`,
+Headers emitted by the gateway whose name starts with `x-section-`
+are stable. Current set (non-exhaustive): `x-section-decision`,
+`x-section-reason`, `x-section-severity`,
+`x-section-latency-ms`, `x-section-response-findings`,
 `x-request-id`.
 
 ### 6. Helm chart values
 
-The keys defined in `deploy/helm/praesidio/values.schema.json` are
+The keys defined in `deploy/helm/section/values.schema.json` are
 stable. Adding new optional keys is non-breaking. Renaming, removing,
 or changing the type of an existing key is breaking.
 
@@ -87,8 +87,8 @@ or changing the type of an existing key is breaking.
 
 * `ghcr.io/cwellbournewood/gateway:<tag>` and `ghcr.io/cwellbournewood/ui:<tag>`
   tag scheme (`vX.Y.Z`, `vX.Y`, `sha-...`).
-* The entrypoint binary (`praesidio-gateway`, `praesidio-audit`).
-* The mount paths the gateway expects (`/etc/praesidio/policies`).
+* The entrypoint binary (`section-gateway`, `section-audit`).
+* The mount paths the gateway expects (`/etc/section/policies`).
 * The default ports (`8080` gateway, `3000` UI).
 
 ### 8. Database schema
@@ -101,7 +101,7 @@ the old column is kept and dual-written, then removed.
 
 ## What is *not* stable
 
-* Python module structure under `praesidio_gateway.*` (we may
+* Python module structure under `section_gateway.*` (we may
   reorganise internally).
 * The shape of internal CEL evaluation context (the inputs to policy
   CEL expressions are documented at `docs/policy/cel-context.md` and
@@ -115,9 +115,9 @@ When we plan to remove or rename a stable-surface element:
 1. **Announce** in the next minor release CHANGELOG under a
    `### Deprecated` heading. Include the replacement, if any.
 2. **Emit a runtime warning** at the affected code path (HTTP response
-   header `x-praesidio-deprecation: <message>`, structured log entry
+   header `x-section-deprecation: <message>`, structured log entry
    with `deprecation=true`, or OTel attribute
-   `praesidio.deprecated=true`).
+   `section.deprecated=true`).
 3. **Wait at least 12 months** from the announcement before removing
    the element. The removal is always a major-version release.
 4. **Document the migration** at

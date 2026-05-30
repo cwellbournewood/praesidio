@@ -1,7 +1,7 @@
-# Kubernetes admission policy — Praesidio LLM egress guard
+# Kubernetes admission policy — Section LLM egress guard
 
 This directory ships a defence-in-depth admission policy that blocks
-Kubernetes workloads from bypassing the Praesidio gateway. Specifically,
+Kubernetes workloads from bypassing the Section gateway. Specifically,
 it denies the creation of any Pod that BOTH:
 
 1. mounts a Secret whose name matches a cloud-credentials pattern
@@ -12,9 +12,9 @@ it denies the creation of any Pod that BOTH:
 
 The combination is the smoking gun for "this workload talks directly to
 an LLM with cloud credentials in scope" — exactly the case that the
-Praesidio control plane is designed to govern. Workloads that legitimately
+Section control plane is designed to govern. Workloads that legitimately
 need both can opt out with the annotation
-`praesidio.dev/admission-bypass=true` (requires platform-admin RBAC).
+`section.dev/admission-bypass=true` (requires platform-admin RBAC).
 
 ## Two policy engines, pick one
 
@@ -36,8 +36,8 @@ kubectl apply -f validating-admission-policy.yaml
 Verify the binding is active:
 
 ```bash
-kubectl get validatingadmissionpolicy praesidio-llm-egress-guard
-kubectl get validatingadmissionpolicybinding praesidio-llm-egress-guard-binding
+kubectl get validatingadmissionpolicy section-llm-egress-guard
+kubectl get validatingadmissionpolicybinding section-llm-egress-guard-binding
 ```
 
 ### Gatekeeper (older clusters, or operator preference)
@@ -46,7 +46,7 @@ Files:
 
 * `gatekeeper-constraint-template.yaml` — the `ConstraintTemplate`
   (Rego).
-* `gatekeeper-constraint.yaml` — the `PraesidioLlmEgressGuard` constraint
+* `gatekeeper-constraint.yaml` — the `SectionLlmEgressGuard` constraint
   instance.
 
 Install (requires Gatekeeper already running):
@@ -59,7 +59,7 @@ helm upgrade --install gatekeeper gatekeeper/gatekeeper \
 kubectl apply -f gatekeeper-constraint-template.yaml
 # Wait for the template to be ingested before applying the constraint.
 kubectl wait --for=condition=ready=true \
-    constrainttemplate.templates.gatekeeper.sh/praesidiollmegressguard \
+    constrainttemplate.templates.gatekeeper.sh/sectionllmegressguard \
     --timeout=60s
 kubectl apply -f gatekeeper-constraint.yaml
 ```
@@ -76,7 +76,7 @@ kubectl apply -f gatekeeper-constraint.yaml
 
 ## Test fixtures
 
-* `test/test-pod-allowed.yaml` — should be admitted (uses Praesidio
+* `test/test-pod-allowed.yaml` — should be admitted (uses Section
   gateway base URL).
 * `test/test-pod-blocked.yaml` — should be denied (direct OpenAI URL).
 

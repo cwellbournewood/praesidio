@@ -9,7 +9,7 @@
  * than the one the page actually uses — that's why this lives here.
  *
  * Communication with the content script is via `window.postMessage`
- * tagged `__praesidio__`. The content script is the only listener that
+ * tagged `__section__`. The content script is the only listener that
  * cares; everyone else's origin checks should drop these messages.
  *
  * Scope: we only intercept POST requests whose body contains a chat
@@ -18,7 +18,7 @@
  * unchanged.
  */
 (() => {
-  const TAG = '__praesidio__';
+  const TAG = '__section__';
 
   // Provider URL patterns we care about. Conservative: each site's
   // own SPA fetches its OWN backend, not the LLM provider directly, so
@@ -166,7 +166,7 @@
   // ---- fetch -------------------------------------------------------------
   const origFetch = window.fetch.bind(window);
   type FetchArgs = Parameters<typeof window.fetch>;
-  window.fetch = async function praesidioFetch(...args: FetchArgs): Promise<Response> {
+  window.fetch = async function sectionFetch(...args: FetchArgs): Promise<Response> {
     const [input, init] = args;
     const url =
       typeof input === 'string'
@@ -198,7 +198,7 @@
     if (sanitisedBody === null) {
       // Block — fabricate a synthetic response so the page sees an
       // explicit error instead of hanging.
-      return new Response('blocked by Praesidio', {
+      return new Response('blocked by Section', {
         status: 451,
         statusText: 'Unavailable For Legal Reasons',
       });
@@ -229,22 +229,22 @@
   // The DOM lib types XHR.open as having two overloads; here we declare
   // it as a single rest-args function so we can pass through unchanged.
   type XhrOpen = (this: XMLHttpRequest, ...args: unknown[]) => void;
-  (XMLHttpRequest.prototype.open as unknown as XhrOpen) = function praesidioOpen(
+  (XMLHttpRequest.prototype.open as unknown as XhrOpen) = function sectionOpen(
     this: XMLHttpRequest,
     ...args: unknown[]
   ): void {
     const method = String(args[0] ?? 'GET');
     const url = args[1];
-    (this as XMLHttpRequest & { __praesidioMethod?: string; __praesidioUrl?: string }).__praesidioMethod = method;
-    (this as XMLHttpRequest & { __praesidioMethod?: string; __praesidioUrl?: string }).__praesidioUrl = String(url ?? '');
+    (this as XMLHttpRequest & { __sectionMethod?: string; __sectionUrl?: string }).__sectionMethod = method;
+    (this as XMLHttpRequest & { __sectionMethod?: string; __sectionUrl?: string }).__sectionUrl = String(url ?? '');
     return (origXhrOpen as unknown as XhrOpen).apply(this, args);
   };
-  XMLHttpRequest.prototype.send = function praesidioSend(
+  XMLHttpRequest.prototype.send = function sectionSend(
     body?: Document | XMLHttpRequestBodyInit | null,
   ): void {
-    const meta = this as XMLHttpRequest & { __praesidioMethod?: string; __praesidioUrl?: string };
-    const method = (meta.__praesidioMethod ?? 'GET').toUpperCase();
-    const url = meta.__praesidioUrl ?? '';
+    const meta = this as XMLHttpRequest & { __sectionMethod?: string; __sectionUrl?: string };
+    const method = (meta.__sectionMethod ?? 'GET').toUpperCase();
+    const url = meta.__sectionUrl ?? '';
     if (method !== 'POST' || !shouldIntercept(url) || typeof body !== 'string') {
       return origXhrSend.call(this, body ?? null);
     }

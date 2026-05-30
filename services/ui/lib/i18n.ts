@@ -1,7 +1,7 @@
 /**
  * Lightweight i18n hook.
  *
- * A full ICU runtime is overkill for the Praesidio admin console — the
+ * A full ICU runtime is overkill for the Section admin console — the
  * surface area is mostly nouns and short verbs, and our operators are
  * native English speakers. We ship a zero-dependency dictionary lookup
  * with `{placeholder}` interpolation and a hidden `?lang=` query toggle

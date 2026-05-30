@@ -1,6 +1,6 @@
 # Supply-chain security
 
-Every Praesidio release is built, signed, and attested in GitHub Actions
+Every Section release is built, signed, and attested in GitHub Actions
 using OIDC-issued short-lived credentials — no long-lived signing keys
 exist in the project. This document explains what gets produced and how
 to verify it.
@@ -13,9 +13,9 @@ to verify it.
 | `ghcr.io/cwellbournewood/ui:<version>` | GitHub Container Registry | cosign keyless (Sigstore) |
 | CycloneDX SBOM per image | release asset + cosign-attested in-registry | cosign attest |
 | SLSA-3 build provenance per image | in-registry attestation | slsa-github-generator |
-| `oci://ghcr.io/cwellbournewood/charts/praesidio:<version>` Helm chart | GitHub Container Registry | cosign keyless |
-| `praesidio-<version>.tgz` Helm chart tarball | release asset | cosign sign-blob (with the checksum file) |
-| `praesidio-release.sha256` checksum manifest | release asset | cosign sign-blob (`.sig` + `.pem`) |
+| `oci://ghcr.io/cwellbournewood/charts/section:<version>` Helm chart | GitHub Container Registry | cosign keyless |
+| `section-<version>.tgz` Helm chart tarball | release asset | cosign sign-blob (with the checksum file) |
+| `section-release.sha256` checksum manifest | release asset | cosign sign-blob (`.sig` + `.pem`) |
 
 The release workflow that produces all of these is
 `.github/workflows/release.yml`. It runs only on tags that match
@@ -28,7 +28,7 @@ performed the sign. Verify against the expected identity:
 
 ```bash
 COSIGN_EXPERIMENTAL=1 cosign verify \
-    --certificate-identity-regexp '^https://github\.com/cwellbournewood/praesidio/\.github/workflows/release\.yml@refs/tags/v.*' \
+    --certificate-identity-regexp '^https://github\.com/cwellbournewood/section/\.github/workflows/release\.yml@refs/tags/v.*' \
     --certificate-oidc-issuer https://token.actions.githubusercontent.com \
     ghcr.io/cwellbournewood/gateway:1.0.0 | jq .
 ```
@@ -37,7 +37,7 @@ You can pin to a digest for full immutability:
 
 ```bash
 cosign verify \
-    --certificate-identity-regexp '^https://github\.com/cwellbournewood/praesidio/\.github/workflows/release\.yml@refs/tags/v.*' \
+    --certificate-identity-regexp '^https://github\.com/cwellbournewood/section/\.github/workflows/release\.yml@refs/tags/v.*' \
     --certificate-oidc-issuer https://token.actions.githubusercontent.com \
     ghcr.io/cwellbournewood/gateway@sha256:<digest>
 ```
@@ -47,7 +47,7 @@ cosign verify \
 ```bash
 cosign verify-attestation \
     --type cyclonedx \
-    --certificate-identity-regexp '^https://github\.com/cwellbournewood/praesidio/\.github/workflows/release\.yml@refs/tags/v.*' \
+    --certificate-identity-regexp '^https://github\.com/cwellbournewood/section/\.github/workflows/release\.yml@refs/tags/v.*' \
     --certificate-oidc-issuer https://token.actions.githubusercontent.com \
     ghcr.io/cwellbournewood/gateway@sha256:<digest> | \
     jq -r '.payload' | base64 -d | jq .predicate
@@ -57,7 +57,7 @@ cosign verify-attestation \
 
 ```bash
 slsa-verifier verify-image ghcr.io/cwellbournewood/gateway@sha256:<digest> \
-    --source-uri github.com/cwellbournewood/praesidio \
+    --source-uri github.com/cwellbournewood/section \
     --source-tag v1.0.0
 ```
 
@@ -73,14 +73,14 @@ machine-verifiable record of:
 
 ## Verifying the Helm chart
 
-The chart is pushed to `ghcr.io/cwellbournewood/charts/praesidio` as an OCI
+The chart is pushed to `ghcr.io/cwellbournewood/charts/section` as an OCI
 artefact and signed by the same workflow identity:
 
 ```bash
 cosign verify \
-    --certificate-identity-regexp '^https://github\.com/cwellbournewood/praesidio/\.github/workflows/release\.yml@refs/tags/v.*' \
+    --certificate-identity-regexp '^https://github\.com/cwellbournewood/section/\.github/workflows/release\.yml@refs/tags/v.*' \
     --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-    ghcr.io/cwellbournewood/charts/praesidio:1.0.0
+    ghcr.io/cwellbournewood/charts/section:1.0.0
 ```
 
 If you fetch the tarball from the GitHub Release page (not the OCI
@@ -88,14 +88,14 @@ registry), verify the checksum manifest signature first:
 
 ```bash
 cosign verify-blob \
-    --certificate praesidio-release.sha256.pem \
-    --signature praesidio-release.sha256.sig \
-    --certificate-identity-regexp '^https://github\.com/cwellbournewood/praesidio/\.github/workflows/release\.yml@refs/tags/v.*' \
+    --certificate section-release.sha256.pem \
+    --signature section-release.sha256.sig \
+    --certificate-identity-regexp '^https://github\.com/cwellbournewood/section/\.github/workflows/release\.yml@refs/tags/v.*' \
     --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-    praesidio-release.sha256
+    section-release.sha256
 
 # Then validate the chart tarball against the verified manifest:
-sha256sum -c praesidio-release.sha256
+sha256sum -c section-release.sha256
 ```
 
 ## Reproducing locally

@@ -7,7 +7,7 @@ import stat
 import pytest
 from cryptography import x509
 
-from praesidio_edge_proxy import ca
+from section_edge_proxy import ca
 
 
 def test_ensure_ca_generates_root_and_key(tmp_ca_dir):
@@ -18,13 +18,13 @@ def test_ensure_ca_generates_root_and_key(tmp_ca_dir):
     assert key_path.exists()
 
     cert = x509.load_pem_x509_certificate(cert_path.read_bytes())
-    # Subject CN must mention Praesidio.
+    # Subject CN must mention Section.
     cns = [
         attr.value
         for attr in cert.subject
         if attr.oid == x509.NameOID.COMMON_NAME
     ]
-    assert any("Praesidio" in c for c in cns)
+    assert any("Section" in c for c in cns)
 
     # Basic constraints: CA true, path length 0.
     bc = cert.extensions.get_extension_for_class(x509.BasicConstraints).value
@@ -110,6 +110,6 @@ def test_default_ca_dir_is_per_os(monkeypatch):
     """Default dir respects $LOCALAPPDATA / Library / XDG_DATA_HOME conventions."""
     monkeypatch.setenv("LOCALAPPDATA", r"C:\fake\local")
     monkeypatch.setenv("XDG_DATA_HOME", "/fake/xdg")
-    # Just make sure it's a Path and contains 'Praesidio' or 'praesidio'.
+    # Just make sure it's a Path and contains 'Section' or 'section'.
     p = ca.default_ca_dir()
-    assert "Praesidio" in str(p) or "praesidio" in str(p)
+    assert "Section" in str(p) or "section" in str(p)

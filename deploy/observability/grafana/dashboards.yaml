@@ -1,17 +1,17 @@
-# Mounts the canonical Praesidio dashboards from deploy/grafana/dashboards/
+# Mounts the canonical Section dashboards from deploy/grafana/dashboards/
 # (no duplication — single source of truth for both Helm and compose).
 apiVersion: 1
 
 providers:
-  - name: Praesidio
+  - name: Section
     orgId: 1
-    folder: Praesidio
-    folderUid: praesidio
+    folder: Section
+    folderUid: section
     type: file
     disableDeletion: false
     editable: false
     updateIntervalSeconds: 30
     allowUiUpdates: false
     options:
-      path: /var/lib/grafana/dashboards/praesidio
+      path: /var/lib/grafana/dashboards/section
       foldersFromFilesStructure: false

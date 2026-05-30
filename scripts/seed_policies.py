@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Seed the Praesidio gateway with a policy bundle.
+Seed the Section gateway with a policy bundle.
 
 Usage:
     python scripts/seed_policies.py [--bundle PATH] [--gateway URL] [--api-key KEY]
@@ -34,7 +34,7 @@ except ImportError:
 
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="Seed Praesidio policies.")
+    p = argparse.ArgumentParser(description="Seed Section policies.")
     p.add_argument(
         "--bundle",
         type=Path,
@@ -43,13 +43,13 @@ def parse_args() -> argparse.Namespace:
     )
     p.add_argument(
         "--gateway",
-        default=os.environ.get("PRAESIDIO_GATEWAY", "http://localhost:8080"),
+        default=os.environ.get("SECTION_GATEWAY", "http://localhost:8080"),
         help="Gateway base URL (default: http://localhost:8080)",
     )
     p.add_argument(
         "--api-key",
-        default=os.environ.get("PRAESIDIO_API_KEY", "praesidio-demo-key"),
-        help="Admin API key (default: env PRAESIDIO_API_KEY or 'praesidio-demo-key')",
+        default=os.environ.get("SECTION_API_KEY", "section-demo-key"),
+        help="Admin API key (default: env SECTION_API_KEY or 'section-demo-key')",
     )
     p.add_argument(
         "--no-reload",

@@ -14,7 +14,7 @@ ready-to-POST JSON body for `/v1/chat/completions`.
 
 ```bash
 export GATEWAY=http://localhost:8080
-export KEY=praesidio-demo-key
+export KEY=section-demo-key
 
 for f in examples/demo-prompts/0*.json; do
   echo "==> $f"

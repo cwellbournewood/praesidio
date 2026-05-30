@@ -1,8 +1,8 @@
 # Third-party software
 
-Praesidio is built on a stack of open-source components. This document
+Section is built on a stack of open-source components. This document
 lists the third-party libraries and tools we depend on, their licenses,
-their purpose in Praesidio, and their upstream URLs.
+their purpose in Section, and their upstream URLs.
 
 Versions are pinned in `services/gateway/pyproject.toml` and
 `services/ui/package.json`. License strings are taken from the most

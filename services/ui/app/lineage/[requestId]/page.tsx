@@ -19,7 +19,7 @@ import type { LineageGraphData, LineageNode } from '@/lib/types';
 // the initial UI shell. The lineage route is rarely the first page a
 // new operator visits.
 const LineageGraph = lazy(() =>
-  import('@/components/praesidio/LineageGraph').then((m) => ({ default: m.LineageGraph })),
+  import('@/components/section/LineageGraph').then((m) => ({ default: m.LineageGraph })),
 );
 
 interface ApiLineage extends LineageGraphData {

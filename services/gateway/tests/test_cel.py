@@ -1,7 +1,7 @@
 """DSL expression evaluator tests (`any` / `count` / `matches` / `in`)."""
 from __future__ import annotations
 
-from praesidio_gateway.policy.dsl import evaluate
+from section_gateway.policy.dsl import evaluate
 
 
 def _findings(*labels):

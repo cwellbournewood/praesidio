@@ -1,11 +1,11 @@
-# Praesidio Grafana dashboards
+# Section Grafana dashboards
 
 Two dashboards plus provisioning manifests:
 
 | File | Purpose |
 |---|---|
-| `dashboards/praesidio-overview.json` | Throughput by route, decision distribution, DLP detector p50/p99, vault hit ratio, upstream latency by provider, error rate |
-| `dashboards/praesidio-compliance.json` | Per-tenant audit volume, false-positive rate by detector, retention status, hash-chain validity |
+| `dashboards/section-overview.json` | Throughput by route, decision distribution, DLP detector p50/p99, vault hit ratio, upstream latency by provider, error rate |
+| `dashboards/section-compliance.json` | Per-tenant audit volume, false-positive rate by detector, retention status, hash-chain validity |
 | `provisioning/datasources.yaml` | Prometheus + Loki datasource manifest |
 | `provisioning/dashboards.yaml` | File-based dashboard provider |
 
@@ -20,10 +20,10 @@ Emitted by the gateway per `docs/architecture/02-gateway.md`:
 - `detector_feedback_total{detector,label}` — counter (operator feedback)
 - `vault_ops_total{op,result}` — counter; `op ∈ {lookup,store,delete}`; `result ∈ {hit,miss,error}`
 - `upstream_latency_seconds_bucket{provider,le}` — histogram
-- `praesidio_audit_events_total{...}` — gauge
-- `praesidio_audit_oldest_event_timestamp_seconds` — gauge
-- `praesidio_audit_retention_days` — gauge
-- `praesidio_audit_chain_valid` — gauge (0 = broken, 1 = valid)
+- `section_audit_events_total{...}` — gauge
+- `section_audit_oldest_event_timestamp_seconds` — gauge
+- `section_audit_retention_days` — gauge
+- `section_audit_chain_valid` — gauge (0 = broken, 1 = valid)
 
 If your metric names differ, override via dashboard variables or edit the
 JSON in place.
@@ -33,7 +33,7 @@ JSON in place.
 ### Via the Grafana UI
 
 1. Dashboards -> Import -> Upload JSON file
-2. Pick `praesidio-overview.json` (then `praesidio-compliance.json`)
+2. Pick `section-overview.json` (then `section-compliance.json`)
 3. Choose your Prometheus datasource when prompted
 
 ### Via provisioning (Helm)
@@ -54,20 +54,20 @@ dashboardProviders:
   dashboardproviders.yaml:
     apiVersion: 1
     providers:
-      - name: praesidio
-        folder: Praesidio
+      - name: section
+        folder: Section
         type: file
         options:
-          path: /var/lib/grafana/dashboards/praesidio
+          path: /var/lib/grafana/dashboards/section
 
 dashboardsConfigMaps:
-  praesidio: praesidio-grafana-dashboards
+  section: section-grafana-dashboards
 ```
 
 Then create a ConfigMap from the dashboards directory:
 
 ```bash
-kubectl -n monitoring create configmap praesidio-grafana-dashboards \
+kubectl -n monitoring create configmap section-grafana-dashboards \
   --from-file=deploy/grafana/dashboards/
 ```
 
@@ -76,4 +76,4 @@ kubectl -n monitoring create configmap praesidio-grafana-dashboards \
 For a self-hosted Grafana, drop `provisioning/datasources.yaml` at
 `/etc/grafana/provisioning/datasources/` and `provisioning/dashboards.yaml`
 at `/etc/grafana/provisioning/dashboards/`, then mount the
-`dashboards/` directory at `/var/lib/grafana/dashboards/praesidio/`.
+`dashboards/` directory at `/var/lib/grafana/dashboards/section/`.

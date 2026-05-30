@@ -1,6 +1,6 @@
-# Praesidio Gateway
+# Section Gateway
 
-The data-plane process for Praesidio. FastAPI / asyncio. Accepts OpenAI- and
+The data-plane process for Section. FastAPI / asyncio. Accepts OpenAI- and
 Anthropic-compatible requests, runs a DLP pipeline + policy engine, applies
 anonymisation transforms, forwards to the chosen upstream LLM, restores
 placeholders in the response, and writes a hash-chained audit row.
@@ -16,7 +16,7 @@ services/gateway/
 ├── Dockerfile              multi-stage (builder w/ uv → slim runtime)
 ├── migrations/
 │   └── 0001_init.sql       audit_events + lineage_* tables (RLS)
-├── praesidio_gateway/
+├── section_gateway/
 │   ├── main.py             FastAPI app + lifespan + middlewares
 │   ├── config.py           pydantic-settings
 │   ├── auth.py             Principal resolution from API key / OIDC headers
@@ -53,20 +53,20 @@ source .venv/bin/activate    # PowerShell: .venv\Scripts\Activate.ps1
 uv pip install -e '.[dev]'
 
 # Generate local keys (dev only — production reads them from the env).
-export PRAESIDIO_ENV=development
-export PRAESIDIO_VAULT_KEY=$(openssl rand -base64 32)
-export PRAESIDIO_FPE_KEY=$(openssl rand -hex 16)
+export SECTION_ENV=development
+export SECTION_VAULT_KEY=$(openssl rand -base64 32)
+export SECTION_FPE_KEY=$(openssl rand -hex 16)
 
 # Point at the example bundle.
-export PRAESIDIO_POLICY_BUNDLE=../../examples/policies
+export SECTION_POLICY_BUNDLE=../../examples/policies
 
 # In-process SQLite + in-memory vault are fine for local exploration:
-export DATABASE_URL=sqlite+aiosqlite:///./praesidio.db
+export DATABASE_URL=sqlite+aiosqlite:///./section.db
 export REDIS_URL=
 
 # Run.
-uv run praesidio-gateway
-# … or: uv run uvicorn praesidio_gateway.main:app --port 8080 --reload
+uv run section-gateway
+# … or: uv run uvicorn section_gateway.main:app --port 8080 --reload
 ```
 
 Sanity probes:
@@ -75,7 +75,7 @@ Sanity probes:
 curl localhost:8080/healthz                   # liveness
 curl localhost:8080/readyz                    # readiness
 curl localhost:8080/metrics                   # Prometheus exposition
-curl -H 'x-api-key: praesidio-demo-key' localhost:8080/v1/models
+curl -H 'x-api-key: section-demo-key' localhost:8080/v1/models
 ```
 
 Send a chat that contains PII:
@@ -83,7 +83,7 @@ Send a chat that contains PII:
 ```bash
 curl -s localhost:8080/v1/chat/completions \
   -H 'content-type: application/json' \
-  -H 'x-api-key: praesidio-demo-key' \
+  -H 'x-api-key: section-demo-key' \
   -d '{"model":"gpt-4o-mini",
        "messages":[{"role":"user","content":"Email alice@example.com"}]}'
 ```
@@ -92,15 +92,15 @@ The audit row should appear at `GET /admin/events`. Use `--print-config` to
 dump the resolved settings (with secrets redacted):
 
 ```bash
-uv run praesidio-gateway --print-config
+uv run section-gateway --print-config
 ```
 
 ## Testing
 
 ```bash
 uv run pytest -q
-uv run ruff check praesidio_gateway tests
-uv run mypy praesidio_gateway     # advisory
+uv run ruff check section_gateway tests
+uv run mypy section_gateway     # advisory
 ```
 
 The tests use **fakeredis-style in-memory vault** and **aiosqlite in-memory**
@@ -108,9 +108,9 @@ DB — no external services needed. The e2e test mocks OpenAI with `respx`.
 
 ## Adding a detector
 
-1. Drop a module in `praesidio_gateway/dlp/detectors/` exposing
+1. Drop a module in `section_gateway/dlp/detectors/` exposing
    `async def detect(text: str) -> list[Finding]`.
-2. Build `Finding` objects with `praesidio_gateway.dlp.types.make_finding(...)`
+2. Build `Finding` objects with `section_gateway.dlp.types.make_finding(...)`
    so the sha256 hash discipline is enforced (raw text never persisted).
 3. Register the detector in `dlp/pipeline.py` under `_DEFAULT_DETECTORS`
    and decide whether it should be in the always-on fast lane or the
@@ -118,7 +118,7 @@ DB — no external services needed. The e2e test mocks OpenAI with `respx`.
 4. Add a test in `tests/test_detectors_<name>.py`.
 
 The pipeline runs every active detector concurrently behind a soft deadline
-(`PRAESIDIO_DETECTOR_TIMEOUT_SECONDS`); slow detectors that miss the deadline
+(`SECTION_DETECTOR_TIMEOUT_SECONDS`); slow detectors that miss the deadline
 are skipped and the decision is marked `partial`.
 
 ## Adding a provider adapter
@@ -141,20 +141,20 @@ are skipped and the decision is marked `partial`.
 
 Per-route `fail_mode: open|closed` in policy controls behaviour when the DLP
 pipeline raises or the vault is unreachable. `closed` returns
-`503 X-Praesidio-Reason: praesidio_unavailable`; `open` forwards the original
+`503 X-Section-Reason: section_unavailable`; `open` forwards the original
 request and writes an audit row with `degraded=true`.
 
 ## Security notes
 
 - The gateway never logs raw matched text — only sha256 hashes (see
   `dlp/types.py::make_finding`).
-- The vault key (`PRAESIDIO_VAULT_KEY`) and FPE key (`PRAESIDIO_FPE_KEY`)
-  must come from your KMS in production. In `PRAESIDIO_ENV=development` the
+- The vault key (`SECTION_VAULT_KEY`) and FPE key (`SECTION_FPE_KEY`)
+  must come from your KMS in production. In `SECTION_ENV=development` the
   gateway will auto-generate ephemeral keys and log a loud `RuntimeWarning`.
 - The audit chain hash binds each row to the prior one per-tenant; tampering
   with any row breaks every subsequent hash.
 - The Postgres schema enables RLS on `audit_events` and `lineage_nodes`. Apps
-  must `SET praesidio.tenant_id = '<tenant>'` per session.
+  must `SET section.tenant_id = '<tenant>'` per session.
 
 ## Wire format
 
@@ -163,7 +163,7 @@ Inbound is OpenAI-compatible (`/v1/chat/completions`, `/v1/completions`,
 (`/anthropic/v1/messages`). All responses include:
 
 - `X-Request-Id` — UUID echoed back for correlation
-- `X-Praesidio-Decision` — `allow | transform | block`
-- `X-Praesidio-Policy` — id of the policy whose rule fired
-- `X-Praesidio-Route` — chosen upstream (provider/model)
-- `X-Praesidio-Latency-Ms` — server-side processing latency
+- `X-Section-Decision` — `allow | transform | block`
+- `X-Section-Policy` — id of the policy whose rule fired
+- `X-Section-Route` — chosen upstream (provider/model)
+- `X-Section-Latency-Ms` — server-side processing latency

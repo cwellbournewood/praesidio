@@ -3,14 +3,14 @@ from __future__ import annotations
 
 import pytest
 
-from praesidio_gateway.anonymize.tokenizer import (
+from section_gateway.anonymize.tokenizer import (
     anonymise,
     restore_text,
     restore_with_vault,
 )
-from praesidio_gateway.anonymize.vault import InMemoryBackend, TokenVault
-from praesidio_gateway.dlp.detectors import regex as det_regex
-from praesidio_gateway.policy.models import Transform
+from section_gateway.anonymize.vault import InMemoryBackend, TokenVault
+from section_gateway.dlp.detectors import regex as det_regex
+from section_gateway.policy.models import Transform
 
 
 @pytest.mark.asyncio

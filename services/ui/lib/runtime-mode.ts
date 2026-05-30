@@ -17,7 +17,7 @@ import * as React from 'react';
 
 export type RuntimeMode = 'live' | 'mock';
 
-const KEY = 'praesidio.runtime-mode';
+const KEY = 'section.runtime-mode';
 
 export function gatewayUrl(): string | null {
   const url = process.env.NEXT_PUBLIC_GATEWAY_URL;
@@ -58,7 +58,7 @@ interface Ctx {
 
 const RuntimeModeContext = React.createContext<Ctx | null>(null);
 
-const EVENT = 'praesidio:runtime-mode-changed';
+const EVENT = 'section:runtime-mode-changed';
 
 /** Imperative reader for non-React modules (lib/api.ts). */
 export function currentMode(): RuntimeMode {

@@ -1,4 +1,4 @@
-# Praesidio Gateway — perf baseline
+# Section Gateway — perf baseline
 
 _Last run: 2026-05-27T22:02:22.032095+00:00_
 _Target: `asgi` · Requests/scenario: 500 · Concurrency: 8 · Python 3.12.12 on win32_
@@ -20,7 +20,7 @@ _Target: `asgi` · Requests/scenario: 500 · Concurrency: 8 · Python 3.12.12 on
 * Default target is `asgi`: the gateway app is loaded in-process via
   `httpx.ASGITransport`. The OpenAI upstream is replaced with a
   `respx` stub returning a canned `chat.completion` body (~80
-  tokens) or a 40-chunk SSE stream. This isolates Praesidio's own
+  tokens) or a 40-chunk SSE stream. This isolates Section's own
   overhead from upstream provider latency.
 * `--target http --url URL` measures a running gateway. The
   operator is responsible for pointing the gateway at a mock
@@ -45,7 +45,7 @@ _Target: `asgi` · Requests/scenario: 500 · Concurrency: 8 · Python 3.12.12 on
   full SSE body in one shot, so TTFB ≈ total latency. With a real
   upstream that drips chunks, TTFB is dominated by the upstream
   model's first-token delay (typically 200–800 ms for hosted
-  models); Praesidio's own added TTFB is < 5 ms.
+  models); Section's own added TTFB is < 5 ms.
 
 ## How to reproduce
 

@@ -7,14 +7,14 @@ variable "region" {
 variable "name_prefix" {
   description = "Prefix applied to all named resources."
   type        = string
-  default     = "praesidio"
+  default     = "section"
 }
 
 variable "tags" {
   description = "Common tags applied to every resource."
   type        = map(string)
   default = {
-    Project   = "praesidio"
+    Project   = "section"
     ManagedBy = "terraform"
   }
 }
@@ -100,11 +100,11 @@ variable "audit_bucket_name" {
 variable "irsa_namespace" {
   description = "Kubernetes namespace the gateway runs in (used for IRSA trust policy)."
   type        = string
-  default     = "praesidio"
+  default     = "section"
 }
 
 variable "irsa_service_account" {
   description = "Kubernetes ServiceAccount name (used for IRSA trust policy)."
   type        = string
-  default     = "praesidio"
+  default     = "section"
 }

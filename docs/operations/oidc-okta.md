@@ -1,13 +1,13 @@
 # OIDC: Okta
 
 This guide walks through wiring **Okta** as the identity provider for the
-Praesidio admin UI and the privileged `/admin/*` API. The general OIDC
+Section admin UI and the privileged `/admin/*` API. The general OIDC
 model is described in [`oidc.md`](oidc.md); this page only covers the
 Okta-specific clicks and the claim mapping.
 
-Praesidio expects the OIDC reverse-proxy (e.g. `oauth2-proxy`, an ingress
+Section expects the OIDC reverse-proxy (e.g. `oauth2-proxy`, an ingress
 controller's `auth_request`, or the UI's NextAuth route) to **verify the
-token and forward identity to the gateway via signed `X-Praesidio-*`
+token and forward identity to the gateway via signed `X-Section-*`
 headers**. The gateway does not itself terminate the OIDC flow — keeping
 identity verification out of the gateway lets it stay a small, auditable
 data-plane component.
@@ -16,7 +16,7 @@ data-plane component.
 
 * An Okta tenant (free Developer edition is fine for evaluation).
 * `okta-admin` permissions on the tenant.
-* The UI deployed at `https://ui.praesidio.example` (replace below).
+* The UI deployed at `https://ui.section.example` (replace below).
 
 ## 1. Create the OIDC application
 
@@ -30,11 +30,11 @@ In the Okta admin console:
 
 | Field | Value |
 |---|---|
-| App integration name | `Praesidio` |
-| Logo (optional) | drop `docs/assets/praesidio-square.png` |
+| App integration name | `Section` |
+| Logo (optional) | drop `docs/assets/section-square.png` |
 | Grant type | check `Authorization Code` only (refresh tokens optional) |
-| **Sign-in redirect URIs** | `https://ui.praesidio.example/api/auth/callback/okta` |
-| **Sign-out redirect URIs** | `https://ui.praesidio.example/` |
+| **Sign-in redirect URIs** | `https://ui.section.example/api/auth/callback/okta` |
+| **Sign-out redirect URIs** | `https://ui.section.example/` |
 | Controlled access | `Allow everyone in your organization to access` (tighten later via group assignment) |
 
 Click **Save**. Okta returns a **Client ID** and **Client Secret** — copy
@@ -43,12 +43,12 @@ both, you'll plug them into the UI's environment.
 ### Trusted origins
 
 Under **Security → API → Trusted Origins**, add
-`https://ui.praesidio.example` with both `CORS` and `Redirect` checked.
+`https://ui.section.example` with both `CORS` and `Redirect` checked.
 
 ## 2. Configure the `groups` claim
 
-Praesidio maps Okta groups to its RBAC roles via the
-`PRAESIDIO_RBAC_GROUP_MAP` JSON env var (see [`oidc.md`](oidc.md#required-claims)).
+Section maps Okta groups to its RBAC roles via the
+`SECTION_RBAC_GROUP_MAP` JSON env var (see [`oidc.md`](oidc.md#required-claims)).
 For the `groups` array to appear on the ID token:
 
 1. **Security → API → Authorization Servers → `default` → Claims → Add Claim**.
@@ -56,23 +56,23 @@ For the `groups` array to appear on the ID token:
    - **Name**: `groups`
    - **Include in token type**: `ID Token` → `Always`
    - **Value type**: `Groups`
-   - **Filter**: `Matches regex` `.*` (or `Starts with` `praesidio-` to
+   - **Filter**: `Matches regex` `.*` (or `Starts with` `section-` to
      restrict the claim to the relevant prefix)
    - **Include in**: `Any scope` (the default `openid` scope is enough)
 
-3. Create matching Okta groups: `praesidio-admins`, `praesidio-ops`,
-   `praesidio-auditors`, `praesidio-viewers`. Assign your real users.
+3. Create matching Okta groups: `section-admins`, `section-ops`,
+   `section-auditors`, `section-viewers`. Assign your real users.
 
 ## 3. (Optional) Pass tenant ID
 
-If you operate Praesidio multi-tenant, add a custom user attribute
+If you operate Section multi-tenant, add a custom user attribute
 `tenant_id` on each user (Okta UD Schema → Profile Editor), then:
 
 1. **Claims → Add Claim**.
 2. Name `tenant_id`, value type `Expression`,
    expression `user.tenant_id`, include in ID token always.
 
-The gateway reads `tenant_id` via the `X-Praesidio-Tenant` header set by
+The gateway reads `tenant_id` via the `X-Section-Tenant` header set by
 the reverse-proxy from this claim.
 
 ## 4. Wire the UI
@@ -84,14 +84,14 @@ OIDC_PROVIDER=okta
 OIDC_ISSUER=https://<your-okta-tenant>.okta.com/oauth2/default
 OIDC_CLIENT_ID=<app-client-id>
 OIDC_CLIENT_SECRET=<app-client-secret>
-OIDC_REDIRECT_URI=https://ui.praesidio.example/api/auth/callback/okta
+OIDC_REDIRECT_URI=https://ui.section.example/api/auth/callback/okta
 OIDC_SCOPES=openid profile email groups
 ```
 
 In the gateway's `.env`:
 
 ```ini
-PRAESIDIO_RBAC_GROUP_MAP={"praesidio-admins":["admin"],"praesidio-ops":["operator","viewer"],"praesidio-auditors":["auditor","viewer"],"praesidio-viewers":["viewer"]}
+SECTION_RBAC_GROUP_MAP={"section-admins":["admin"],"section-ops":["operator","viewer"],"section-auditors":["auditor","viewer"],"section-viewers":["viewer"]}
 ```
 
 ## 5. Smoke test the code exchange
@@ -102,7 +102,7 @@ A direct curl exchange against Okta's token endpoint, useful from CI:
 OKTA_DOMAIN=<your-okta-tenant>.okta.com
 CLIENT_ID=<client-id>
 CLIENT_SECRET=<client-secret>
-REDIRECT=https://ui.praesidio.example/api/auth/callback/okta
+REDIRECT=https://ui.section.example/api/auth/callback/okta
 CODE=<auth-code-from-browser-redirect>
 
 curl -sS -X POST "https://${OKTA_DOMAIN}/oauth2/default/v1/token" \
@@ -118,14 +118,14 @@ JSON to confirm `groups` is present).
 
 ## 6. UI login flow (what a user sees)
 
-1. User visits `https://ui.praesidio.example`.
+1. User visits `https://ui.section.example`.
 2. UI redirects unauthenticated requests to
    `https://<okta>/oauth2/default/v1/authorize?…&scope=openid profile email groups`.
 3. User authenticates with Okta (SSO or password + MFA).
 4. Okta redirects back to `…/api/auth/callback/okta?code=…`.
 5. The UI exchanges the code for tokens, stores the session cookie,
    and from then on attaches the verified identity as
-   `X-Praesidio-User`, `X-Praesidio-Groups`, `X-Praesidio-Tenant` on
+   `X-Section-User`, `X-Section-Groups`, `X-Section-Tenant` on
    every request to the gateway.
 
 ## Troubleshooting

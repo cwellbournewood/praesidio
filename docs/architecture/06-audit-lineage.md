@@ -81,7 +81,7 @@ default every 5 min) published to:
 Verifying the chain requires reading rows in order and recomputing — an
 admin who deletes or edits a row breaks every downstream hash.
 
-Signing is optional: if `PRAESIDIO_AUDIT_SIGNING_KEY` is set (Ed25519), each
+Signing is optional: if `SECTION_AUDIT_SIGNING_KEY` is set (Ed25519), each
 batch's terminal `chain_hash` is signed; the public key is published.
 
 ## Export
@@ -106,7 +106,7 @@ The lineage tracker hooks the following events into the DAG:
 | Embedding write | `embedding` ← `prompt` |
 | Memory write | `memory_write` ← `prompt` and/or `output` |
 
-The UI's lineage view (`services/ui/components/praesidio/LineageGraph`)
+The UI's lineage view (`services/ui/components/section/LineageGraph`)
 renders this as an interactive DAG; clicking any node opens the
 corresponding audit event.
 

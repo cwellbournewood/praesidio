@@ -1,4 +1,4 @@
-# Praesidio fuzz harnesses
+# Section fuzz harnesses
 
 Coverage-guided fuzzers built on [Atheris](https://github.com/google/atheris).
 Targets: the regex / secrets detectors that parse arbitrary user content.

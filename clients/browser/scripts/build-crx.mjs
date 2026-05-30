@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * build-crx — sign `dist/` into `dist-zip/praesidio-browser-extension-<ver>.crx`
+ * build-crx — sign `dist/` into `dist-zip/section-browser-extension-<ver>.crx`
  * for operator self-host distribution (a private update server points at
  * this artifact).
  *
@@ -10,7 +10,7 @@
  * for dev installs.
  *
  * Key resolution order:
- *   1. $PRAESIDIO_CRX_KEY  (path to a PEM file)
+ *   1. $SECTION_CRX_KEY  (path to a PEM file)
  *   2. ./key.pem            (relative to clients/browser/)
  *   3. generated key.pem    (written if missing; gitignored)
  */
@@ -26,7 +26,7 @@ const outDir = resolve(repoRoot, 'dist-zip');
 
 const pkg = JSON.parse(readFileSync(resolve(repoRoot, 'package.json'), 'utf8'));
 const version = pkg.version;
-const crxPath = resolve(outDir, `praesidio-browser-extension-${version}.crx`);
+const crxPath = resolve(outDir, `section-browser-extension-${version}.crx`);
 
 if (!existsSync(distDir)) {
   console.error(`dist/ not found — run \`npm run build\` first.`);
@@ -47,7 +47,7 @@ try {
 }
 
 const keyPath =
-  process.env.PRAESIDIO_CRX_KEY ?? resolve(repoRoot, 'key.pem');
+  process.env.SECTION_CRX_KEY ?? resolve(repoRoot, 'key.pem');
 
 if (!existsSync(keyPath)) {
   console.warn(`Signing key not found at ${keyPath}; generating one.`);
@@ -71,6 +71,6 @@ if (!existsSync(keyPath)) {
 await crx3([distDir], {
   keyPath,
   crxPath,
-  zipPath: resolve(outDir, `praesidio-browser-extension-${version}-unsigned.zip`),
+  zipPath: resolve(outDir, `section-browser-extension-${version}-unsigned.zip`),
 });
 console.log(`wrote ${crxPath}`);

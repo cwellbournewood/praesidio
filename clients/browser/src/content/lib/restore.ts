@@ -186,7 +186,7 @@ function collectPlaceholderNodes(root: Element): PlaceholderMatch[] {
     const el = node as Element;
     const tag = el.tagName;
     if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'NOSCRIPT') continue;
-    if (el.id === 'praesidio-overlay-root') continue;
+    if (el.id === 'section-overlay-root') continue;
     // Push children in reverse so DFS visits them in source order.
     const children = el.childNodes;
     for (let i = children.length - 1; i >= 0; i -= 1) {

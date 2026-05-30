@@ -12,14 +12,14 @@ variable "region" {
 variable "name_prefix" {
   description = "Prefix for all resources."
   type        = string
-  default     = "praesidio"
+  default     = "section"
 }
 
 variable "labels" {
   description = "Labels applied to all resources."
   type        = map(string)
   default = {
-    project    = "praesidio"
+    project    = "section"
     managed_by = "terraform"
   }
 }
@@ -63,11 +63,11 @@ variable "redis_tier" {
 variable "gateway_ksa_namespace" {
   description = "Kubernetes namespace for the gateway."
   type        = string
-  default     = "praesidio"
+  default     = "section"
 }
 
 variable "gateway_ksa_name" {
   description = "Kubernetes ServiceAccount name (Workload Identity)."
   type        = string
-  default     = "praesidio"
+  default     = "section"
 }

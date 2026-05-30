@@ -26,11 +26,11 @@ import pytest
 import respx
 from httpx import ASGITransport
 
-# Test env — must be set before any praesidio_gateway import.
-os.environ["PRAESIDIO_ENV"] = "development"
+# Test env — must be set before any section_gateway import.
+os.environ["SECTION_ENV"] = "development"
 os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///:memory:"
 os.environ["REDIS_URL"] = ""
-os.environ["PRAESIDIO_API_KEYS"] = "test-key"
+os.environ["SECTION_API_KEYS"] = "test-key"
 os.environ.setdefault("OPENAI_API_KEY", "sk-test")
 os.environ.setdefault("ANTHROPIC_API_KEY", "sk-ant-test")
 
@@ -52,7 +52,7 @@ def _load(path: Path) -> dict:
 
 _POLICIES: dict[str, str] = {
     "pii_tokenise_email": (
-        "apiVersion: praesidio/v1\n"
+        "apiVersion: section/v1\n"
         "kind: Policy\n"
         "metadata: {id: pii, name: pii}\n"
         "spec:\n"
@@ -69,7 +69,7 @@ _POLICIES: dict[str, str] = {
         "  fail_mode: closed\n"
     ),
     "block_on_aws_secret": (
-        "apiVersion: praesidio/v1\n"
+        "apiVersion: section/v1\n"
         "kind: Policy\n"
         "metadata: {id: sec, name: sec}\n"
         "spec:\n"
@@ -93,7 +93,7 @@ def _write_bundle(cassette: dict, policy_id: str) -> Path:
     bundle = tmp / "bundle"
     (bundle / "policies").mkdir(parents=True)
     (bundle / "manifest.yaml").write_text(
-        "apiVersion: praesidio/v1\n"
+        "apiVersion: section/v1\n"
         "kind: Bundle\n"
         "metadata: {name: cassette, version: '0'}\n"
         "spec: {includes: []}\n"
@@ -101,7 +101,7 @@ def _write_bundle(cassette: dict, policy_id: str) -> Path:
     provider = cassette["provider"]
     if provider == "openai":
         models = (
-            "apiVersion: praesidio/v1\nkind: ModelRegistry\nspec:\n"
+            "apiVersion: section/v1\nkind: ModelRegistry\nspec:\n"
             "  models:\n"
             "    - id: openai/gpt-4o-mini\n"
             "      provider: openai\n"
@@ -112,13 +112,13 @@ def _write_bundle(cassette: dict, policy_id: str) -> Path:
             "      auth: {type: env, var: OPENAI_API_KEY}\n"
         )
         routes = (
-            "apiVersion: praesidio/v1\nkind: Routes\nspec:\n"
+            "apiVersion: section/v1\nkind: Routes\nspec:\n"
             "  - inbound: {path: /v1/chat/completions, requested_model: gpt-4o-mini}\n"
             "    upstream: openai/gpt-4o-mini\n"
         )
     elif provider == "anthropic":
         models = (
-            "apiVersion: praesidio/v1\nkind: ModelRegistry\nspec:\n"
+            "apiVersion: section/v1\nkind: ModelRegistry\nspec:\n"
             "  models:\n"
             "    - id: anthropic/claude-3-haiku-20240307\n"
             "      provider: anthropic\n"
@@ -129,7 +129,7 @@ def _write_bundle(cassette: dict, policy_id: str) -> Path:
             "      auth: {type: env, var: ANTHROPIC_API_KEY}\n"
         )
         routes = (
-            "apiVersion: praesidio/v1\nkind: Routes\nspec:\n"
+            "apiVersion: section/v1\nkind: Routes\nspec:\n"
             "  - inbound: {path: /anthropic/v1/messages, requested_model: claude-3-haiku-20240307}\n"
             "    upstream: anthropic/claude-3-haiku-20240307\n"
         )
@@ -143,11 +143,11 @@ def _write_bundle(cassette: dict, policy_id: str) -> Path:
 
 
 def _build_app(bundle: Path):
-    os.environ["PRAESIDIO_POLICY_BUNDLE"] = str(bundle)
-    from praesidio_gateway.config import get_settings
+    os.environ["SECTION_POLICY_BUNDLE"] = str(bundle)
+    from section_gateway.config import get_settings
 
     get_settings.cache_clear()
-    from praesidio_gateway.main import create_app
+    from section_gateway.main import create_app
 
     return create_app()
 
@@ -180,9 +180,9 @@ async def _wait_for_audit(app, *, tenant: str | None = None, timeout: float = 12
     """
     from sqlalchemy import select
 
-    from praesidio_gateway.audit.models import AuditEvent
+    from section_gateway.audit.models import AuditEvent
 
-    state = app.state.praesidio
+    state = app.state.section
     deadline = asyncio.get_event_loop().time() + timeout
     rows: list[dict] = []
     while asyncio.get_event_loop().time() < deadline:

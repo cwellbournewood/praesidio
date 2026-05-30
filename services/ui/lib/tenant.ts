@@ -3,9 +3,9 @@
 /**
  * Tenant selection.
  *
- * The currently-selected tenant id is stored in the `praesidio_tenant` cookie
+ * The currently-selected tenant id is stored in the `section_tenant` cookie
  * so that server components can read it on subsequent navigations (the gateway
- * also accepts it as an `X-Praesidio-Tenant` request header — see lib/api.ts).
+ * also accepts it as an `X-Section-Tenant` request header — see lib/api.ts).
  *
  * The list of tenants is fetched from the gateway via `api.tenants()` (which
  * falls back to a deterministic mock list when in mock mode).
@@ -14,8 +14,8 @@
 import * as React from 'react';
 import type { Tenant } from './types';
 
-const COOKIE = 'praesidio_tenant';
-const EVENT = 'praesidio:tenant-changed';
+const COOKIE = 'section_tenant';
+const EVENT = 'section:tenant-changed';
 
 export const MOCK_TENANTS: Tenant[] = [
   { id: 'acme', name: 'Acme Corp', env: 'staging', region: 'eu-west-1' },

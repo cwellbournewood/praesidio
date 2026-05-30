@@ -58,7 +58,7 @@ jobs:
         env:
           NO_COLOR: "1"
           GATEWAY_URL: http://localhost:8080
-          PRAESIDIO_API_KEY: praesidio-demo-key
+          SECTION_API_KEY: section-demo-key
           JUNIT_OUT: artifacts/redteam-junit.xml
         run: |
           mkdir -p artifacts
@@ -69,7 +69,7 @@ jobs:
         run: |
           mkdir -p artifacts
           curl -fsS 'http://localhost:8080/admin/events?limit=500' \
-            -H 'Authorization: Bearer praesidio-demo-key' \
+            -H 'Authorization: Bearer section-demo-key' \
             -o artifacts/events.json || true
 
       - name: Upload artefacts

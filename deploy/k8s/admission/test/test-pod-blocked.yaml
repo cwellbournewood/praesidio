@@ -3,9 +3,9 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: praesidio-admission-blocked
+  name: section-admission-blocked
   labels:
-    app.kubernetes.io/managed-by: praesidio-admission-test
+    app.kubernetes.io/managed-by: section-admission-test
 spec:
   restartPolicy: Never
   volumes:

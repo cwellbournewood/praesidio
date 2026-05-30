@@ -18,7 +18,7 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
 
 WORKDIR /app
 COPY pyproject.toml README.md ./
-COPY praesidio_gateway ./praesidio_gateway
+COPY section_gateway ./section_gateway
 
 # Create venv with deps
 RUN uv venv /opt/venv && \
@@ -35,33 +35,33 @@ FROM python:3.11-slim AS runtime
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PATH="/opt/venv/bin:$PATH" \
-    PRAESIDIO_ENV=production \
-    PRAESIDIO_HOST=0.0.0.0 \
-    PRAESIDIO_PORT=8080
+    SECTION_ENV=production \
+    SECTION_HOST=0.0.0.0 \
+    SECTION_PORT=8080
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         ca-certificates tini \
     && rm -rf /var/lib/apt/lists/* \
-    && useradd --system --uid 10001 --home /home/praesidio --create-home praesidio
+    && useradd --system --uid 10001 --home /home/section --create-home section
 
 COPY --from=builder /opt/venv /opt/venv
 WORKDIR /app
-COPY --chown=praesidio:praesidio praesidio_gateway ./praesidio_gateway
-COPY --chown=praesidio:praesidio migrations ./migrations
-COPY --chown=praesidio:praesidio alembic ./alembic
-COPY --chown=praesidio:praesidio alembic.ini ./alembic.ini
-COPY --chown=praesidio:praesidio pyproject.toml README.md ./
-COPY --chown=praesidio:praesidio docker-entrypoint.sh /usr/local/bin/praesidio-entrypoint
-RUN chmod +x /usr/local/bin/praesidio-entrypoint
+COPY --chown=section:section section_gateway ./section_gateway
+COPY --chown=section:section migrations ./migrations
+COPY --chown=section:section alembic ./alembic
+COPY --chown=section:section alembic.ini ./alembic.ini
+COPY --chown=section:section pyproject.toml README.md ./
+COPY --chown=section:section docker-entrypoint.sh /usr/local/bin/section-entrypoint
+RUN chmod +x /usr/local/bin/section-entrypoint
 
-# When PRAESIDIO_AUTO_MIGRATE=0, the entrypoint skips `alembic upgrade head`.
-ENV PRAESIDIO_AUTO_MIGRATE=1
+# When SECTION_AUTO_MIGRATE=0, the entrypoint skips `alembic upgrade head`.
+ENV SECTION_AUTO_MIGRATE=1
 
-USER praesidio
+USER section
 EXPOSE 8080
 
 HEALTHCHECK --interval=10s --timeout=5s --start-period=15s --retries=5 \
   CMD python -c "import urllib.request,sys;urllib.request.urlopen('http://localhost:8080/healthz')" || exit 1
 
-ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/praesidio-entrypoint"]
-CMD ["python", "-m", "praesidio_gateway.main"]
+ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/section-entrypoint"]
+CMD ["python", "-m", "section_gateway.main"]

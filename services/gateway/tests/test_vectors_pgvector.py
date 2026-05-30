@@ -1,7 +1,7 @@
 """PgVectorConnector tests.
 
 Skipped automatically unless a real Postgres ``DATABASE_URL_PG`` (or
-``PRAESIDIO_PG_DSN``) is configured AND the pgvector extension is
+``SECTION_PG_DSN``) is configured AND the pgvector extension is
 available. Follows the same skip pattern as test_rls_postgres.py so
 contributors without a local Postgres can still run the unit suite.
 
@@ -28,7 +28,7 @@ pytestmark = pytest.mark.postgres
 
 
 def _pg_dsn() -> str | None:
-    return os.environ.get("PRAESIDIO_PG_DSN") or os.environ.get("DATABASE_URL_PG")
+    return os.environ.get("SECTION_PG_DSN") or os.environ.get("DATABASE_URL_PG")
 
 
 def _asyncpg_dsn() -> str | None:
@@ -140,7 +140,7 @@ async def _truncate(dsn: str) -> None:
 def dsn() -> str:
     dsn = _asyncpg_dsn()
     if dsn is None:
-        pytest.skip("PRAESIDIO_PG_DSN not set — pgvector connector test skipped")
+        pytest.skip("SECTION_PG_DSN not set — pgvector connector test skipped")
     asyncio.get_event_loop().run_until_complete(_ensure_schema(dsn))
     asyncio.get_event_loop().run_until_complete(_truncate(dsn))
     return dsn
@@ -152,7 +152,7 @@ def dsn() -> str:
 @pytest.mark.asyncio
 async def test_scan_on_write_persists_sanitised_only(dsn):
     """Findings must be substituted with placeholders before write."""
-    from praesidio_gateway.vectors.pgvector import PgVectorConnector
+    from section_gateway.vectors.pgvector import PgVectorConnector
 
     text = "Email me at alice@example.com please."
     scanner = _FakeScanner(
@@ -162,7 +162,7 @@ async def test_scan_on_write_persists_sanitised_only(dsn):
 
     conn = PgVectorConnector(scanner=scanner, vault=vault, dsn=dsn)
     try:
-        from praesidio_gateway.vectors.base import VectorDocument
+        from section_gateway.vectors.base import VectorDocument
 
         doc_id = f"doc-{uuid.uuid4().hex[:8]}"
         res = await conn.scan_on_write(
@@ -184,8 +184,8 @@ async def test_scan_on_write_persists_sanitised_only(dsn):
 @pytest.mark.asyncio
 async def test_secret_bearing_documents_are_blocked(dsn):
     """Documents containing labelled secrets must NOT be persisted."""
-    from praesidio_gateway.vectors.base import VectorDocument
-    from praesidio_gateway.vectors.pgvector import PgVectorConnector
+    from section_gateway.vectors.base import VectorDocument
+    from section_gateway.vectors.pgvector import PgVectorConnector
 
     text = "AWS_KEY=AKIAIOSFODNN7EXAMPLE"
     scanner = _FakeScanner(
@@ -212,8 +212,8 @@ async def test_secret_bearing_documents_are_blocked(dsn):
 @pytest.mark.asyncio
 async def test_acl_filters_retrieval(dsn):
     """validate_retrieval must drop docs the principal cannot read."""
-    from praesidio_gateway.vectors.base import VectorDocument
-    from praesidio_gateway.vectors.pgvector import PgVectorConnector
+    from section_gateway.vectors.base import VectorDocument
+    from section_gateway.vectors.pgvector import PgVectorConnector
 
     scanner = _FakeScanner({})
     vault = _MemVault()
@@ -252,8 +252,8 @@ async def test_acl_filters_retrieval(dsn):
 @pytest.mark.asyncio
 async def test_acl_group_grant_visible_to_member(dsn):
     """A group-level grant must make the doc visible to any member."""
-    from praesidio_gateway.vectors.base import VectorDocument
-    from praesidio_gateway.vectors.pgvector import PgVectorConnector
+    from section_gateway.vectors.base import VectorDocument
+    from section_gateway.vectors.pgvector import PgVectorConnector
 
     scanner = _FakeScanner({})
     vault = _MemVault()
@@ -290,7 +290,7 @@ async def test_acl_group_grant_visible_to_member(dsn):
 @pytest.mark.asyncio
 async def test_acl_grant_requires_subject(dsn):
     """grant() without a principal or group is a programming error."""
-    from praesidio_gateway.vectors.pgvector import _AsyncpgAclBackend
+    from section_gateway.vectors.pgvector import _AsyncpgAclBackend
 
     backend = _AsyncpgAclBackend(dsn)
     with pytest.raises(ValueError):

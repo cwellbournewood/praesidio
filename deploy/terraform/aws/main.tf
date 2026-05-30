@@ -1,5 +1,5 @@
 ################################################################################
-# Praesidio reference Terraform — AWS
+# Section reference Terraform — AWS
 #
 # !!! STUB QUALITY !!!
 # This module is a *starting point*. It is intentionally minimal and not a
@@ -119,16 +119,16 @@ resource "aws_route_table_association" "private" {
 # In prod, split per data class.
 ################################################################################
 
-resource "aws_kms_key" "praesidio" {
-  description             = "Praesidio data-protection CMK"
+resource "aws_kms_key" "section" {
+  description             = "Section data-protection CMK"
   deletion_window_in_days = 30
   enable_key_rotation     = true
   tags                    = { Name = "${local.name}-cmk" }
 }
 
-resource "aws_kms_alias" "praesidio" {
+resource "aws_kms_alias" "section" {
   name          = "alias/${local.name}"
-  target_key_id = aws_kms_key.praesidio.key_id
+  target_key_id = aws_kms_key.section.key_id
 }
 
 ################################################################################
@@ -151,7 +151,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "audit" {
   rule {
     apply_server_side_encryption_by_default {
       sse_algorithm     = "aws:kms"
-      kms_master_key_id = aws_kms_key.praesidio.arn
+      kms_master_key_id = aws_kms_key.section.arn
     }
     bucket_key_enabled = true
   }
@@ -178,7 +178,7 @@ resource "aws_db_subnet_group" "this" {
 
 resource "aws_security_group" "db" {
   name        = "${local.name}-db"
-  description = "Praesidio Postgres"
+  description = "Section Postgres"
   vpc_id      = aws_vpc.this.id
 
   ingress {
@@ -204,10 +204,10 @@ resource "aws_db_instance" "postgres" {
   instance_class          = var.postgres_instance_class
   allocated_storage       = var.postgres_allocated_storage
   storage_encrypted       = true
-  kms_key_id              = aws_kms_key.praesidio.arn
-  username                = "praesidio"
+  kms_key_id              = aws_kms_key.section.arn
+  username                = "section"
   manage_master_user_password = true
-  db_name                 = "praesidio"
+  db_name                 = "section"
   db_subnet_group_name    = aws_db_subnet_group.this.name
   vpc_security_group_ids  = [aws_security_group.db.id]
   multi_az                = var.postgres_multi_az
@@ -220,7 +220,7 @@ resource "aws_db_instance" "postgres" {
   apply_immediately       = false
   copy_tags_to_snapshot   = true
   performance_insights_enabled = true
-  performance_insights_kms_key_id = aws_kms_key.praesidio.arn
+  performance_insights_kms_key_id = aws_kms_key.section.arn
   auto_minor_version_upgrade = true
 }
 
@@ -235,7 +235,7 @@ resource "aws_elasticache_subnet_group" "this" {
 
 resource "aws_security_group" "redis" {
   name        = "${local.name}-redis"
-  description = "Praesidio Redis"
+  description = "Section Redis"
   vpc_id      = aws_vpc.this.id
 
   ingress {
@@ -256,7 +256,7 @@ resource "aws_security_group" "redis" {
 
 resource "aws_elasticache_replication_group" "redis" {
   replication_group_id          = "${local.name}-redis"
-  description                   = "Praesidio token vault"
+  description                   = "Section token vault"
   engine                        = "redis"
   engine_version                = "7.1"
   node_type                     = var.redis_node_type
@@ -268,7 +268,7 @@ resource "aws_elasticache_replication_group" "redis" {
   security_group_ids            = [aws_security_group.redis.id]
   at_rest_encryption_enabled    = true
   transit_encryption_enabled    = true
-  kms_key_id                    = aws_kms_key.praesidio.arn
+  kms_key_id                    = aws_kms_key.section.arn
   snapshot_retention_limit      = 5
   apply_immediately             = false
 }
@@ -306,7 +306,7 @@ resource "aws_eks_cluster" "this" {
   }
 
   encryption_config {
-    provider { key_arn = aws_kms_key.praesidio.arn }
+    provider { key_arn = aws_kms_key.section.arn }
     resources = ["secrets"]
   }
 
@@ -372,7 +372,7 @@ resource "aws_eks_node_group" "default" {
 }
 
 ################################################################################
-# IRSA role for the Praesidio gateway ServiceAccount.
+# IRSA role for the Section gateway ServiceAccount.
 # Grants KMS use + S3 audit-bucket access.
 ################################################################################
 
@@ -413,7 +413,7 @@ data "aws_iam_policy_document" "gateway" {
       "kms:GenerateDataKey",
       "kms:DescribeKey",
     ]
-    resources = [aws_kms_key.praesidio.arn]
+    resources = [aws_kms_key.section.arn]
   }
   statement {
     actions = [
@@ -428,7 +428,7 @@ data "aws_iam_policy_document" "gateway" {
   }
   statement {
     actions   = ["secretsmanager:GetSecretValue", "secretsmanager:DescribeSecret"]
-    resources = ["arn:aws:secretsmanager:${var.region}:${data.aws_caller_identity.current.account_id}:secret:praesidio/*"]
+    resources = ["arn:aws:secretsmanager:${var.region}:${data.aws_caller_identity.current.account_id}:secret:section/*"]
   }
 }
 

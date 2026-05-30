@@ -11,28 +11,28 @@ import pytest
 from httpx import ASGITransport
 
 # Test config — must be set before importing the app/config.
-os.environ["PRAESIDIO_ENV"] = "development"
+os.environ["SECTION_ENV"] = "development"
 os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///:memory:"
 os.environ["REDIS_URL"] = ""  # in-memory vault
-os.environ["PRAESIDIO_API_KEYS"] = "test-key"
+os.environ["SECTION_API_KEYS"] = "test-key"
 
 
 def _write_bundle(tmp: Path, *, block_aws: bool = False) -> Path:
     bundle = tmp / "bundle"
     (bundle / "policies").mkdir(parents=True)
     (bundle / "manifest.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: Bundle\nmetadata: {name: t, version: '0'}\nspec: {includes: []}\n"
+        "apiVersion: section/v1\nkind: Bundle\nmetadata: {name: t, version: '0'}\nspec: {includes: []}\n"
     )
     (bundle / "models.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: ModelRegistry\nspec:\n"
+        "apiVersion: section/v1\nkind: ModelRegistry\nspec:\n"
         "  models: []\n  endpoints: []\n"
     )
     (bundle / "routes.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: Routes\nspec: []\n"
+        "apiVersion: section/v1\nkind: Routes\nspec: []\n"
     )
     if block_aws:
         (bundle / "policies" / "0001.yaml").write_text(
-            "apiVersion: praesidio/v1\n"
+            "apiVersion: section/v1\n"
             "kind: Policy\n"
             "metadata: {id: sec, name: sec}\n"
             "spec:\n"
@@ -48,7 +48,7 @@ def _write_bundle(tmp: Path, *, block_aws: bool = False) -> Path:
         )
     else:
         (bundle / "policies" / "0001.yaml").write_text(
-            "apiVersion: praesidio/v1\n"
+            "apiVersion: section/v1\n"
             "kind: Policy\n"
             "metadata: {id: pii, name: pii}\n"
             "spec:\n"
@@ -69,8 +69,8 @@ def _write_bundle(tmp: Path, *, block_aws: bool = False) -> Path:
 
 def _set_bundle(tmp: Path, **kwargs) -> None:
     bundle = _write_bundle(tmp, **kwargs)
-    os.environ["PRAESIDIO_POLICY_BUNDLE"] = str(bundle)
-    from praesidio_gateway.config import get_settings
+    os.environ["SECTION_POLICY_BUNDLE"] = str(bundle)
+    from section_gateway.config import get_settings
     get_settings.cache_clear()
 
 
@@ -80,7 +80,7 @@ async def test_scan_masks_email_and_round_trips_via_restore():
     tmp = Path(tempfile.mkdtemp())
     _set_bundle(tmp)
 
-    from praesidio_gateway.main import create_app
+    from section_gateway.main import create_app
 
     app = create_app()
     async with httpx.AsyncClient(
@@ -89,7 +89,7 @@ async def test_scan_masks_email_and_round_trips_via_restore():
         async with app.router.lifespan_context(app):
             resp = await client.post(
                 "/v1/scan",
-                headers={"x-api-key": "test-key", "x-praesidio-tenant": "default"},
+                headers={"x-api-key": "test-key", "x-section-tenant": "default"},
                 json={
                     "text": "Please email alice@example.com about the budget.",
                     "client": "browser-extension",
@@ -113,7 +113,7 @@ async def test_scan_masks_email_and_round_trips_via_restore():
             # model's reply (simulated) that mentions the placeholder.
             restore_resp = await client.post(
                 "/v1/restore",
-                headers={"x-api-key": "test-key", "x-praesidio-tenant": "default"},
+                headers={"x-api-key": "test-key", "x-section-tenant": "default"},
                 json={
                     "request_id": request_id,
                     "text": f"Sure, I'll email {placeholder} about it.",
@@ -132,7 +132,7 @@ async def test_scan_blocks_aws_secret():
     tmp = Path(tempfile.mkdtemp())
     _set_bundle(tmp, block_aws=True)
 
-    from praesidio_gateway.main import create_app
+    from section_gateway.main import create_app
 
     app = create_app()
     async with httpx.AsyncClient(
@@ -141,7 +141,7 @@ async def test_scan_blocks_aws_secret():
         async with app.router.lifespan_context(app):
             resp = await client.post(
                 "/v1/scan",
-                headers={"x-api-key": "test-key", "x-praesidio-tenant": "default"},
+                headers={"x-api-key": "test-key", "x-section-tenant": "default"},
                 json={
                     "text": "deploy with AKIAIOSFODNN7EXAMPLE please",
                     "client": "vscode",
@@ -161,7 +161,7 @@ async def test_scan_allow_when_clean():
     tmp = Path(tempfile.mkdtemp())
     _set_bundle(tmp)
 
-    from praesidio_gateway.main import create_app
+    from section_gateway.main import create_app
 
     app = create_app()
     async with httpx.AsyncClient(
@@ -186,7 +186,7 @@ async def test_restore_reports_missing_for_unknown_placeholder():
     tmp = Path(tempfile.mkdtemp())
     _set_bundle(tmp)
 
-    from praesidio_gateway.main import create_app
+    from section_gateway.main import create_app
 
     app = create_app()
     async with httpx.AsyncClient(
@@ -213,7 +213,7 @@ async def test_scan_writes_audit_with_edge_source_tag():
     tmp = Path(tempfile.mkdtemp())
     _set_bundle(tmp)
 
-    from praesidio_gateway.main import create_app
+    from section_gateway.main import create_app
 
     app = create_app()
     async with httpx.AsyncClient(
@@ -239,7 +239,7 @@ async def test_scan_writes_audit_with_edge_source_tag():
             # flush sees an empty queue but a row appears moments later.
             import asyncio as _asyncio
             for _ in range(300):  # up to ~6s; CI runners need the headroom
-                await app.state.praesidio.audit.flush()
+                await app.state.section.audit.flush()
                 events_resp = await client.get(
                     "/admin/events", headers={"x-api-key": "test-key"}
                 )
@@ -266,7 +266,7 @@ async def test_scan_normalises_unknown_client_value():
     tmp = Path(tempfile.mkdtemp())
     _set_bundle(tmp)
 
-    from praesidio_gateway.main import create_app
+    from section_gateway.main import create_app
 
     app = create_app()
     async with httpx.AsyncClient(
@@ -284,7 +284,7 @@ async def test_scan_normalises_unknown_client_value():
             # Re-flush inside the loop — see the sibling test's comment.
             import asyncio as _asyncio
             for _ in range(300):  # up to ~6s; CI runners need the headroom
-                await app.state.praesidio.audit.flush()
+                await app.state.section.audit.flush()
                 events_resp = await client.get(
                     "/admin/events", headers={"x-api-key": "test-key"}
                 )

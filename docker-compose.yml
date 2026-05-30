@@ -2,9 +2,9 @@ services:
   postgres:
     image: pgvector/pgvector:pg16
     environment:
-      POSTGRES_USER: praesidio
-      POSTGRES_PASSWORD: praesidio
-      POSTGRES_DB: praesidio
+      POSTGRES_USER: section
+      POSTGRES_PASSWORD: section
+      POSTGRES_DB: section
     volumes:
       - pgdata:/var/lib/postgresql/data
       # NOTE: ./services/gateway/migrations is the legacy raw-SQL bootstrap.
@@ -13,7 +13,7 @@ services:
       # a duplicate-table race against Alembic. Keep them in-repo for the
       # bare-metal install docs only.
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "praesidio"]
+      test: ["CMD", "pg_isready", "-U", "section"]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -39,11 +39,11 @@ services:
       dockerfile: Dockerfile
     env_file: .env
     environment:
-      DATABASE_URL: postgresql+asyncpg://praesidio:praesidio@postgres:5432/praesidio
+      DATABASE_URL: postgresql+asyncpg://section:section@postgres:5432/section
       REDIS_URL: redis://redis:6379/0
-      PRAESIDIO_POLICY_BUNDLE: /etc/praesidio/policies
+      SECTION_POLICY_BUNDLE: /etc/section/policies
     volumes:
-      - ./examples/policies:/etc/praesidio/policies:ro
+      - ./examples/policies:/etc/section/policies:ro
     depends_on:
       postgres:
         condition: service_healthy
@@ -63,7 +63,7 @@ services:
       dockerfile: Dockerfile
     environment:
       NEXT_PUBLIC_GATEWAY_URL: http://localhost:8080
-      PRAESIDIO_GATEWAY_INTERNAL_URL: http://gateway:8080
+      SECTION_GATEWAY_INTERNAL_URL: http://gateway:8080
     depends_on:
       gateway:
         condition: service_healthy
@@ -78,7 +78,7 @@ services:
 
   # Edge: optional CA proxy sidecar. Operators opt in with
   #   docker compose --profile edge up
-  # Pre-mint the CA on a build host (`praesidio-edge-proxy install-ca`),
+  # Pre-mint the CA on a build host (`section-edge-proxy install-ca`),
   # mount it into /data — the container will NOT auto-generate, because
   # we don't want the private key trapped in an ephemeral pod.
   edge-proxy:
@@ -86,19 +86,19 @@ services:
     build:
       context: ./services/edge-proxy
     environment:
-      PRAESIDIO_EDGE_GATEWAY_URL: http://gateway:8080
-      PRAESIDIO_EDGE_API_KEY: ${PRAESIDIO_API_KEY:-praesidio-demo-key}
-      PRAESIDIO_EDGE_LISTEN_HOST: 0.0.0.0
-      PRAESIDIO_EDGE_LISTEN_PORT: "8888"
+      SECTION_EDGE_GATEWAY_URL: http://gateway:8080
+      SECTION_EDGE_API_KEY: ${SECTION_API_KEY:-section-demo-key}
+      SECTION_EDGE_LISTEN_HOST: 0.0.0.0
+      SECTION_EDGE_LISTEN_PORT: "8888"
     depends_on:
       gateway:
         condition: service_healthy
     ports:
       - "8888:8888"
     volumes:
-      - praesidio-edge-ca:/data
+      - section-edge-ca:/data
 
 volumes:
   pgdata:
   redisdata:
-  praesidio-edge-ca:
+  section-edge-ca:

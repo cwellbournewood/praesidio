@@ -1,4 +1,4 @@
-// Praesidio JetBrains plugin — module build script.
+// Section JetBrains plugin — module build script.
 //
 // Uses the gradle-intellij-plugin (legacy, stable on 232–252 range) so we
 // can run against the broad IntelliJ Platform range declared in
@@ -69,7 +69,7 @@ changelog {
     keepUnreleasedSection = true
     unreleasedTerm = "[Unreleased]"
     groups = listOf("Added", "Changed", "Fixed", "Removed")
-    repositoryUrl = "https://github.com/cwellbournewood/praesidio"
+    repositoryUrl = "https://github.com/cwellbournewood/section"
 }
 
 ktlint {
@@ -141,7 +141,7 @@ tasks {
     }
 
     buildPlugin {
-        // Resulting artifact: build/distributions/praesidio-jetbrains-<ver>.zip
+        // Resulting artifact: build/distributions/section-jetbrains-<ver>.zip
         archiveBaseName.set(providers.gradleProperty("pluginName").get())
         archiveVersion.set(providers.gradleProperty("pluginVersion").get())
     }

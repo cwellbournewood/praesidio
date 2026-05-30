@@ -1,5 +1,5 @@
 /**
- * "Praesidio: Sign In" and "Praesidio: Sign Out".
+ * "Section: Sign In" and "Section: Sign Out".
  *
  * Sign-in offers two flows:
  *   1. API key — prompts for the key, stores in SecretStorage.
@@ -11,17 +11,17 @@
 import * as vscode from "vscode";
 
 import type { AuthManager } from "../auth.js";
-import type { PraesidioSettings } from "../settings.js";
+import type { SectionSettings } from "../settings.js";
 
 export interface SignInDeps {
   auth: AuthManager;
-  getSettings: () => PraesidioSettings;
+  getSettings: () => SectionSettings;
   onChanged?: () => void;
 }
 
 export function registerSignIn(deps: SignInDeps): vscode.Disposable[] {
   const signIn = vscode.commands.registerCommand(
-    "praesidio.signIn",
+    "section.signIn",
     async () => {
       const pick = await vscode.window.showQuickPick(
         [
@@ -36,12 +36,12 @@ export function registerSignIn(deps: SignInDeps): vscode.Disposable[] {
             description: "Sign in via your IdP in the browser",
           },
         ],
-        { title: "Praesidio: choose auth method" },
+        { title: "Section: choose auth method" },
       );
       if (!pick) return;
       if (pick.id === "apikey") {
         const key = await vscode.window.showInputBox({
-          prompt: "Praesidio API key (X-API-Key)",
+          prompt: "Section API key (X-API-Key)",
           password: true,
           ignoreFocusOut: true,
           placeHolder: "praes_...",
@@ -50,7 +50,7 @@ export function registerSignIn(deps: SignInDeps): vscode.Disposable[] {
         if (!key) return;
         await deps.auth.setApiKey(key.trim());
         void vscode.window.showInformationMessage(
-          "Praesidio: API key stored.",
+          "Section: API key stored.",
         );
         deps.onChanged?.();
         return;
@@ -66,7 +66,7 @@ export function registerSignIn(deps: SignInDeps): vscode.Disposable[] {
         const ok = await vscode.window.withProgress(
           {
             location: vscode.ProgressLocation.Notification,
-            title: "Praesidio: signing in…",
+            title: "Section: signing in…",
             cancellable: true,
           },
           (progress, token) =>
@@ -81,24 +81,24 @@ export function registerSignIn(deps: SignInDeps): vscode.Disposable[] {
         );
         if (ok) {
           void vscode.window.showInformationMessage(
-            "Praesidio: signed in.",
+            "Section: signed in.",
           );
           deps.onChanged?.();
         }
       } catch (err) {
         void vscode.window.showErrorMessage(
-          `Praesidio sign-in failed: ${(err as Error).message}`,
+          `Section sign-in failed: ${(err as Error).message}`,
         );
       }
     },
   );
 
   const signOut = vscode.commands.registerCommand(
-    "praesidio.signOut",
+    "section.signOut",
     async () => {
       await deps.auth.signOut();
       void vscode.window.showInformationMessage(
-        "Praesidio: signed out.",
+        "Section: signed out.",
       );
       deps.onChanged?.();
     },

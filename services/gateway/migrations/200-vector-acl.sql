@@ -1,4 +1,4 @@
--- Praesidio Gateway — vector store + per-document ACL.
+-- Section Gateway — vector store + per-document ACL.
 --
 -- Adds two tables used by the vector-store connectors:
 --
@@ -73,22 +73,22 @@ CREATE INDEX IF NOT EXISTS idx_documents_acl_lookup
 
 -- ---------------------------------------------------------------------------
 -- Row-Level Security
---   Both tables enforce the same praesidio.tenant_id session variable
+--   Both tables enforce the same section.tenant_id session variable
 --   contract as audit_events / lineage_nodes.
 -- ---------------------------------------------------------------------------
 ALTER TABLE vector_documents ENABLE ROW LEVEL SECURITY;
 ALTER TABLE documents_acl    ENABLE ROW LEVEL SECURITY;
 
-DROP POLICY IF EXISTS praesidio_tenant_isolation ON vector_documents;
-CREATE POLICY praesidio_tenant_isolation ON vector_documents
-    USING      (tenant_id = current_setting('praesidio.tenant_id', true)
-                OR current_setting('praesidio.tenant_id', true) = '*')
-    WITH CHECK (tenant_id = current_setting('praesidio.tenant_id', true)
-                OR current_setting('praesidio.tenant_id', true) = '*');
+DROP POLICY IF EXISTS section_tenant_isolation ON vector_documents;
+CREATE POLICY section_tenant_isolation ON vector_documents
+    USING      (tenant_id = current_setting('section.tenant_id', true)
+                OR current_setting('section.tenant_id', true) = '*')
+    WITH CHECK (tenant_id = current_setting('section.tenant_id', true)
+                OR current_setting('section.tenant_id', true) = '*');
 
-DROP POLICY IF EXISTS praesidio_tenant_isolation ON documents_acl;
-CREATE POLICY praesidio_tenant_isolation ON documents_acl
-    USING      (tenant_id = current_setting('praesidio.tenant_id', true)
-                OR current_setting('praesidio.tenant_id', true) = '*')
-    WITH CHECK (tenant_id = current_setting('praesidio.tenant_id', true)
-                OR current_setting('praesidio.tenant_id', true) = '*');
+DROP POLICY IF EXISTS section_tenant_isolation ON documents_acl;
+CREATE POLICY section_tenant_isolation ON documents_acl
+    USING      (tenant_id = current_setting('section.tenant_id', true)
+                OR current_setting('section.tenant_id', true) = '*')
+    WITH CHECK (tenant_id = current_setting('section.tenant_id', true)
+                OR current_setting('section.tenant_id', true) = '*');

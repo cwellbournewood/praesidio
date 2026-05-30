@@ -1,7 +1,7 @@
 /**
- * Status-bar widget for the Praesidio extension.
+ * Status-bar widget for the Section extension.
  *
- * Bottom-left "$(shield) Praesidio" pill. Tooltip shows gateway URL,
+ * Bottom-left "$(shield) Section" pill. Tooltip shows gateway URL,
  * last decision, and proxy state. Clicking the pill opens a quick-pick
  * with sign-in / toggle-proxy / scan-selection / open-audit.
  */
@@ -9,10 +9,10 @@
 import * as vscode from "vscode";
 
 import type { DecisionStore } from "./decisionsView.js";
-import type { PraesidioSettings } from "./settings.js";
+import type { SectionSettings } from "./settings.js";
 import type { ProxyState } from "./lib/types.js";
 
-export class PraesidioStatusBar {
+export class SectionStatusBar {
   private readonly item: vscode.StatusBarItem;
   private readonly subs: vscode.Disposable[] = [];
   private proxyState: ProxyState = "stopped";
@@ -20,29 +20,29 @@ export class PraesidioStatusBar {
 
   constructor(
     private readonly store: DecisionStore,
-    private settings: PraesidioSettings,
+    private settings: SectionSettings,
   ) {
     this.item = vscode.window.createStatusBarItem(
-      "praesidio.statusBar",
+      "section.statusBar",
       vscode.StatusBarAlignment.Left,
       0,
     );
-    this.item.name = "Praesidio";
-    this.item.command = "praesidio.statusBar.menu";
+    this.item.name = "Section";
+    this.item.command = "section.statusBar.menu";
     this.subs.push(this.item);
     this.subs.push(
       this.store.onDidChange(() => this.render()),
     );
     this.subs.push(
       vscode.commands.registerCommand(
-        "praesidio.statusBar.menu",
+        "section.statusBar.menu",
         () => this.showMenu(),
       ),
     );
     this.render();
   }
 
-  setSettings(s: PraesidioSettings): void {
+  setSettings(s: SectionSettings): void {
     this.settings = s;
     this.render();
   }
@@ -73,11 +73,11 @@ export class PraesidioStatusBar {
     }
     const last = this.store.last();
     const lastTag = last ? ` • ${last.action}` : "";
-    this.item.text = `$(shield) Praesidio${lastTag}`;
+    this.item.text = `$(shield) Section${lastTag}`;
 
     const md = new vscode.MarkdownString();
     md.isTrusted = false;
-    md.appendMarkdown(`**Praesidio**\n\n`);
+    md.appendMarkdown(`**Section**\n\n`);
     md.appendMarkdown(`- gateway: \`${this.settings.gateway.url}\`\n`);
     md.appendMarkdown(
       `- signed in: ${this.signedIn ? "yes" : "no"}\n`,
@@ -140,25 +140,25 @@ export class PraesidioStatusBar {
       },
     ];
     const pick = await vscode.window.showQuickPick(items, {
-      title: "Praesidio",
+      title: "Section",
       placeHolder: "What would you like to do?",
     });
     if (!pick) return;
     switch (pick.id) {
       case "scan":
-        await vscode.commands.executeCommand("praesidio.scanSelection");
+        await vscode.commands.executeCommand("section.scanSelection");
         return;
       case "signin":
-        await vscode.commands.executeCommand("praesidio.signIn");
+        await vscode.commands.executeCommand("section.signIn");
         return;
       case "signout":
-        await vscode.commands.executeCommand("praesidio.signOut");
+        await vscode.commands.executeCommand("section.signOut");
         return;
       case "proxy":
-        await vscode.commands.executeCommand("praesidio.toggleProxy");
+        await vscode.commands.executeCommand("section.toggleProxy");
         return;
       case "audit":
-        await vscode.commands.executeCommand("praesidio.openAudit");
+        await vscode.commands.executeCommand("section.openAudit");
         return;
     }
   }

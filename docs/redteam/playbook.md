@@ -1,7 +1,7 @@
 # Red-team playbook (excerpt)
 
 A short, public excerpt of the internal red-team playbook used to validate
-Praesidio's detectors and policy enforcement. Full suite lives in a
+Section's detectors and policy enforcement. Full suite lives in a
 separate internal repository.
 
 ## Goals
@@ -51,7 +51,7 @@ For each attack class, validate that:
 ## Running
 
 ```bash
-# requires Praesidio running locally
+# requires Section running locally
 cd bench/redteam
 uv run python run.py --target http://localhost:8080 --policy pii-strict
 ```

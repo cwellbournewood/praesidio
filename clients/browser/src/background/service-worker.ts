@@ -4,7 +4,7 @@
  *  - settings + secrets storage
  *  - gateway calls (scan, restore, ping)
  *  - OIDC device-code flow + refresh
- *  - 5-minute heartbeat that POSTs `__praesidio_heartbeat__` to /v1/scan
+ *  - 5-minute heartbeat that POSTs `__section_heartbeat__` to /v1/scan
  *    so SIEM dashboards can spot agent gaps
  *  - rolling decision log shown in the popup
  *
@@ -37,7 +37,7 @@ import {
   type SiteId,
 } from '../lib/types.js';
 
-const HEARTBEAT_ALARM = 'praesidio.heartbeat';
+const HEARTBEAT_ALARM = 'section.heartbeat';
 const HEARTBEAT_PERIOD_MIN = 5;
 
 interface RuntimeContext {
@@ -260,9 +260,9 @@ export async function heartbeat(): Promise<void> {
   }
   try {
     await client.scan({
-      text: '__praesidio_heartbeat__',
+      text: '__section_heartbeat__',
       client: 'browser-extension',
-      url: 'praesidio://heartbeat',
+      url: 'section://heartbeat',
       model: 'heartbeat',
     });
   } catch {

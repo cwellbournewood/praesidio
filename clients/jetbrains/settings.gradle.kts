@@ -1,4 +1,4 @@
-// Praesidio JetBrains plugin — root project settings.
+// Section JetBrains plugin — root project settings.
 //
 // Single-module Gradle build. The plugin is published as a single .zip
 // suitable for the JetBrains Marketplace and for sideload via
@@ -21,4 +21,4 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "praesidio-jetbrains"
+rootProject.name = "section-jetbrains"

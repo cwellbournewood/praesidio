@@ -1,5 +1,5 @@
 /**
- * "Praesidio: Scan Selection" command.
+ * "Section: Scan Selection" command.
  *
  * Behaviour:
  *  1. Grab the current editor selection (fall back to the whole document).
@@ -27,12 +27,12 @@ export function registerScanSelection(
   deps: ScanSelectionDeps,
 ): vscode.Disposable {
   return vscode.commands.registerCommand(
-    "praesidio.scanSelection",
+    "section.scanSelection",
     async () => {
       const editor = vscode.window.activeTextEditor;
       if (!editor) {
         void vscode.window.showWarningMessage(
-          "Praesidio: no active editor.",
+          "Section: no active editor.",
         );
         return;
       }
@@ -46,7 +46,7 @@ export function registerScanSelection(
       const text = editor.document.getText(range);
       if (!text.trim()) {
         void vscode.window.showWarningMessage(
-          "Praesidio: selection is empty.",
+          "Section: selection is empty.",
         );
         return;
       }
@@ -57,7 +57,7 @@ export function registerScanSelection(
         resp = await vscode.window.withProgress(
           {
             location: vscode.ProgressLocation.Notification,
-            title: "Praesidio: scanning selection…",
+            title: "Section: scanning selection…",
             cancellable: false,
           },
           () =>
@@ -66,7 +66,7 @@ export function registerScanSelection(
                 text,
                 client: "vscode",
                 url: editor.document.uri.toString(),
-                model: "praesidio-edge-scan-selection",
+                model: "section-edge-scan-selection",
                 session_id: `vscode-sel:${editor.document.uri.toString()}`,
               },
               cred,
@@ -74,7 +74,7 @@ export function registerScanSelection(
         );
       } catch (err) {
         void vscode.window.showErrorMessage(
-          `Praesidio scan failed: ${(err as Error).message}`,
+          `Section scan failed: ${(err as Error).message}`,
         );
         return;
       }
@@ -94,7 +94,7 @@ export function registerScanSelection(
 
       if (resp.action === "block") {
         await vscode.window.showErrorMessage(
-          `Praesidio blocked the selection: ${resp.reason ?? "policy violation"} (severity: ${resp.severity ?? "unknown"})`,
+          `Section blocked the selection: ${resp.reason ?? "policy violation"} (severity: ${resp.severity ?? "unknown"})`,
           { modal: true },
         );
         return;
@@ -102,7 +102,7 @@ export function registerScanSelection(
 
       if (resp.action === "allow") {
         void vscode.window.setStatusBarMessage(
-          "$(check) Praesidio: no sensitive data found.",
+          "$(check) Section: no sensitive data found.",
           4000,
         );
         return;
@@ -116,7 +116,7 @@ export function registerScanSelection(
           eb.replace(range, sanitised);
         });
         void vscode.window.showInformationMessage(
-          `Praesidio: replaced ${resp.transforms.length} sensitive value(s).`,
+          `Section: replaced ${resp.transforms.length} sensitive value(s).`,
         );
       }
     },
@@ -145,11 +145,11 @@ async function showMaskPreview(
     "vscode.diff",
     left.uri,
     right.uri,
-    `Praesidio: original ↔ sanitised (${transformCount} transform${transformCount === 1 ? "" : "s"})`,
+    `Section: original ↔ sanitised (${transformCount} transform${transformCount === 1 ? "" : "s"})`,
     { preview: true, preserveFocus: false },
   );
   const decision = await vscode.window.showInformationMessage(
-    `Praesidio found ${transformCount} sensitive value(s). Replace the selection with the sanitised text?`,
+    `Section found ${transformCount} sensitive value(s). Replace the selection with the sanitised text?`,
     { modal: true },
     "Replace",
     "Cancel",

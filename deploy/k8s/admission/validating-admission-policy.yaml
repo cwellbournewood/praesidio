@@ -1,14 +1,14 @@
 # =============================================================================
-# Praesidio — ValidatingAdmissionPolicy (Kubernetes >= 1.30)
+# Section — ValidatingAdmissionPolicy (Kubernetes >= 1.30)
 # -----------------------------------------------------------------------------
 # Blocks creation of any Pod that BOTH
 #   (a) mounts a Secret whose name suggests it contains cloud credentials, AND
 #   (b) sets an environment variable whose value resolves to an LLM provider
-#       host that is NOT in the Praesidio allow-list.
+#       host that is NOT in the Section allow-list.
 #
 # Rationale: AI workloads with direct cloud-credential access AND direct
 # LLM-provider egress are exactly the population that should be routed
-# through the Praesidio gateway. Forcing them through the gateway is what
+# through the Section gateway. Forcing them through the gateway is what
 # gives us audit, DLP, and policy enforcement. Without this, a developer
 # can innocently `pip install openai` and pipe a customer database through
 # GPT-4 in 5 lines, completely outside the control plane.
@@ -26,7 +26,7 @@
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingAdmissionPolicy
 metadata:
-  name: praesidio-llm-egress-guard
+  name: section-llm-egress-guard
 spec:
   failurePolicy: Fail
   matchConstraints:
@@ -35,7 +35,7 @@ spec:
         apiVersions: ["v1"]
         operations: ["CREATE", "UPDATE"]
         resources: ["pods"]
-  # The list of LLM hostnames Praesidio governs. Pods that talk to anything
+  # The list of LLM hostnames Section governs. Pods that talk to anything
   # outside this list are unaffected — only direct, ungated access to a
   # listed provider triggers the policy.
   variables:
@@ -72,12 +72,12 @@ spec:
             variables.llmHosts.exists(h, e.value.contains(h))
           )
         )
-    # Praesidio annotation an operator can use to consciously opt a Pod
+    # Section annotation an operator can use to consciously opt a Pod
     # OUT of the guard (e.g. the gateway pod itself, which by definition
     # talks to LLM providers). Requires platform-admin approval to set.
     - name: hasBypass
       expression: |
-        object.metadata.?annotations['praesidio.dev/admission-bypass'].orValue('') == 'true'
+        object.metadata.?annotations['section.dev/admission-bypass'].orValue('') == 'true'
   validations:
     - expression: |
         variables.hasBypass ||
@@ -85,17 +85,17 @@ spec:
       # k8s ValidatingAdmissionPolicy requires `message` to be a single
       # line — no embedded newlines. Keep the prose short and direct the
       # operator to the runbook for the full background.
-      message: "Pod mounts cloud credentials AND sets an env var targeting a known LLM provider host. Route through the Praesidio gateway (e.g. OPENAI_BASE_URL=http://praesidio-gateway:8080/v1) or annotate praesidio.dev/admission-bypass=true. See docs/operations/admission.md."
+      message: "Pod mounts cloud credentials AND sets an env var targeting a known LLM provider host. Route through the Section gateway (e.g. OPENAI_BASE_URL=http://section-gateway:8080/v1) or annotate section.dev/admission-bypass=true. See docs/operations/admission.md."
       reason: Forbidden
 ---
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingAdmissionPolicyBinding
 metadata:
-  name: praesidio-llm-egress-guard-binding
+  name: section-llm-egress-guard-binding
 spec:
-  policyName: praesidio-llm-egress-guard
+  policyName: section-llm-egress-guard
   validationActions: [Deny, Audit]
-  # Default: enforce on every namespace except kube-system / Praesidio's own
+  # Default: enforce on every namespace except kube-system / Section's own
   # namespace. Operators can scope this with matchResources for staged
   # rollout.
   matchResources:
@@ -103,4 +103,4 @@ spec:
       matchExpressions:
         - key: kubernetes.io/metadata.name
           operator: NotIn
-          values: [kube-system, kube-public, praesidio]
+          values: [kube-system, kube-public, section]

@@ -1,4 +1,4 @@
-# Praesidio — AWS reference Terraform
+# Section — AWS reference Terraform
 
 **Stub quality.** This module is a reference *starting point* — not a
 turnkey production deployment. Review every resource and tune for your
@@ -19,7 +19,7 @@ What it creates:
 ```bash
 cd deploy/terraform/aws
 terraform init
-terraform plan -var region=us-east-1 -var name_prefix=praesidio
+terraform plan -var region=us-east-1 -var name_prefix=section
 terraform apply
 ```
 
@@ -30,7 +30,7 @@ bucket has versioning enabled. You must disable both manually before
 `terraform destroy` can succeed:
 
 ```bash
-aws rds modify-db-instance --db-instance-identifier praesidio-postgres --no-deletion-protection --apply-immediately
+aws rds modify-db-instance --db-instance-identifier section-postgres --no-deletion-protection --apply-immediately
 aws s3api delete-objects --bucket <audit-bucket> --delete "$(aws s3api list-object-versions --bucket <audit-bucket> --output json --query '{Objects: Versions[].{Key:Key,VersionId:VersionId}}')"
 terraform destroy
 ```

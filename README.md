@@ -1,7 +1,7 @@
-# Praesidio
+# Section
 
 <p align="center">
-  <img src="docs/assets/overview.png" alt="Praesidio operator console — Overview: KPIs, throughput, top detectors, live tape" width="900" />
+  <img src="docs/assets/overview.png" alt="Section operator console — Overview: KPIs, throughput, top detectors, live tape" width="900" />
   <br/>
   <sub><i>The operator console. Every decision, every tenant, every model — printed afresh as data arrives.</i></sub>
 </p>
@@ -10,9 +10,9 @@
 for every prompt, response, embedding, and agent action.
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-D14B2C.svg)](LICENSE)
-[![CI](https://github.com/cwellbournewood/praesidio/actions/workflows/ci.yml/badge.svg)](https://github.com/cwellbournewood/praesidio/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/cwellbournewood/praesidio/actions/workflows/codeql.yml/badge.svg)](https://github.com/cwellbournewood/praesidio/actions/workflows/codeql.yml)
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/cwellbournewood/praesidio/badge)](https://securityscorecards.dev/viewer/?uri=github.com/cwellbournewood/praesidio)
+[![CI](https://github.com/cwellbournewood/section/actions/workflows/ci.yml/badge.svg)](https://github.com/cwellbournewood/section/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/cwellbournewood/section/actions/workflows/codeql.yml/badge.svg)](https://github.com/cwellbournewood/section/actions/workflows/codeql.yml)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/cwellbournewood/section/badge)](https://securityscorecards.dev/viewer/?uri=github.com/cwellbournewood/section)
 
 ---
 
@@ -20,7 +20,7 @@ for every prompt, response, embedding, and agent action.
 
 Traditional DLP looks for strings. AI leaks happen semantically — a developer
 pastes a stack trace that names a customer; a copilot summarises a deal memo
-into a retrieval index; an agent quietly emails a vendor list. Praesidio sits
+into a retrieval index; an agent quietly emails a vendor list. Section sits
 in front of every LLM call, every retrieval, and every tool invocation, and
 answers three questions before any of them touch a model:
 
@@ -36,8 +36,8 @@ record.
 ## Quick start
 
 ```bash
-git clone https://github.com/cwellbournewood/praesidio.git
-cd praesidio
+git clone https://github.com/cwellbournewood/section.git
+cd section
 cp .env.example .env
 docker compose up --build
 ```
@@ -46,7 +46,7 @@ Point any OpenAI client at the gateway and send a prompt:
 
 ```bash
 export OPENAI_BASE_URL=http://localhost:8080/v1
-export OPENAI_API_KEY=praesidio-demo-key
+export OPENAI_API_KEY=section-demo-key
 
 curl http://localhost:8080/v1/chat/completions \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
@@ -76,9 +76,9 @@ Full walkthrough: [`docs/getting-started.md`](docs/getting-started.md).
   per-tenant HKDF), FF3-1 format-preserving encryption, and redaction —
   policy-selectable per entity. Streaming responses are chunk-boundary safe.
 - **Policy as code** — YAML + CEL, cosign-signed bundles, race-safe
-  hot-reload, `praesidio-policy lint`.
+  hot-reload, `section-policy lint`.
 - **Audit & lineage** — Postgres-backed hash-chained event log with a
-  `praesidio-audit verify` tamper CLI, SIEM webhook, and Splunk HEC sink.
+  `section-audit verify` tamper CLI, SIEM webhook, and Splunk HEC sink.
 - **Edge coverage** — Manifest V3 browser extension (6 consumer AI sites),
   VS Code + JetBrains extensions, and a local CA proxy that brings Cursor,
   Claude Code, Continue, aider, Cline, Copilot CLI, and Zed into compliance.
@@ -96,7 +96,7 @@ Full walkthrough: [`docs/getting-started.md`](docs/getting-started.md).
 
 ```
                                        +----------------------------+
-  server-side apps,                    |     Praesidio Gateway      |
+  server-side apps,                    |     Section Gateway      |
   agents, CI       ------------------> |                            | -->  OpenAI / Anthropic
                                        |                            | -->  Azure OpenAI / Bedrock
   edge browser extension               |   +--------+  +--------+   | -->  Gemini / Cohere / Mistral
@@ -142,7 +142,7 @@ Deeper dives in [`docs/architecture/`](docs/architecture/).
 ## Security
 
 Vulnerability disclosures go through [GitHub Private Vulnerability
-Reporting](https://github.com/cwellbournewood/praesidio/security/advisories/new).
+Reporting](https://github.com/cwellbournewood/section/security/advisories/new).
 See [`SECURITY.md`](SECURITY.md) for the disclosure SLA and scope.
 
 Every release is cosign-signed with verifiable GitHub OIDC identity. Each

@@ -1,7 +1,7 @@
 # Edge coverage matrix
 
-Status of Praesidio's endpoint coverage across the client × provider
-grid. This is the canonical answer to "does Praesidio cover ChatGPT in
+Status of Section's endpoint coverage across the client × provider
+grid. This is the canonical answer to "does Section cover ChatGPT in
 the browser? what about Cursor? Copilot CLI?".
 
 Legend
@@ -56,10 +56,10 @@ Native UI surface beyond what the proxy provides:
 | Feature | Status |
 |---|---|
 | Status bar: gateway connection + proxy state | ✅ |
-| Command: Praesidio: Scan Selection | ✅ |
-| Command: Praesidio: Tokenise Selection | ✅ |
-| Command: Praesidio: Toggle Proxy | ✅ |
-| Command: Praesidio: Sign In (OIDC) | ✅ |
+| Command: Section: Scan Selection | ✅ |
+| Command: Section: Tokenise Selection | ✅ |
+| Command: Section: Toggle Proxy | ✅ |
+| Command: Section: Sign In (OIDC) | ✅ |
 | Diagnostic provider: sensitive data in open editor | ✅ |
 | Code action: tokenise sensitive span | ✅ |
 | Tool window: recent decisions | ✅ |
@@ -71,9 +71,9 @@ Native UI surface beyond what the proxy provides:
 | Feature | Status |
 |---|---|
 | Settings panel: gateway URL + sign-in | ✅ |
-| Action: Praesidio: Scan Selection | ✅ |
-| Action: Praesidio: Tokenise Selection | ✅ |
-| Action: Praesidio: Toggle Proxy | ✅ |
+| Action: Section: Scan Selection | ✅ |
+| Action: Section: Tokenise Selection | ✅ |
+| Action: Section: Toggle Proxy | ✅ |
 | Inspection: SensitiveDataInspection (Warning) | ✅ |
 | Tool window: recent decisions | ✅ |
 | Quick-fix: tokenise | ✅ |

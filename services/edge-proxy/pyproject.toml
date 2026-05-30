@@ -1,10 +1,10 @@
 [project]
-name = "praesidio-edge-proxy"
+name = "section-edge-proxy"
 version = "1.0.0"
-description = "Praesidio Edge Proxy — local CA MITM that routes LLM-API traffic through the Praesidio gateway for scan + mask + restore."
+description = "Section Edge Proxy — local CA MITM that routes LLM-API traffic through the Section gateway for scan + mask + restore."
 requires-python = ">=3.11"
 license = { text = "Apache-2.0" }
-authors = [{ name = "Praesidio Contributors" }]
+authors = [{ name = "Section Contributors" }]
 readme = "README.md"
 dependencies = [
   "mitmproxy>=11.0.0",
@@ -26,17 +26,17 @@ dev = [
 ]
 
 [project.scripts]
-praesidio-edge-proxy = "praesidio_edge_proxy.cli:main"
+section-edge-proxy = "section_edge_proxy.cli:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["praesidio_edge_proxy"]
+packages = ["section_edge_proxy"]
 
 [tool.hatch.build.targets.wheel.shared-data]
-"praesidio_edge_proxy/install" = "share/praesidio_edge_proxy/install"
+"section_edge_proxy/install" = "share/section_edge_proxy/install"
 
 [tool.ruff]
 line-length = 100
@@ -58,7 +58,7 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S", "B", "ASYNC", "SIM117"]
-"praesidio_edge_proxy/install/**" = ["S"]
+"section_edge_proxy/install/**" = ["S"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

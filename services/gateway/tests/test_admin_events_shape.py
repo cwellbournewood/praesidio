@@ -9,23 +9,23 @@ import httpx
 import pytest
 from httpx import ASGITransport
 
-os.environ["PRAESIDIO_ENV"] = "development"
+os.environ["SECTION_ENV"] = "development"
 os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///:memory:"
 os.environ["REDIS_URL"] = ""
-os.environ["PRAESIDIO_API_KEYS"] = "test-key"
+os.environ["SECTION_API_KEYS"] = "test-key"
 
 
 def _empty_bundle(tmp: Path) -> Path:
     bundle = tmp / "bundle"
     (bundle / "policies").mkdir(parents=True)
     (bundle / "manifest.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: Bundle\nmetadata: {name: t, version: '0'}\nspec: {includes: []}\n"
+        "apiVersion: section/v1\nkind: Bundle\nmetadata: {name: t, version: '0'}\nspec: {includes: []}\n"
     )
     (bundle / "models.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: ModelRegistry\nspec: {models: [], endpoints: []}\n"
+        "apiVersion: section/v1\nkind: ModelRegistry\nspec: {models: [], endpoints: []}\n"
     )
     (bundle / "routes.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: Routes\nspec: []\n"
+        "apiVersion: section/v1\nkind: Routes\nspec: []\n"
     )
     return bundle
 
@@ -65,16 +65,16 @@ async def _seed_one_row(state) -> None:
 async def test_events_default_returns_bare_array():
     tmp = Path(tempfile.mkdtemp())
     bundle = _empty_bundle(tmp)
-    os.environ["PRAESIDIO_POLICY_BUNDLE"] = str(bundle)
-    from praesidio_gateway.config import get_settings
+    os.environ["SECTION_POLICY_BUNDLE"] = str(bundle)
+    from section_gateway.config import get_settings
 
     get_settings.cache_clear()
-    from praesidio_gateway.main import create_app
+    from section_gateway.main import create_app
 
     app = create_app()
     async with httpx.AsyncClient(transport=ASGITransport(app=app), base_url="http://t") as c:
         async with app.router.lifespan_context(app):
-            await _seed_one_row(app.state.praesidio)
+            await _seed_one_row(app.state.section)
             r = await c.get("/admin/events", headers={"x-api-key": "test-key"})
     assert r.status_code == 200, r.text
     body = r.json()
@@ -86,16 +86,16 @@ async def test_events_default_returns_bare_array():
 async def test_events_paged_returns_envelope():
     tmp = Path(tempfile.mkdtemp())
     bundle = _empty_bundle(tmp)
-    os.environ["PRAESIDIO_POLICY_BUNDLE"] = str(bundle)
-    from praesidio_gateway.config import get_settings
+    os.environ["SECTION_POLICY_BUNDLE"] = str(bundle)
+    from section_gateway.config import get_settings
 
     get_settings.cache_clear()
-    from praesidio_gateway.main import create_app
+    from section_gateway.main import create_app
 
     app = create_app()
     async with httpx.AsyncClient(transport=ASGITransport(app=app), base_url="http://t") as c:
         async with app.router.lifespan_context(app):
-            await _seed_one_row(app.state.praesidio)
+            await _seed_one_row(app.state.section)
             r = await c.get(
                 "/admin/events?paged=true", headers={"x-api-key": "test-key"}
             )

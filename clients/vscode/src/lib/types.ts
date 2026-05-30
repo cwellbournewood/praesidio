@@ -1,8 +1,8 @@
 /**
- * Shared types for the Praesidio VS Code extension.
+ * Shared types for the Section VS Code extension.
  *
  * Mirrors the gateway API contract defined in
- * `services/gateway/praesidio_gateway/api/v1/scan.py`.
+ * `services/gateway/section_gateway/api/v1/scan.py`.
  */
 
 export type ScanAction = "allow" | "mask" | "block";

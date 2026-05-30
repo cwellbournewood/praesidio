@@ -1,6 +1,6 @@
 """DLP coverage evaluation.
 
-Drives every committed corpus through ``praesidio_gateway.dlp.pipeline.run_pipeline``
+Drives every committed corpus through ``section_gateway.dlp.pipeline.run_pipeline``
 in-process (no HTTP), then computes per-detector precision / recall / F1
 using **label-presence** matching:
 
@@ -87,7 +87,7 @@ def _load_corpus(name: str, path: Path) -> list[Example]:
 
 
 async def _predict(text: str, enable: list[str]) -> set[str]:
-    from praesidio_gateway.dlp.pipeline import run_pipeline
+    from section_gateway.dlp.pipeline import run_pipeline
     result = await run_pipeline(text, enable=enable, deadline_s=2.0)
     return {f.label for f in result.findings}
 
@@ -226,7 +226,7 @@ async def _score_corpus(name: str, path: Path) -> dict[str, Any]:
 def _write_markdown(report: dict[str, Any]) -> None:
     DOCS_PATH.parent.mkdir(parents=True, exist_ok=True)
     lines: list[str] = [
-        "# Praesidio DLP — coverage matrix",
+        "# Section DLP — coverage matrix",
         "",
         f"_Last run: {report['started_utc']}_",
         "",
@@ -328,7 +328,7 @@ def _summarise_for_baseline(report: dict[str, Any]) -> dict[str, Any]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Praesidio DLP eval")
+    parser = argparse.ArgumentParser(description="Section DLP eval")
     parser.add_argument("--update-baseline", action="store_true",
                         help="Overwrite bench/eval/baseline.json with this run's numbers")
     parser.add_argument("--no-docs", action="store_true",

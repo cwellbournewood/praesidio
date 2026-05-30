@@ -94,7 +94,7 @@ export default function SettingsPage() {
             k="NEXT_PUBLIC_MOCK"
             v={process.env.NEXT_PUBLIC_MOCK ?? '0'}
           />
-          <KV k="UI build" v="praesidio-ui v0.1.0" />
+          <KV k="UI build" v="section-ui v0.1.0" />
         </CardContent>
       </Card>
 

@@ -7,7 +7,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
  * Credentials grant (a.k.a. "Direct Access Grants" in Keycloak).
  *
  * Why ROPC and not Authorization Code?
- *   - Praesidio is an internal admin console; we want a single inline
+ *   - Section is an internal admin console; we want a single inline
  *     login form that matches the rest of the chrome, not a redirect to
  *     a separate themed Keycloak page.
  *   - Keycloak still owns identity, password storage, brute-force lockout,
@@ -15,16 +15,16 @@ import CredentialsProvider from 'next-auth/providers/credentials';
  *
  * Env contract (host pnpm dev):
  *
- *   OIDC_ISSUER         = http://localhost:8081/realms/praesidio
- *   OIDC_CLIENT_ID      = praesidio
- *   OIDC_CLIENT_SECRET  = praesidio-demo-secret
+ *   OIDC_ISSUER         = http://localhost:8081/realms/section
+ *   OIDC_CLIENT_ID      = section
+ *   OIDC_CLIENT_SECRET  = section-demo-secret
  *   NEXTAUTH_URL        = http://localhost:3010
  *   NEXTAUTH_SECRET     = <random hex>
  */
 
-const issuer = process.env.OIDC_ISSUER ?? 'http://localhost:8081/realms/praesidio';
-const clientId = process.env.OIDC_CLIENT_ID ?? 'praesidio';
-const clientSecret = process.env.OIDC_CLIENT_SECRET ?? 'praesidio-demo-secret';
+const issuer = process.env.OIDC_ISSUER ?? 'http://localhost:8081/realms/section';
+const clientId = process.env.OIDC_CLIENT_ID ?? 'section';
+const clientSecret = process.env.OIDC_CLIENT_SECRET ?? 'section-demo-secret';
 
 type KeycloakTokenResponse = {
   access_token: string;
@@ -93,7 +93,7 @@ const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       id: 'keycloak',
-      name: 'Praesidio',
+      name: 'Section',
       credentials: {
         username: { label: 'Username', type: 'text' },
         password: { label: 'Password', type: 'password' },

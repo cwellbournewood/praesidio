@@ -47,7 +47,7 @@ jobs:
           queries: security-extended,security-and-quality
           config: |
             paths:
-              - services/gateway/praesidio_gateway
+              - services/gateway/section_gateway
               - services/ui/app
               - services/ui/components
               - services/ui/lib

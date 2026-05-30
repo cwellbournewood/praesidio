@@ -38,14 +38,14 @@ jobs:
           version: v3.15.4
 
       - name: helm lint
-        run: helm lint deploy/helm/praesidio
+        run: helm lint deploy/helm/section
 
       - name: helm template (defaults)
-        run: helm template praesidio deploy/helm/praesidio > render-default.yaml
+        run: helm template section deploy/helm/section > render-default.yaml
 
       - name: helm template (embedded + plain secrets, dev profile)
         run: |
-          helm template praesidio deploy/helm/praesidio \
+          helm template section deploy/helm/section \
             --set postgres.embedded=true \
             --set redis.embedded=true \
             --set secrets.externalSecrets=false \
@@ -86,7 +86,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: services/gateway
-          tags: ghcr.io/praesidio/gateway:local
+          tags: ghcr.io/section/gateway:local
           load: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
@@ -95,7 +95,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: services/ui
-          tags: ghcr.io/praesidio/ui:local
+          tags: ghcr.io/section/ui:local
           load: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
@@ -103,13 +103,13 @@ jobs:
       - name: Create kind cluster
         uses: helm/kind-action@v1.10.0
         with:
-          cluster_name: praesidio-smoke
+          cluster_name: section-smoke
           version: v0.23.0
 
       - name: Load images into kind
         run: |
-          kind load docker-image ghcr.io/praesidio/gateway:local --name praesidio-smoke
-          kind load docker-image ghcr.io/praesidio/ui:local --name praesidio-smoke
+          kind load docker-image ghcr.io/section/gateway:local --name section-smoke
+          kind load docker-image ghcr.io/section/ui:local --name section-smoke
 
       - name: Set up Helm
         uses: azure/setup-helm@v4
@@ -118,8 +118,8 @@ jobs:
 
       - name: helm install (embedded pg/redis, no external secrets, mock keys)
         run: |
-          helm install praesidio deploy/helm/praesidio \
-            --namespace praesidio --create-namespace \
+          helm install section deploy/helm/section \
+            --namespace section --create-namespace \
             --set image.gateway.tag=local \
             --set image.ui.tag=local \
             --set image.gateway.pullPolicy=IfNotPresent \
@@ -138,16 +138,16 @@ jobs:
       - name: helm get manifest
         run: |
           mkdir -p artifacts
-          helm get manifest praesidio -n praesidio > artifacts/manifest.yaml
+          helm get manifest section -n section > artifacts/manifest.yaml
 
       - name: Wait for pods Ready
         run: |
-          kubectl -n praesidio rollout status deploy -l app.kubernetes.io/component=gateway --timeout=5m || true
-          kubectl -n praesidio get pods -o wide
+          kubectl -n section rollout status deploy -l app.kubernetes.io/component=gateway --timeout=5m || true
+          kubectl -n section get pods -o wide
 
       - name: Port-forward gateway
         run: |
-          kubectl -n praesidio port-forward svc/praesidio-gateway 8080:8080 >/tmp/pf.log 2>&1 &
+          kubectl -n section port-forward svc/section-gateway 8080:8080 >/tmp/pf.log 2>&1 &
           for i in $(seq 1 30); do
             if curl -fsS http://localhost:8080/healthz >/dev/null 2>&1; then
               echo "gateway healthy via port-forward after ${i}s"
@@ -157,7 +157,7 @@ jobs:
           done
           echo "gateway not healthy via port-forward" >&2
           cat /tmp/pf.log || true
-          kubectl -n praesidio describe pods || true
+          kubectl -n section describe pods || true
           exit 1
 
       - name: Run demo.sh against kind
@@ -169,10 +169,10 @@ jobs:
         if: failure()
         run: |
           mkdir -p artifacts
-          kubectl -n praesidio get all -o wide > artifacts/all.txt || true
-          kubectl -n praesidio describe pods > artifacts/describe.txt || true
-          kubectl -n praesidio logs --tail=500 -l app.kubernetes.io/component=gateway > artifacts/gateway.log || true
-          kubectl -n praesidio logs --tail=500 -l app.kubernetes.io/component=ui > artifacts/ui.log || true
+          kubectl -n section get all -o wide > artifacts/all.txt || true
+          kubectl -n section describe pods > artifacts/describe.txt || true
+          kubectl -n section logs --tail=500 -l app.kubernetes.io/component=gateway > artifacts/gateway.log || true
+          kubectl -n section logs --tail=500 -l app.kubernetes.io/component=ui > artifacts/ui.log || true
 
       - name: Upload helm artefacts
         if: always()

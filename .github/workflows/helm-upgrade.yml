@@ -1,6 +1,6 @@
 name: helm-upgrade
 
-# Verifies that a Praesidio Helm release installed from a *previous* version of
+# Verifies that a Section Helm release installed from a *previous* version of
 # the chart can be cleanly `helm upgrade`d to the chart in the current commit
 # without the gateway losing readiness or breaking a basic round-trip.
 #
@@ -69,7 +69,7 @@ jobs:
             source="merge-base with origin/main"
           else
             # Last resort: the very first commit that touched the chart.
-            ref=$(git log --diff-filter=A --format=%H -- deploy/helm/praesidio/Chart.yaml | tail -1)
+            ref=$(git log --diff-filter=A --format=%H -- deploy/helm/section/Chart.yaml | tail -1)
             source="first commit touching Chart.yaml"
           fi
           if [ -z "${ref}" ]; then
@@ -83,11 +83,11 @@ jobs:
       - name: Worktree for baseline chart
         run: |
           set -euo pipefail
-          git worktree add /tmp/praesidio-baseline ${{ steps.baseline.outputs.ref }}
+          git worktree add /tmp/section-baseline ${{ steps.baseline.outputs.ref }}
           echo "--- baseline Chart.yaml ---"
-          cat /tmp/praesidio-baseline/deploy/helm/praesidio/Chart.yaml || true
+          cat /tmp/section-baseline/deploy/helm/section/Chart.yaml || true
           echo "--- HEAD Chart.yaml ---"
-          cat deploy/helm/praesidio/Chart.yaml
+          cat deploy/helm/section/Chart.yaml
 
       - name: Set up Buildx
         uses: docker/setup-buildx-action@v3
@@ -106,8 +106,8 @@ jobs:
       - name: Build gateway image (baseline)
         uses: docker/build-push-action@v6
         with:
-          context: /tmp/praesidio-baseline/services/gateway
-          tags: ghcr.io/praesidio/gateway:baseline
+          context: /tmp/section-baseline/services/gateway
+          tags: ghcr.io/section/gateway:baseline
           load: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
@@ -115,8 +115,8 @@ jobs:
       - name: Build UI image (baseline)
         uses: docker/build-push-action@v6
         with:
-          context: /tmp/praesidio-baseline/services/ui
-          tags: ghcr.io/praesidio/ui:baseline
+          context: /tmp/section-baseline/services/ui
+          tags: ghcr.io/section/ui:baseline
           load: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
@@ -125,7 +125,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: services/gateway
-          tags: ghcr.io/praesidio/gateway:head
+          tags: ghcr.io/section/gateway:head
           load: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
@@ -134,7 +134,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: services/ui
-          tags: ghcr.io/praesidio/ui:head
+          tags: ghcr.io/section/ui:head
           load: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
@@ -142,15 +142,15 @@ jobs:
       - name: Create kind cluster
         uses: helm/kind-action@v1.10.0
         with:
-          cluster_name: praesidio-upgrade
+          cluster_name: section-upgrade
           version: v0.23.0
 
       - name: Load images into kind
         run: |
-          kind load docker-image ghcr.io/praesidio/gateway:baseline --name praesidio-upgrade
-          kind load docker-image ghcr.io/praesidio/ui:baseline --name praesidio-upgrade
-          kind load docker-image ghcr.io/praesidio/gateway:head --name praesidio-upgrade
-          kind load docker-image ghcr.io/praesidio/ui:head --name praesidio-upgrade
+          kind load docker-image ghcr.io/section/gateway:baseline --name section-upgrade
+          kind load docker-image ghcr.io/section/ui:baseline --name section-upgrade
+          kind load docker-image ghcr.io/section/gateway:head --name section-upgrade
+          kind load docker-image ghcr.io/section/ui:head --name section-upgrade
 
       - name: Set up Helm
         uses: azure/setup-helm@v4
@@ -169,13 +169,13 @@ jobs:
           # vault-key change between install and upgrade would falsely look
           # like a regression (placeholders born under the old key would
           # become unreversible).
-          mkdir -p /tmp/praesidio-secrets
-          printf '%s' "$VAULT_KEY"  > /tmp/praesidio-secrets/vault
-          printf '%s' "$FPE_KEY"    > /tmp/praesidio-secrets/fpe
-          printf '%s' "$FPE_TWEAK"  > /tmp/praesidio-secrets/tweak
+          mkdir -p /tmp/section-secrets
+          printf '%s' "$VAULT_KEY"  > /tmp/section-secrets/vault
+          printf '%s' "$FPE_KEY"    > /tmp/section-secrets/fpe
+          printf '%s' "$FPE_TWEAK"  > /tmp/section-secrets/tweak
 
-          helm install praesidio /tmp/praesidio-baseline/deploy/helm/praesidio \
-            --namespace praesidio --create-namespace \
+          helm install section /tmp/section-baseline/deploy/helm/section \
+            --namespace section --create-namespace \
             --set image.gateway.tag=baseline \
             --set image.ui.tag=baseline \
             --set image.gateway.pullPolicy=IfNotPresent \
@@ -193,14 +193,14 @@ jobs:
 
       - name: Wait for baseline pods Ready
         run: |
-          kubectl -n praesidio rollout status deploy -l app.kubernetes.io/component=gateway --timeout=5m
-          kubectl -n praesidio get pods -o wide
+          kubectl -n section rollout status deploy -l app.kubernetes.io/component=gateway --timeout=5m
+          kubectl -n section get pods -o wide
 
       - name: Smoke-test baseline gateway
         id: smoke-baseline
         run: |
           set -euo pipefail
-          kubectl -n praesidio port-forward svc/praesidio-gateway 8080:8080 >/tmp/pf-baseline.log 2>&1 &
+          kubectl -n section port-forward svc/section-gateway 8080:8080 >/tmp/pf-baseline.log 2>&1 &
           PF_PID=$!
           trap "kill $PF_PID 2>/dev/null || true" EXIT
           for i in $(seq 1 30); do
@@ -218,7 +218,7 @@ jobs:
           code=$(curl -s -o /tmp/baseline-sim.json -w "%{http_code}" \
             -X POST http://localhost:8080/admin/simulate \
             -H 'content-type: application/json' \
-            -H 'x-praesidio-tenant: default' \
+            -H 'x-section-tenant: default' \
             -d '{"text":"contact me at alice@example.com"}')
           set -e
           echo "baseline /admin/simulate -> HTTP $code"
@@ -232,11 +232,11 @@ jobs:
       - name: helm upgrade (HEAD chart, HEAD images)
         run: |
           set -euo pipefail
-          VAULT_KEY=$(cat /tmp/praesidio-secrets/vault)
-          FPE_KEY=$(cat /tmp/praesidio-secrets/fpe)
-          FPE_TWEAK=$(cat /tmp/praesidio-secrets/tweak)
-          helm upgrade praesidio deploy/helm/praesidio \
-            --namespace praesidio \
+          VAULT_KEY=$(cat /tmp/section-secrets/vault)
+          FPE_KEY=$(cat /tmp/section-secrets/fpe)
+          FPE_TWEAK=$(cat /tmp/section-secrets/tweak)
+          helm upgrade section deploy/helm/section \
+            --namespace section \
             --set image.gateway.tag=head \
             --set image.ui.tag=head \
             --set image.gateway.pullPolicy=IfNotPresent \
@@ -255,10 +255,10 @@ jobs:
       - name: Wait for HEAD pods Ready after upgrade
         run: |
           set -euo pipefail
-          kubectl -n praesidio rollout status deploy -l app.kubernetes.io/component=gateway --timeout=5m
+          kubectl -n section rollout status deploy -l app.kubernetes.io/component=gateway --timeout=5m
           # Confirm every gateway pod is actually running the :head tag —
           # a stuck upgrade would leave some on :baseline.
-          imgs=$(kubectl -n praesidio get pods -l app.kubernetes.io/component=gateway \
+          imgs=$(kubectl -n section get pods -l app.kubernetes.io/component=gateway \
             -o jsonpath='{range .items[*]}{.spec.containers[?(@.name=="gateway")].image}{"\n"}{end}' | sort -u)
           echo "Gateway images after upgrade:"
           echo "$imgs"
@@ -266,15 +266,15 @@ jobs:
             echo "ERROR: at least one gateway pod is not on :head after upgrade" >&2
             exit 1
           fi
-          kubectl -n praesidio get pods -o wide
+          kubectl -n section get pods -o wide
 
       - name: Smoke-test HEAD gateway after upgrade
         run: |
           set -euo pipefail
           # Re-establish the port-forward; the previous pod was rolled.
-          pkill -f 'kubectl.*port-forward.*praesidio-gateway' 2>/dev/null || true
+          pkill -f 'kubectl.*port-forward.*section-gateway' 2>/dev/null || true
           sleep 2
-          kubectl -n praesidio port-forward svc/praesidio-gateway 8080:8080 >/tmp/pf-head.log 2>&1 &
+          kubectl -n section port-forward svc/section-gateway 8080:8080 >/tmp/pf-head.log 2>&1 &
           PF_PID=$!
           trap "kill $PF_PID 2>/dev/null || true" EXIT
           for i in $(seq 1 30); do
@@ -295,17 +295,17 @@ jobs:
         if: always()
         run: |
           mkdir -p artifacts
-          helm history praesidio -n praesidio | tee artifacts/helm-history.txt
-          helm get manifest praesidio -n praesidio > artifacts/manifest-head.yaml || true
+          helm history section -n section | tee artifacts/helm-history.txt
+          helm get manifest section -n section > artifacts/manifest-head.yaml || true
 
       - name: Collect cluster state on failure
         if: failure()
         run: |
           mkdir -p artifacts
-          kubectl -n praesidio get all -o wide > artifacts/all.txt || true
-          kubectl -n praesidio describe pods > artifacts/describe.txt || true
-          kubectl -n praesidio logs --tail=500 -l app.kubernetes.io/component=gateway > artifacts/gateway.log || true
-          kubectl -n praesidio logs --tail=500 -l app.kubernetes.io/component=ui > artifacts/ui.log || true
+          kubectl -n section get all -o wide > artifacts/all.txt || true
+          kubectl -n section describe pods > artifacts/describe.txt || true
+          kubectl -n section logs --tail=500 -l app.kubernetes.io/component=gateway > artifacts/gateway.log || true
+          kubectl -n section logs --tail=500 -l app.kubernetes.io/component=ui > artifacts/ui.log || true
           cat /tmp/pf-baseline.log >> artifacts/pf.log 2>/dev/null || true
           cat /tmp/pf-head.log     >> artifacts/pf.log 2>/dev/null || true
 

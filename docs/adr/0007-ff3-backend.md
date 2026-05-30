@@ -2,11 +2,11 @@
 
 | Status   | Date       | Deciders                |
 |----------|------------|-------------------------|
-| Accepted | 2026-05-27 | Praesidio core / Lane G |
+| Accepted | 2026-05-27 | Section core / Lane G |
 
 ## Context
 
-Praesidio supports three anonymisation methods, policy-selectable per entity
+Section supports three anonymisation methods, policy-selectable per entity
 label:
 
 1. **`redact`** — replace with a fixed marker (`[REDACTED_EMAIL]`).
@@ -31,7 +31,7 @@ ship in v1.0 — operators expect `method: fpe` to *work*.
 ## Decision
 
 **Vendor a pure-Python FF3-1 implementation** under
-`services/gateway/praesidio_gateway/anonymize/_ff3.py`.
+`services/gateway/section_gateway/anonymize/_ff3.py`.
 
 We chose vendoring over a PyPI dependency for the following reasons:
 
@@ -77,7 +77,7 @@ Length bounds per FF3-1:
 
 ## Cryptographic notes
 
-- **Keys** are derived per-tenant from `PRAESIDIO_FPE_KEY` via the HKDF
+- **Keys** are derived per-tenant from `SECTION_FPE_KEY` via the HKDF
   pipeline (see `anonymize/vault.py`). The cipher accepts 128, 192 or
   256-bit keys.
 - **Tweaks** MUST be exactly 7 bytes (56 bits). The wrapper accepts

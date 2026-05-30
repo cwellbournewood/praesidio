@@ -2,11 +2,11 @@ global:
   scrape_interval: 15s
   evaluation_interval: 15s
   external_labels:
-    cluster: praesidio-local
+    cluster: section-local
     environment: local
 
 scrape_configs:
-  - job_name: praesidio-gateway
+  - job_name: section-gateway
     metrics_path: /metrics
     static_configs:
       - targets: ["gateway:8080"]

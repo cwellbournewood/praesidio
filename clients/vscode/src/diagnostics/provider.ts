@@ -8,6 +8,6 @@
 
 import * as vscode from "vscode";
 
-export function createPraesidioDiagnostics(): vscode.DiagnosticCollection {
-  return vscode.languages.createDiagnosticCollection("praesidio");
+export function createSectionDiagnostics(): vscode.DiagnosticCollection {
+  return vscode.languages.createDiagnosticCollection("section");
 }

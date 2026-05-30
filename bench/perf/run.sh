@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Praesidio perf baseline — convenience wrapper.
+# Section perf baseline — convenience wrapper.
 #
 # Default: 500 requests per scenario, concurrency 8, ASGI in-process target.
 # Override via env or pass through:

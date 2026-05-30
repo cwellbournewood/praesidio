@@ -1,6 +1,6 @@
 # Browser extension — install + operate
 
-The Praesidio browser extension (Manifest V3) intercepts prompt submission
+The Section browser extension (Manifest V3) intercepts prompt submission
 on the six most-used consumer AI sites and routes prompts through the
 gateway's `/v1/scan` before they leave the browser.
 
@@ -23,11 +23,11 @@ for the listed sites, so it can't intercept anything else.
 The same MV3 binary works in all Chromium-derived browsers.
 
 1. Download the signed `.crx` from the latest [GitHub
-   release](https://github.com/cwellbournewood/praesidio/releases/latest)
+   release](https://github.com/cwellbournewood/section/releases/latest)
    (or use the operator-hosted update server below).
 2. Drag the `.crx` into `chrome://extensions` (with **Developer mode**
    enabled), or push it via Chrome Enterprise policy.
-3. Click the Praesidio icon in the toolbar.
+3. Click the Section icon in the toolbar.
 4. Either paste an API key OR click **Sign in with OIDC** and approve
    in the popup tab.
 5. Set the gateway URL (`https://gateway.your-corp.com`) and click
@@ -43,8 +43,8 @@ Web Store, ship the `.crx` from GitHub releases and host an update
 server.
 
 ```
-https://updates.your-corp.com/praesidio-browser/update.xml
-https://updates.your-corp.com/praesidio-browser/praesidio-edge-<version>.crx
+https://updates.your-corp.com/section-browser/update.xml
+https://updates.your-corp.com/section-browser/section-edge-<version>.crx
 ```
 
 Push to your fleet via the standard Chrome
@@ -55,8 +55,8 @@ SLSA-3 provenance attestation per release.
 ## Install for developers
 
 ```bash
-git clone https://github.com/cwellbournewood/praesidio
-cd praesidio/clients/browser
+git clone https://github.com/cwellbournewood/section
+cd section/clients/browser
 npm install
 npm run build
 ```
@@ -85,7 +85,7 @@ policy:
 
 ```json
 {
-  "Praesidio": {
+  "Section": {
     "gateway_url": {
       "Value": "https://gateway.your-corp.com"
     },
@@ -104,7 +104,7 @@ policy:
 }
 ```
 
-Save as `Praesidio.json` and deploy via Chrome / Edge managed-storage
+Save as `Section.json` and deploy via Chrome / Edge managed-storage
 manifest.
 
 ## Troubleshooting

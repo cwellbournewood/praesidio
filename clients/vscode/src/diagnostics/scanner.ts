@@ -6,7 +6,7 @@
  * `scan` rather than a future `/v1/preview` endpoint because that's
  * what the gateway already exposes — but we **do not** auto-apply the
  * returned `sanitised` text. The user must trigger the
- * "Praesidio: Tokenise" code action explicitly.
+ * "Section: Tokenise" code action explicitly.
  *
  * Important: every scan still writes a vault entry + audit row on the
  * server. For very large documents this is fine (scan is idempotent
@@ -96,7 +96,7 @@ export class DocumentScanner {
         this.opts.diagnostics.set(doc.uri, [
           new vscode.Diagnostic(
             new vscode.Range(0, 0, 0, 0),
-            `Praesidio scan failed: ${msg}`,
+            `Section scan failed: ${msg}`,
             vscode.DiagnosticSeverity.Information,
           ),
         ]);
@@ -139,7 +139,7 @@ export class DocumentScanner {
           text: chunk.text,
           client: "vscode",
           url: doc.uri.toString(),
-          model: "praesidio-edge-scan",
+          model: "section-edge-scan",
           session_id: sessionId,
         },
         credential,
@@ -149,11 +149,11 @@ export class DocumentScanner {
         const range = findingRange(doc, chunk.startOffset, f);
         const diag = new vscode.Diagnostic(
           range,
-          `[Praesidio] ${f.label} (${f.detector}, conf ${f.confidence.toFixed(2)})`,
+          `[Section] ${f.label} (${f.detector}, conf ${f.confidence.toFixed(2)})`,
           this.opts.severity(),
         );
         diag.code = f.label;
-        diag.source = "praesidio";
+        diag.source = "section";
         diagnostics.push(diag);
       }
     }

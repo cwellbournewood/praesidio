@@ -1,6 +1,6 @@
 # Modes
 
-A **mode** is a signed, versioned bundle that tunes Praesidio for a specific
+A **mode** is a signed, versioned bundle that tunes Section for a specific
 domain — healthcare, financial services, software engineering, intelligence,
 and so on. A mode is not a separate runtime; it is a composable layer on top
 of the standard gateway, anonymiser, and policy engine.

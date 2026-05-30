@@ -6,8 +6,8 @@ describe('csp.checkGatewayUrl', () => {
   it('accepts localhost:8000', () => {
     expect(checkGatewayUrl('https://localhost:8000').ok).toBe(true);
   });
-  it('accepts wildcard *.praesidio.local', () => {
-    expect(checkGatewayUrl('https://gw.praesidio.local').ok).toBe(true);
+  it('accepts wildcard *.section.local', () => {
+    expect(checkGatewayUrl('https://gw.section.local').ok).toBe(true);
   });
   it('rejects unrelated hosts', () => {
     expect(checkGatewayUrl('https://evil.example.com').ok).toBe(false);

@@ -1,6 +1,6 @@
 # Backup & restore
 
-Praesidio holds two pieces of durable state that must be backed up:
+Section holds two pieces of durable state that must be backed up:
 
 1. **Postgres** — audit chain, lineage graph, optional config. Loss
    means loss of compliance evidence; the system continues to operate
@@ -23,27 +23,27 @@ run a nightly logical dump and ship to object storage:
 
 ```bash
 PGPASSWORD="$PG_PASS" pg_dump \
-    -h "$PG_HOST" -U praesidio -d praesidio \
+    -h "$PG_HOST" -U section -d section \
     --format=custom --compress=9 \
-    --file="/backups/praesidio-$(date -u +%Y%m%dT%H%M%SZ).dump"
+    --file="/backups/section-$(date -u +%Y%m%dT%H%M%SZ).dump"
 
-aws s3 cp /backups/praesidio-*.dump \
-    s3://cwellbournewood-praesidio-backups/postgres/ \
-    --sse aws:kms --sse-kms-key-id alias/praesidio-backups
+aws s3 cp /backups/section-*.dump \
+    s3://cwellbournewood-section-backups/postgres/ \
+    --sse aws:kms --sse-kms-key-id alias/section-backups
 ```
 
 Restore:
 
 ```bash
-createdb -h "$PG_HOST" -U postgres praesidio_restored
-pg_restore -h "$PG_HOST" -U postgres -d praesidio_restored \
+createdb -h "$PG_HOST" -U postgres section_restored
+pg_restore -h "$PG_HOST" -U postgres -d section_restored \
     --jobs=4 --no-owner --no-privileges \
-    praesidio-20260527T000000Z.dump
+    section-20260527T000000Z.dump
 
 # Verify the audit chain integrity before swapping connections:
-PRAESIDIO_GATEWAY=http://localhost:8080 \
-PRAESIDIO_API_KEY=... \
-    praesidio-audit verify --tenant '*' --since 1y
+SECTION_GATEWAY=http://localhost:8080 \
+SECTION_API_KEY=... \
+    section-audit verify --tenant '*' --since 1y
 ```
 
 ### PITR (recommended)
@@ -54,7 +54,7 @@ discovery SLA — 7 days is the project's recommended floor.
 
 PITR restore steps are provider-specific; the key thing is the **audit
 verify** step afterwards. A point-in-time restore that lands mid-write
-can leave a torn-tail at the latest chain link; `praesidio-audit verify`
+can leave a torn-tail at the latest chain link; `section-audit verify`
 will report exactly which event in which tenant chain is the first
 inconsistent one, and operators can either accept the truncation
 (documented in your incident report) or step further back.
@@ -65,7 +65,7 @@ The restored database always satisfies whatever Alembic revision the
 binary you restore *with* expects. Run
 
 ```bash
-PRAESIDIO_DATABASE_URL="postgresql+asyncpg://..." \
+SECTION_DATABASE_URL="postgresql+asyncpg://..." \
     alembic upgrade head
 ```
 
@@ -74,9 +74,9 @@ restored database.
 
 ## Redis token vault
 
-The vault is **encrypted at rest by Praesidio itself** (AES-256-GCM with
+The vault is **encrypted at rest by Section itself** (AES-256-GCM with
 HKDF-derived per-tenant keys). Loss of the Redis data file is a service
-incident; loss of `PRAESIDIO_VAULT_KEY` is the actual catastrophe.
+incident; loss of `SECTION_VAULT_KEY` is the actual catastrophe.
 
 ### Snapshot policy
 
@@ -104,7 +104,7 @@ automated snapshots in the console; copy snapshots to a separate region.
 # Stop the Redis instance, copy the AOF + RDB files into the data dir,
 # then start. The AOF replay is automatic; verify with:
 redis-cli -h "$REDIS_HOST" DBSIZE
-redis-cli -h "$REDIS_HOST" --scan --pattern 'praesidio:tok:*' | wc -l
+redis-cli -h "$REDIS_HOST" --scan --pattern 'section:tok:*' | wc -l
 ```
 
 After restore, the vault key MUST match what was active when the data

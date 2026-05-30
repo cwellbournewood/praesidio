@@ -1,6 +1,6 @@
 # Operations
 
-Runbooks and integration guides for operators deploying Praesidio:
+Runbooks and integration guides for operators deploying Section:
 
 - [Signed policy bundles](signed-bundles.md) — cosign + OCI publish/verify flow
 - [OIDC integration (overview)](oidc.md) — claim model, role mapping, Keycloak dev overlay

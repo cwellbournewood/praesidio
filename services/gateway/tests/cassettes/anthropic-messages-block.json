@@ -35,7 +35,7 @@
   "expectations": {
     "status_code": 403,
     "upstream_must_not_be_called": true,
-    "response_headers_present": ["x-praesidio-decision"],
+    "response_headers_present": ["x-section-decision"],
     "audit_decision": "block"
   }
 }

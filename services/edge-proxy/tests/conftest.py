@@ -2,7 +2,7 @@
 
 Two big ideas:
 
-* We don't boot the real mitmproxy network stack. The :class:`PraesidioAddon`
+* We don't boot the real mitmproxy network stack. The :class:`SectionAddon`
   hooks (``request``/``response``) accept any object that quacks like a
   ``mitmproxy.http.HTTPFlow`` — we build a minimal fake in
   :class:`FakeFlow` and exercise the hooks directly. This is the same
@@ -21,13 +21,13 @@ import httpx
 import pytest
 import respx
 
-from praesidio_edge_proxy.config import EdgeSettings
+from section_edge_proxy.config import EdgeSettings
 
 
 @pytest.fixture
 def tmp_ca_dir(tmp_path: Path) -> Path:
     """Per-test CA dir. Keeps trust-store + key material out of the user's home."""
-    return tmp_path / "praesidio"
+    return tmp_path / "section"
 
 
 @pytest.fixture
@@ -197,7 +197,7 @@ def fake_flow_factory() -> Any:
 @pytest.fixture
 def gateway_client(settings: EdgeSettings) -> Any:
     """A real :class:`GatewayClient` wired up to httpx + respx (no real network)."""
-    from praesidio_edge_proxy.scan_client import GatewayClient
+    from section_edge_proxy.scan_client import GatewayClient
 
     return GatewayClient(
         settings,

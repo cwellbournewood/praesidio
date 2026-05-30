@@ -1,4 +1,4 @@
-# Praesidio — JetBrains plugin
+# Section — JetBrains plugin
 
 Semantic data-loss prevention for AI coding tools, inside your JetBrains IDE.
 
@@ -9,14 +9,14 @@ DataGrip — anything on the IntelliJ Platform 2023.2 through 2025.2.
 
 | Capability | How |
 |---|---|
-| Scan editor selections for sensitive data | Right-click → **Praesidio: Scan Selection** |
-| Replace sensitive spans with reversible placeholders | Right-click → **Praesidio: Tokenise Selection** |
+| Scan editor selections for sensitive data | Right-click → **Section: Scan Selection** |
+| Replace sensitive spans with reversible placeholders | Right-click → **Section: Tokenise Selection** |
 | Highlight findings inline in any open file | Built-in **Sensitive data** inspection with **Tokenise** quick-fix |
-| Manage the local MITM edge proxy | Tools → Praesidio → **Toggle Edge Proxy** |
-| Authenticate the IDE to the gateway | Tools → Praesidio → **Sign In** (OIDC device-code) or **Settings → Tools → Praesidio** for API key |
+| Manage the local MITM edge proxy | Tools → Section → **Toggle Edge Proxy** |
+| Authenticate the IDE to the gateway | Tools → Section → **Sign In** (OIDC device-code) or **Settings → Tools → Section** for API key |
 | See your most-recent gateway decisions | Tool window on the right edge |
 
-Everything routes through your operator's Praesidio gateway, so the same DLP
+Everything routes through your operator's Section gateway, so the same DLP
 policy that governs server traffic also covers your IDE.
 
 ## Install
@@ -25,7 +25,7 @@ policy that governs server traffic also covers your IDE.
 
 1. **File → Settings → Plugins → Marketplace** (macOS: **IntelliJ IDEA →
    Preferences → Plugins → Marketplace**).
-2. Search for **Praesidio**.
+2. Search for **Section**.
 3. Click **Install** and restart the IDE.
 
 ### Sideload a `.zip`
@@ -33,7 +33,7 @@ policy that governs server traffic also covers your IDE.
 If your organisation pins a specific release or installs from an air-gapped
 mirror:
 
-1. Download `praesidio-jetbrains-<version>.zip` from your operator's
+1. Download `section-jetbrains-<version>.zip` from your operator's
    distribution channel.
 2. **File → Settings → Plugins → ⚙ (top-right) → Install Plugin from Disk…**
 3. Select the `.zip`. Restart when prompted.
@@ -43,26 +43,26 @@ sideloading:
 
 ```bash
 cosign verify-blob \
-  --signature praesidio-jetbrains-<version>.zip.sig \
-  --certificate-identity-regexp 'https://github.com/cwellbournewood/praesidio/.*' \
+  --signature section-jetbrains-<version>.zip.sig \
+  --certificate-identity-regexp 'https://github.com/cwellbournewood/section/.*' \
   --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
-  praesidio-jetbrains-<version>.zip
+  section-jetbrains-<version>.zip
 ```
 
 ## Configure
 
-Open **Settings → Tools → Praesidio**:
+Open **Settings → Tools → Section**:
 
 | Field | Description |
 |---|---|
-| **Gateway URL** | Base URL of your Praesidio gateway, e.g. `https://gateway.acme.example/`. |
+| **Gateway URL** | Base URL of your Section gateway, e.g. `https://gateway.acme.example/`. |
 | **API key** | A per-user key, stored in the IDE PasswordSafe. Leave blank if signing in via OIDC. |
-| **Tenant** | Optional `X-Praesidio-Tenant` header. Overridden by JWT claim when signed in via OIDC. |
+| **Tenant** | Optional `X-Section-Tenant` header. Overridden by JWT claim when signed in via OIDC. |
 | **Sign in via OIDC…** | Starts the RFC 8628 device-code flow against your operator's IdP. The IDE opens a browser tab; approve there and the refresh token lands in your OS keychain. |
 | **Enable sensitive-data inspection** | Whether the inspection scans open files. Turn off if you want only on-demand scans. |
 | **Inspection debounce (ms)** | Quiescence window between document changes before re-scanning. Default 750 ms. |
-| **Start edge proxy on IDE launch** | Spawn `praesidio-edge-proxy` automatically. Requires the CLI to be installed and the CA cert trusted. |
-| **Edge proxy binary path** | Optional path to the proxy CLI. Defaults to `praesidio-edge-proxy` on `$PATH`. |
+| **Start edge proxy on IDE launch** | Spawn `section-edge-proxy` automatically. Requires the CLI to be installed and the CA cert trusted. |
+| **Edge proxy binary path** | Optional path to the proxy CLI. Defaults to `section-edge-proxy` on `$PATH`. |
 
 Hit **Test connection** to verify the gateway is reachable.
 
@@ -72,15 +72,15 @@ Hit **Test connection** to verify the gateway is reachable.
 2. API key (from PasswordSafe)
 3. Header-only (dev gateways with `--auth-mode dev`)
 
-Both auth modes also send `X-Praesidio-Tenant`, `X-Praesidio-User`, and
-`X-Praesidio-Groups` headers so a gateway behind a header-trusting reverse
+Both auth modes also send `X-Section-Tenant`, `X-Section-User`, and
+`X-Section-Groups` headers so a gateway behind a header-trusting reverse
 proxy still works.
 
 ## Usage
 
 ### Scan selection
 
-Highlight text in any editor, right-click → **Praesidio → Scan Selection**.
+Highlight text in any editor, right-click → **Section → Scan Selection**.
 
 A balloon notification tells you the decision:
 - **Allowed** — no findings, nothing to do.
@@ -93,7 +93,7 @@ Selection** explicitly.
 
 ### Tokenise selection
 
-Highlight text, right-click → **Praesidio → Tokenise Selection**. The
+Highlight text, right-click → **Section → Tokenise Selection**. The
 selection is replaced with the sanitised version in a single undoable edit.
 Subsequent model responses containing the placeholders are restored via
 `POST /v1/restore`; this plugin uses the same vault binding as the rest of
@@ -117,7 +117,7 @@ Toggle off in **Settings** if you only want on-demand scans.
 ### Edge proxy
 
 The bundled **Toggle Edge Proxy** action spawns or kills the local
-`praesidio-edge-proxy` CLI. The proxy MITMs traffic from any AI CLI tool
+`section-edge-proxy` CLI. The proxy MITMs traffic from any AI CLI tool
 that respects `HTTPS_PROXY` (Cursor, Claude Code, Continue, aider, Copilot
 CLI, …) and scans every prompt through the same gateway.
 
@@ -132,7 +132,7 @@ cd clients/jetbrains
 ./gradlew buildPlugin
 ```
 
-Output lands at `build/distributions/praesidio-jetbrains-<version>.zip`.
+Output lands at `build/distributions/section-jetbrains-<version>.zip`.
 
 The wrapper downloads Gradle 8.5 on first run; you need a JDK 17+ on
 your PATH or `JAVA_HOME`.
@@ -167,10 +167,10 @@ Launches a fresh IntelliJ IDEA Community sandbox with the plugin pre-installed.
 
 Each tagged release ships:
 
-- `praesidio-jetbrains-<version>.zip` — installable plugin.
-- `praesidio-jetbrains-<version>.zip.sig` + `.pem` — cosign keyless
+- `section-jetbrains-<version>.zip` — installable plugin.
+- `section-jetbrains-<version>.zip.sig` + `.pem` — cosign keyless
   signature and certificate.
-- `praesidio-jetbrains-<version>.zip.intoto.jsonl` — SLSA-3 provenance.
+- `section-jetbrains-<version>.zip.intoto.jsonl` — SLSA-3 provenance.
 
 The same artifact is pushed to the JetBrains Marketplace and to the
 GitHub release.

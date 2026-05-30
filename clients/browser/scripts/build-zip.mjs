@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * build-zip — package `dist/` as `dist-zip/praesidio-browser-extension-<ver>.zip`
+ * build-zip — package `dist/` as `dist-zip/section-browser-extension-<ver>.zip`
  * for Chrome Web Store / Edge Add-ons / Opera Add-ons submission.
  *
  * No external deps — we build the ZIP by hand (deflate per entry,
@@ -19,7 +19,7 @@ const outDir = resolve(repoRoot, 'dist-zip');
 
 const pkg = JSON.parse(readFileSync(resolve(repoRoot, 'package.json'), 'utf8'));
 const version = pkg.version;
-const zipPath = resolve(outDir, `praesidio-browser-extension-${version}.zip`);
+const zipPath = resolve(outDir, `section-browser-extension-${version}.zip`);
 
 if (!existsSync(distDir)) {
   console.error(`dist/ not found — run \`npm run build\` first.`);

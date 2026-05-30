@@ -14,10 +14,10 @@ import respx
 from httpx import ASGITransport
 
 # Test config — must be set before importing the app/config.
-os.environ["PRAESIDIO_ENV"] = "development"
+os.environ["SECTION_ENV"] = "development"
 os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///:memory:"
 os.environ["REDIS_URL"] = ""  # in-memory vault
-os.environ["PRAESIDIO_API_KEYS"] = "test-key"
+os.environ["SECTION_API_KEYS"] = "test-key"
 os.environ["OPENAI_API_KEY"] = "sk-test"
 
 
@@ -25,10 +25,10 @@ def _write_bundle(tmp: Path) -> Path:
     bundle = tmp / "bundle"
     (bundle / "policies").mkdir(parents=True)
     (bundle / "manifest.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: Bundle\nmetadata: {name: t, version: '0'}\nspec: {includes: []}\n"
+        "apiVersion: section/v1\nkind: Bundle\nmetadata: {name: t, version: '0'}\nspec: {includes: []}\n"
     )
     (bundle / "models.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: ModelRegistry\nspec:\n"
+        "apiVersion: section/v1\nkind: ModelRegistry\nspec:\n"
         "  models:\n"
         "    - id: openai/gpt-4o-mini\n"
         "      provider: openai\n"
@@ -39,12 +39,12 @@ def _write_bundle(tmp: Path) -> Path:
         "      auth: {type: env, var: OPENAI_API_KEY}\n"
     )
     (bundle / "routes.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: Routes\nspec:\n"
+        "apiVersion: section/v1\nkind: Routes\nspec:\n"
         "  - inbound: {path: /v1/chat/completions, requested_model: gpt-4o-mini}\n"
         "    upstream: openai/gpt-4o-mini\n"
     )
     (bundle / "policies" / "0001-pii.yaml").write_text(
-        "apiVersion: praesidio/v1\n"
+        "apiVersion: section/v1\n"
         "kind: Policy\n"
         "metadata: {id: pii, name: pii}\n"
         "spec:\n"
@@ -69,14 +69,14 @@ async def test_e2e_email_round_trip():
     # Build a fresh bundle dir.
     tmp = Path(tempfile.mkdtemp())
     bundle = _write_bundle(tmp)
-    os.environ["PRAESIDIO_POLICY_BUNDLE"] = str(bundle)
+    os.environ["SECTION_POLICY_BUNDLE"] = str(bundle)
 
     # IMPORTANT: clear cached settings before import.
-    from praesidio_gateway.config import get_settings
+    from section_gateway.config import get_settings
     get_settings.cache_clear()
 
     # Replace the postgres DSN with sqlite for the audit writer.
-    from praesidio_gateway.main import create_app
+    from section_gateway.main import create_app
 
     captured: dict[str, str] = {}
 
@@ -121,7 +121,7 @@ async def test_e2e_email_round_trip():
             async with app.router.lifespan_context(app):
                 resp = await client.post(
                     "/v1/chat/completions",
-                    headers={"x-api-key": "test-key", "x-praesidio-tenant": "default"},
+                    headers={"x-api-key": "test-key", "x-section-tenant": "default"},
                     json={
                         "model": "gpt-4o-mini",
                         "messages": [
@@ -146,7 +146,7 @@ async def test_e2e_block_when_aws_secret():
     bundle = _write_bundle(tmp)
     # Replace the policy with one that blocks credential.aws_access_key.
     (bundle / "policies" / "0001-pii.yaml").write_text(
-        "apiVersion: praesidio/v1\n"
+        "apiVersion: section/v1\n"
         "kind: Policy\n"
         "metadata: {id: sec, name: sec}\n"
         "spec:\n"
@@ -162,10 +162,10 @@ async def test_e2e_block_when_aws_secret():
         "        action: allow\n"
         "  fail_mode: closed\n"
     )
-    os.environ["PRAESIDIO_POLICY_BUNDLE"] = str(bundle)
-    from praesidio_gateway.config import get_settings
+    os.environ["SECTION_POLICY_BUNDLE"] = str(bundle)
+    from section_gateway.config import get_settings
     get_settings.cache_clear()
-    from praesidio_gateway.main import create_app
+    from section_gateway.main import create_app
 
     app = create_app()
     async with httpx.AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
@@ -181,4 +181,4 @@ async def test_e2e_block_when_aws_secret():
                 },
             )
     assert resp.status_code == 403
-    assert resp.headers.get("x-praesidio-decision") == "block"
+    assert resp.headers.get("x-section-decision") == "block"

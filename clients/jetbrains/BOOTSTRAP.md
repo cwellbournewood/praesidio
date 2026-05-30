@@ -35,6 +35,6 @@ The expected sha256 is published in
 
 ```bash
 ./gradlew test         # run unit tests
-./gradlew buildPlugin  # produce build/distributions/praesidio-jetbrains-*.zip
+./gradlew buildPlugin  # produce build/distributions/section-jetbrains-*.zip
 ./gradlew ktlintCheck  # lint
 ```

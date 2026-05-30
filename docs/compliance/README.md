@@ -1,8 +1,8 @@
 # Compliance mappings
 
-Praesidio is not a certification, but it produces the controls and
+Section is not a certification, but it produces the controls and
 evidence required for several major frameworks. Each document below maps
-the framework's relevant clauses to Praesidio capabilities.
+the framework's relevant clauses to Section capabilities.
 
 | Framework | Doc |
 |---|---|

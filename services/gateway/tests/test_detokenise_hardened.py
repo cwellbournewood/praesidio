@@ -20,26 +20,26 @@ import httpx
 import pytest
 from httpx import ASGITransport
 
-os.environ["PRAESIDIO_ENV"] = "development"
+os.environ["SECTION_ENV"] = "development"
 os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///:memory:"
 os.environ["REDIS_URL"] = ""
-os.environ["PRAESIDIO_API_KEYS"] = "test-key"
-os.environ["PRAESIDIO_ADMIN_API_KEYS"] = "test-key"
-os.environ["PRAESIDIO_DETOK_RATE_LIMIT_PER_TENANT_RPM"] = "2"
+os.environ["SECTION_API_KEYS"] = "test-key"
+os.environ["SECTION_ADMIN_API_KEYS"] = "test-key"
+os.environ["SECTION_DETOK_RATE_LIMIT_PER_TENANT_RPM"] = "2"
 
 
 def _empty_bundle(tmp: Path) -> Path:
     bundle = tmp / "bundle"
     (bundle / "policies").mkdir(parents=True)
     (bundle / "manifest.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: Bundle\n"
+        "apiVersion: section/v1\nkind: Bundle\n"
         "metadata: {name: t, version: '0'}\nspec: {includes: []}\n"
     )
     (bundle / "models.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: ModelRegistry\nspec: {models: [], endpoints: []}\n"
+        "apiVersion: section/v1\nkind: ModelRegistry\nspec: {models: [], endpoints: []}\n"
     )
     (bundle / "routes.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: Routes\nspec: []\n"
+        "apiVersion: section/v1\nkind: Routes\nspec: []\n"
     )
     return bundle
 
@@ -47,19 +47,19 @@ def _empty_bundle(tmp: Path) -> Path:
 def _make_app():
     tmp = Path(tempfile.mkdtemp())
     bundle = _empty_bundle(tmp)
-    os.environ["PRAESIDIO_POLICY_BUNDLE"] = str(bundle)
-    from praesidio_gateway.config import get_settings
+    os.environ["SECTION_POLICY_BUNDLE"] = str(bundle)
+    from section_gateway.config import get_settings
 
     get_settings.cache_clear()
-    from praesidio_gateway.api.admin.detokenise import _reset_tenant_buckets
-    from praesidio_gateway.main import create_app
+    from section_gateway.api.admin.detokenise import _reset_tenant_buckets
+    from section_gateway.main import create_app
 
     _reset_tenant_buckets()
     return create_app()
 
 
 def _headers(tenant: str = "tA") -> dict[str, str]:
-    return {"x-api-key": "test-key", "x-praesidio-tenant": tenant}
+    return {"x-api-key": "test-key", "x-section-tenant": tenant}
 
 
 @pytest.mark.asyncio
@@ -140,7 +140,7 @@ async def test_rate_limit_per_tenant_429() -> None:
     assert r1.status_code == 200, r1.text
     assert r2.status_code == 200, r2.text
     assert r3.status_code == 429, r3.text
-    assert r3.headers.get("X-Praesidio-RateLimit-Scope") == "detokenise"
+    assert r3.headers.get("X-Section-RateLimit-Scope") == "detokenise"
     assert r3.headers.get("Retry-After") is not None
 
 
@@ -181,8 +181,8 @@ async def test_audit_row_records_ticket_and_event_type() -> None:
             r = await c.post("/admin/detokenise", json=body, headers=_headers("tA"))
             assert r.status_code == 200, r.text
             # Flush + poll for the audit row.
-            state = app.state.praesidio
-            from praesidio_gateway.audit.models import AuditEvent
+            state = app.state.section
+            from section_gateway.audit.models import AuditEvent
 
             row = None
             for _ in range(50):

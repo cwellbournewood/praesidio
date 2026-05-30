@@ -8,7 +8,7 @@ import { Tag } from '@/components/ui/tag';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
-import { PolicyEditor } from '@/components/praesidio/PolicyEditor';
+import { PolicyEditor } from '@/components/section/PolicyEditor';
 import { swrFetcher } from '@/lib/api';
 import type { Policy } from '@/lib/types';
 import { ago, decisionClasses, decisionLabel, formatInt } from '@/lib/utils';

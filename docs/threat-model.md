@@ -90,8 +90,8 @@ the pipeline, and policy/reload mutates effective enforcement.
 
 | STRIDE | Threat | Mitigation |
 |---|---|---|
-| **S**poofing | Attacker calls `/admin/*` with leaked API key | Admin keys are a separate keyspace from data-plane keys; OIDC required when `PRAESIDIO_ADMIN_REQUIRE_OIDC=1`; per-endpoint RBAC scope (`admin:simulate`, `admin:detokenise`, `admin:policy`) |
-| **T**ampering | Manipulated reload payload installs malicious bundle | `/admin/policy/reload` only re-reads from configured `PRAESIDIO_POLICY_BUNDLE`; signature verification (cosign) is enforced before swap; rejected bundles leave the previous active set untouched |
+| **S**poofing | Attacker calls `/admin/*` with leaked API key | Admin keys are a separate keyspace from data-plane keys; OIDC required when `SECTION_ADMIN_REQUIRE_OIDC=1`; per-endpoint RBAC scope (`admin:simulate`, `admin:detokenise`, `admin:policy`) |
+| **T**ampering | Manipulated reload payload installs malicious bundle | `/admin/policy/reload` only re-reads from configured `SECTION_POLICY_BUNDLE`; signature verification (cosign) is enforced before swap; rejected bundles leave the previous active set untouched |
 | **R**epudiation | Operator denies running a detokenise | Every `/admin/*` call writes a dedicated audit row with principal, reason, request digest, and (for detokenise) the placeholder + originating event id; rows are part of the hash chain |
 | **I**nfo disclosure | `/admin/simulate` returns transforms that include masked secrets | Simulate honours the live policy: any transform/block applies to its response too; raw originals never leave the gateway. `/admin/detokenise` requires a `reason` string ≥ 10 chars and is rate-limited per principal |
 | **D**oS | Reload loop pins CPU | Reload is debounced server-side (≥ 5s between accepted calls); simulate is rate-limited per API key |
@@ -100,14 +100,14 @@ the pipeline, and policy/reload mutates effective enforcement.
 ### SIEM webhook egress
 
 The gateway can forward audit events to a customer-owned SIEM via
-HTTPS webhook (`PRAESIDIO_SIEM_WEBHOOK_URL`).
+HTTPS webhook (`SECTION_SIEM_WEBHOOK_URL`).
 
 | STRIDE | Threat | Mitigation |
 |---|---|---|
-| **S**poofing | A misconfigured URL exfiltrates events to an attacker domain | URL must resolve to an explicit allow-list of host suffixes (`PRAESIDIO_SIEM_ALLOWED_HOSTS`); HTTPS required; mTLS option for production |
+| **S**poofing | A misconfigured URL exfiltrates events to an attacker domain | URL must resolve to an explicit allow-list of host suffixes (`SECTION_SIEM_ALLOWED_HOSTS`); HTTPS required; mTLS option for production |
 | **T**ampering | Events modified in transit | TLS 1.3 + HMAC-SHA256 over the JSON body using a shared signing secret; receiver verifies before ingest |
 | **R**epudiation | "We never received that event" | Each delivery is retried with idempotency key; gateway records delivery receipts in `audit_egress` |
-| **I**nfo disclosure | Webhook leaks via DNS rebinding / SSRF to internal network | Resolver pre-checks block RFC1918 / link-local / metadata IPs unless `PRAESIDIO_SIEM_ALLOW_PRIVATE=1`; outbound NetworkPolicy in Helm restricts gateway egress to the allow-list |
+| **I**nfo disclosure | Webhook leaks via DNS rebinding / SSRF to internal network | Resolver pre-checks block RFC1918 / link-local / metadata IPs unless `SECTION_SIEM_ALLOW_PRIVATE=1`; outbound NetworkPolicy in Helm restricts gateway egress to the allow-list |
 | **D**oS | Slow receiver back-pressures the gateway | Egress runs on a bounded async queue with timeout; on overflow events spill to local WAL and a degraded marker is flagged in `/healthz` |
 | **E**oP | Webhook source can replay events to bypass deduplication | Receiver-side replay protection via the idempotency key + monotonic event id; mandated in the integration doc |
 
@@ -138,7 +138,7 @@ for safe rollout; it is also the most common operator footgun.
 | **R**epudiation | "We thought it was enforcing" | Every audit row records `policy.mode = shadow\|enforce`; UI Events table highlights shadow rows with a distinct badge; weekly digest shows shadow coverage |
 | **I**nfo disclosure | Shadow rule still triggers DLP and stores findings | Same data minimisation as enforce mode: findings are hashed, not stored as text |
 | **D**oS | Shadow evaluation doubles CPU on every request | Shadow rules share the pipeline pass with enforcing rules; bounded total evaluation budget per request |
-| **E**oP | All rules silently in shadow → fail-open | Startup check warns and emits a high-severity audit event if 100% of `block` rules for the default policy are in shadow; `PRAESIDIO_FORBID_FULL_SHADOW=1` (recommended for prod) makes this a fatal config error |
+| **E**oP | All rules silently in shadow → fail-open | Startup check warns and emits a high-severity audit event if 100% of `block` rules for the default policy are in shadow; `SECTION_FORBID_FULL_SHADOW=1` (recommended for prod) makes this a fatal config error |
 
 ### Agent broker (architected)
 
@@ -151,11 +151,11 @@ for safe rollout; it is also the most common operator footgun.
 
 ### Tool-call allowlist enforcement (G6 — runtime)
 
-Praesidio inspects every upstream response for `tool_calls` (OpenAI) /
+Section inspects every upstream response for `tool_calls` (OpenAI) /
 `tool_use` blocks (Anthropic) and applies the active policy's
 `tool_allowlist`. The enforcement module
-(`praesidio_gateway.policy.tool_calls`) is pure Python and is shared
-with the `praesidio-policy lint` CLI so the static check and the
+(`section_gateway.policy.tool_calls`) is pure Python and is shared
+with the `section-policy lint` CLI so the static check and the
 runtime check cannot drift.
 
 | STRIDE | Threat | Mitigation |
@@ -165,7 +165,7 @@ runtime check cannot drift.
 | **R** | Operator denies disallowing a tool | Every denied call increments `policy.tool_calls.blocked_total{tenant,policy,tool}` and writes an audit row with the offending name |
 | **I** | Deny reason leaks tool catalogue | Deny reason is generic ("not in allowlist") to the caller; full reason only in the audit row |
 | **D** | Adversary spams disallowed tool calls to flood the counter | Counter is bounded by Prometheus label cardinality limits; per-tenant audit rate-limit |
-| **E** | Tool with `*` wildcard accidentally permits a dangerous tool | `praesidio-policy lint` warns on `allow: ["*"]` without a non-empty `deny`; recommended deploy pattern is allow-list-with-glob |
+| **E** | Tool with `*` wildcard accidentally permits a dangerous tool | `section-policy lint` warns on `allow: ["*"]` without a non-empty `deny`; recommended deploy pattern is allow-list-with-glob |
 
 ### Detokenise hardening (G7)
 
@@ -204,7 +204,7 @@ on returned documents).
 
 | STRIDE | Threat | Mitigation |
 |---|---|---|
-| **D** | One leaked API key consumes the entire tenant quota | Per-key RPM bucket (`PRAESIDIO_RATE_LIMIT_PER_KEY_RPM`) on top of the tenant bucket |
+| **D** | One leaked API key consumes the entire tenant quota | Per-key RPM bucket (`SECTION_RATE_LIMIT_PER_KEY_RPM`) on top of the tenant bucket |
 | **E** | Caller routes around per-key limit by switching models | Per-(tenant, model) TPM bucket charged after the upstream response so cost-based throttling is honest |
 | **I** | Counter labels leak tenant identity in metrics | Tenant label is the hash from the principal fingerprint, not the raw tenant id |
 
@@ -220,7 +220,7 @@ on returned documents).
 
 | STRIDE | Threat | Mitigation |
 |---|---|---|
-| **T** | Operator inflates `PRAESIDIO_PRICE_BOOK_JSON` to hide cost overruns | Price book is loaded at boot and its digest is included in the metering audit row; Grafana panel surfaces price-book version |
+| **T** | Operator inflates `SECTION_PRICE_BOOK_JSON` to hide cost overruns | Price book is loaded at boot and its digest is included in the metering audit row; Grafana panel surfaces price-book version |
 | **I** | Metering exposes per-prompt token counts to other tenants | Counters are labelled `{tenant, model, route}`; Prometheus RBAC by namespace; admin UI scope checks |
 
 ### Alembic migrations (D1)
@@ -235,11 +235,11 @@ on returned documents).
 
 A `ValidatingAdmissionPolicy` (k8s ≥1.30) and a Gatekeeper
 `ConstraintTemplate` are shipped so cluster admins can refuse Pod
-manifests that target an LLM endpoint without routing through Praesidio.
+manifests that target an LLM endpoint without routing through Section.
 
 | STRIDE | Threat | Mitigation |
 |---|---|---|
-| **E** | Pod bypasses gateway by setting `OPENAI_BASE_URL` directly | Admission policy denies any container whose env contains an LLM provider host not on `praesidio-allowed-llm-endpoints` ConfigMap |
+| **E** | Pod bypasses gateway by setting `OPENAI_BASE_URL` directly | Admission policy denies any container whose env contains an LLM provider host not on `section-allowed-llm-endpoints` ConfigMap |
 | **T** | Constraint disabled by editing the policy live | Policy is shipped as a GitOps artifact; `kubectl auth can-i` matrix restricts mutation to platform team |
 
 ### Release supply chain (D4)
@@ -252,7 +252,7 @@ manifests that target an LLM endpoint without routing through Praesidio.
 
 ## 5. AI-specific risks (OWASP LLM Top 10 — 2025 mapping)
 
-| OWASP LLM | Praesidio control |
+| OWASP LLM | Section control |
 |---|---|
 | LLM01 Prompt Injection | injection detector + agent-broker `<UNTRUSTED_CONTENT>` wrapper |
 | LLM02 Sensitive Information Disclosure | semantic DLP + anonymiser + output DLP |
@@ -262,13 +262,13 @@ manifests that target an LLM endpoint without routing through Praesidio.
 | LLM06 Excessive Agency | capability tokens (scoped, time-bound, revocable) |
 | LLM07 System Prompt Leakage | output DLP detects prompt-echo |
 | LLM08 Vector / Embedding Weaknesses | ACL-mediated retrieval; embedding ACLs; tenant isolation |
-| LLM09 Misinformation | n/a (Praesidio is not a fact-checker) |
+| LLM09 Misinformation | n/a (Section is not a fact-checker) |
 | LLM10 Unbounded Consumption | rate limits + cost budgets in model router |
 
 ## 6. Out of scope
 
 - Model alignment / safety tuning of upstream LLMs.
-- Endpoint compromise that bypasses Praesidio entirely (user pastes into
+- Endpoint compromise that bypasses Section entirely (user pastes into
   a personal account on a personal device).
 - Cryptographic attacks on AES-256-GCM / Ed25519 / FF3-1 within their
   documented parameter ranges.

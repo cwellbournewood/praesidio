@@ -11,10 +11,10 @@ import pytest
 import respx
 from httpx import ASGITransport
 
-os.environ["PRAESIDIO_ENV"] = "development"
+os.environ["SECTION_ENV"] = "development"
 os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///:memory:"
 os.environ["REDIS_URL"] = ""
-os.environ["PRAESIDIO_API_KEYS"] = "test-key"
+os.environ["SECTION_API_KEYS"] = "test-key"
 os.environ["OPENAI_API_KEY"] = "sk-test"
 
 
@@ -22,10 +22,10 @@ def _bundle(tmp: Path) -> Path:
     bundle = tmp / "bundle"
     (bundle / "policies").mkdir(parents=True)
     (bundle / "manifest.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: Bundle\nmetadata: {name: t, version: '0'}\nspec: {includes: []}\n"
+        "apiVersion: section/v1\nkind: Bundle\nmetadata: {name: t, version: '0'}\nspec: {includes: []}\n"
     )
     (bundle / "models.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: ModelRegistry\nspec:\n"
+        "apiVersion: section/v1\nkind: ModelRegistry\nspec:\n"
         "  models:\n"
         "    - id: openai/gpt-4o-mini\n"
         "      provider: openai\n"
@@ -36,12 +36,12 @@ def _bundle(tmp: Path) -> Path:
         "      auth: {type: env, var: OPENAI_API_KEY}\n"
     )
     (bundle / "routes.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: Routes\nspec:\n"
+        "apiVersion: section/v1\nkind: Routes\nspec:\n"
         "  - inbound: {path: /v1/chat/completions, requested_model: gpt-4o-mini}\n"
         "    upstream: openai/gpt-4o-mini\n"
     )
     (bundle / "policies" / "0001-pii.yaml").write_text(
-        "apiVersion: praesidio/v1\n"
+        "apiVersion: section/v1\n"
         "kind: Policy\n"
         "metadata: {id: pii, name: pii}\n"
         "spec:\n"
@@ -60,11 +60,11 @@ def _bundle(tmp: Path) -> Path:
 async def test_openai_tool_call_arguments_are_scanned_and_redacted():
     tmp = Path(tempfile.mkdtemp())
     bundle = _bundle(tmp)
-    os.environ["PRAESIDIO_POLICY_BUNDLE"] = str(bundle)
-    from praesidio_gateway.config import get_settings
+    os.environ["SECTION_POLICY_BUNDLE"] = str(bundle)
+    from section_gateway.config import get_settings
 
     get_settings.cache_clear()
-    from praesidio_gateway.main import create_app
+    from section_gateway.main import create_app
 
     async def _handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(
@@ -119,4 +119,4 @@ async def test_openai_tool_call_arguments_are_scanned_and_redacted():
     assert "victim@target.com" not in args_str
     assert "REDACTED_EMAIL" in args_str
     # Response-findings header must report at least one.
-    assert int(r.headers.get("x-praesidio-response-findings", "0")) >= 1
+    assert int(r.headers.get("x-section-response-findings", "0")) >= 1

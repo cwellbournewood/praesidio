@@ -1,6 +1,6 @@
 # Healthcare Mode — Reference Implementation
 
-This directory is the **reference mode bundle** for Praesidio. It demonstrates
+This directory is the **reference mode bundle** for Section. It demonstrates
 the full set of files described in the
 [Mode Authoring Guide](../../../../docs/modes/mode-authoring-guide.md).
 

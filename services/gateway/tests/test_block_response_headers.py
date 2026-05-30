@@ -1,8 +1,8 @@
 """Block-response header coverage for both v1 OpenAI and Anthropic routes.
 
-Asserts that every 403 block carries both ``X-Praesidio-Reason`` AND
-``X-Praesidio-Severity`` (mixed-case spelling) plus the lowercase
-``x-praesidio-decision: block`` / ``x-praesidio-policy`` companions.
+Asserts that every 403 block carries both ``X-Section-Reason`` AND
+``X-Section-Severity`` (mixed-case spelling) plus the lowercase
+``x-section-decision: block`` / ``x-section-policy`` companions.
 """
 from __future__ import annotations
 
@@ -14,10 +14,10 @@ import httpx
 import pytest
 from httpx import ASGITransport
 
-os.environ["PRAESIDIO_ENV"] = "development"
+os.environ["SECTION_ENV"] = "development"
 os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///:memory:"
 os.environ["REDIS_URL"] = ""
-os.environ["PRAESIDIO_API_KEYS"] = "test-key"
+os.environ["SECTION_API_KEYS"] = "test-key"
 os.environ["OPENAI_API_KEY"] = "sk-test"
 os.environ["ANTHROPIC_API_KEY"] = "sk-test-ant"
 
@@ -26,10 +26,10 @@ def _bundle(tmp: Path, *, route: str = "/v1/chat/completions") -> Path:
     bundle = tmp / "bundle"
     (bundle / "policies").mkdir(parents=True)
     (bundle / "manifest.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: Bundle\nmetadata: {name: t, version: '0'}\nspec: {includes: []}\n"
+        "apiVersion: section/v1\nkind: Bundle\nmetadata: {name: t, version: '0'}\nspec: {includes: []}\n"
     )
     (bundle / "models.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: ModelRegistry\nspec:\n"
+        "apiVersion: section/v1\nkind: ModelRegistry\nspec:\n"
         "  models:\n"
         "    - id: openai/gpt-4o-mini\n"
         "      provider: openai\n"
@@ -46,14 +46,14 @@ def _bundle(tmp: Path, *, route: str = "/v1/chat/completions") -> Path:
         "      auth: {type: env, var: ANTHROPIC_API_KEY}\n"
     )
     (bundle / "routes.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: Routes\nspec:\n"
+        "apiVersion: section/v1\nkind: Routes\nspec:\n"
         "  - inbound: {path: /v1/chat/completions, requested_model: gpt-4o-mini}\n"
         "    upstream: openai/gpt-4o-mini\n"
         "  - inbound: {path: /anthropic/v1/messages, requested_model: claude-3-haiku-20240307}\n"
         "    upstream: anthropic/claude-3-haiku-20240307\n"
     )
     (bundle / "policies" / "0001-block-secret.yaml").write_text(
-        "apiVersion: praesidio/v1\n"
+        "apiVersion: section/v1\n"
         "kind: Policy\n"
         "metadata: {id: sec, name: sec}\n"
         "spec:\n"
@@ -73,8 +73,8 @@ def _bundle(tmp: Path, *, route: str = "/v1/chat/completions") -> Path:
 
 
 def _reload_settings(bundle: Path) -> None:
-    os.environ["PRAESIDIO_POLICY_BUNDLE"] = str(bundle)
-    from praesidio_gateway.config import get_settings
+    os.environ["SECTION_POLICY_BUNDLE"] = str(bundle)
+    from section_gateway.config import get_settings
 
     get_settings.cache_clear()
 
@@ -83,7 +83,7 @@ def _reload_settings(bundle: Path) -> None:
 async def test_openai_block_has_reason_and_severity_headers():
     bundle = _bundle(Path(tempfile.mkdtemp()), route="/v1/chat/completions")
     _reload_settings(bundle)
-    from praesidio_gateway.main import create_app
+    from section_gateway.main import create_app
 
     app = create_app()
     async with httpx.AsyncClient(transport=ASGITransport(app=app), base_url="http://t") as c:
@@ -99,17 +99,17 @@ async def test_openai_block_has_reason_and_severity_headers():
                 },
             )
     assert r.status_code == 403, r.text
-    assert r.headers.get("x-praesidio-decision") == "block"
-    assert r.headers.get("X-Praesidio-Reason") == "AWS credential detected"
-    assert r.headers.get("X-Praesidio-Severity") == "critical"
-    assert r.headers.get("x-praesidio-policy") == "sec"
+    assert r.headers.get("x-section-decision") == "block"
+    assert r.headers.get("X-Section-Reason") == "AWS credential detected"
+    assert r.headers.get("X-Section-Severity") == "critical"
+    assert r.headers.get("x-section-policy") == "sec"
 
 
 @pytest.mark.asyncio
 async def test_anthropic_block_has_reason_and_severity_headers():
     bundle = _bundle(Path(tempfile.mkdtemp()), route="/anthropic/v1/messages")
     _reload_settings(bundle)
-    from praesidio_gateway.main import create_app
+    from section_gateway.main import create_app
 
     app = create_app()
     async with httpx.AsyncClient(transport=ASGITransport(app=app), base_url="http://t") as c:
@@ -125,10 +125,10 @@ async def test_anthropic_block_has_reason_and_severity_headers():
                 },
             )
     assert r.status_code == 403, r.text
-    assert r.headers.get("x-praesidio-decision") == "block"
-    assert r.headers.get("X-Praesidio-Reason") == "AWS credential detected"
-    assert r.headers.get("X-Praesidio-Severity") == "critical"
-    assert r.headers.get("x-praesidio-policy") == "sec"
+    assert r.headers.get("x-section-decision") == "block"
+    assert r.headers.get("X-Section-Reason") == "AWS credential detected"
+    assert r.headers.get("X-Section-Severity") == "critical"
+    assert r.headers.get("x-section-policy") == "sec"
 
 
 @pytest.mark.asyncio
@@ -137,7 +137,7 @@ async def test_openai_block_defaults_when_rule_has_no_reason_or_severity():
     tmp = Path(tempfile.mkdtemp())
     bundle = _bundle(tmp)
     (bundle / "policies" / "0001-block-secret.yaml").write_text(
-        "apiVersion: praesidio/v1\n"
+        "apiVersion: section/v1\n"
         "kind: Policy\n"
         "metadata: {id: sec, name: sec}\n"
         "spec:\n"
@@ -152,7 +152,7 @@ async def test_openai_block_defaults_when_rule_has_no_reason_or_severity():
         "  fail_mode: closed\n"
     )
     _reload_settings(bundle)
-    from praesidio_gateway.main import create_app
+    from section_gateway.main import create_app
 
     app = create_app()
     async with httpx.AsyncClient(transport=ASGITransport(app=app), base_url="http://t") as c:
@@ -167,5 +167,5 @@ async def test_openai_block_defaults_when_rule_has_no_reason_or_severity():
             )
     assert r.status_code == 403
     # Defaults: "blocked by policy" + "high"
-    assert r.headers.get("X-Praesidio-Reason") == "blocked by policy"
-    assert r.headers.get("X-Praesidio-Severity") == "high"
+    assert r.headers.get("X-Section-Reason") == "blocked by policy"
+    assert r.headers.get("X-Section-Severity") == "high"

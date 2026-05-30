@@ -1,4 +1,4 @@
-apiVersion: praesidio/v1
+apiVersion: section/v1
 kind: Mode
 metadata:
   id: healthcare
@@ -6,7 +6,7 @@ metadata:
   version: 0.1.0
   owner: privacy@acme.example
   maintainers:
-    - { name: "Praesidio Maintainers", email: "maintainers@praesidio.dev", org: "Praesidio" }
+    - { name: "Section Maintainers", email: "maintainers@section.dev", org: "Section" }
   description: |
     HIPAA Safe-Harbor + GDPR Art.9 tuning for clinical assistants,
     discharge-summary drafting, and de-identification of PHI for analytics.
@@ -14,7 +14,7 @@ metadata:
     in text; routes inference exclusively to BAA-covered upstreams; fails
     closed; logs every re-identification with treatment/payment/operations
     purpose declared by the caller.
-  homepage: https://praesidio.dev/modes/healthcare
+  homepage: https://section.dev/modes/healthcare
   license: Apache-2.0
 spec:
   extends: pii-strict

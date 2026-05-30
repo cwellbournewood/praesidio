@@ -6,8 +6,8 @@ import logging
 import pytest
 from sqlalchemy.ext.asyncio import create_async_engine
 
-from praesidio_gateway.audit.models import Base
-from praesidio_gateway.audit.writer import AuditWriter, _short_traceback
+from section_gateway.audit.models import Base
+from section_gateway.audit.writer import AuditWriter, _short_traceback
 
 
 def _raise_through_frame() -> None:
@@ -40,7 +40,7 @@ async def test_audit_insert_failure_logs_single_error_line(caplog):
     # A bad row missing required fields — SQLAlchemy will raise during insert.
     bad_row = {"tenant_id": "t"}  # missing decision, chain_hash, etc.
 
-    with caplog.at_level(logging.ERROR, logger="praesidio_gateway.audit.writer"):
+    with caplog.at_level(logging.ERROR, logger="section_gateway.audit.writer"):
         await writer._flush([bad_row])
 
     error_records = [r for r in caplog.records if r.levelno == logging.ERROR]

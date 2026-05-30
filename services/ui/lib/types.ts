@@ -5,7 +5,7 @@
 export type Decision = 'allow' | 'transform' | 'block' | 'error' | 'simulate';
 
 // The canonical wire-label union. Kept in lockstep with the Python
-// source of truth at `services/gateway/praesidio_gateway/dlp/display.py`
+// source of truth at `services/gateway/section_gateway/dlp/display.py`
 // and the TS twin at `services/ui/lib/labels.ts` (which carries the
 // full display metadata). `(string & {})` keeps the union open so new
 // labels round-trip through the UI without a type rebuild.

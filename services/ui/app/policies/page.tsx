@@ -27,7 +27,7 @@ export default function PoliciesPage() {
             </h1>
           </div>
           <a
-            href="https://github.com/your-org/praesidio-policies"
+            href="https://github.com/your-org/section-policies"
             className="inline-flex items-center gap-1 font-mono text-[10.5px] tracking-[0.14em] uppercase text-text-tertiary hover:text-accent"
           >
             open in git <ArrowUpRight className="h-3 w-3" />

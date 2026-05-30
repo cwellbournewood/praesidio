@@ -1,4 +1,4 @@
-"""Tests for the praesidio-edge-proxy CLI."""
+"""Tests for the section-edge-proxy CLI."""
 from __future__ import annotations
 
 import io
@@ -6,8 +6,8 @@ import json
 from contextlib import redirect_stdout
 from pathlib import Path
 
-from praesidio_edge_proxy import cli
-from praesidio_edge_proxy import status as status_mod
+from section_edge_proxy import cli
+from section_edge_proxy import status as status_mod
 
 # ---------------------------------------------------------------------------
 # Argument parsing
@@ -21,8 +21,8 @@ def test_parser_accepts_each_command():
 
 
 def test_start_args_override_env(monkeypatch):
-    monkeypatch.setenv("PRAESIDIO_EDGE_GATEWAY_URL", "http://env-gw")
-    monkeypatch.setenv("PRAESIDIO_EDGE_API_KEY", "env-key")
+    monkeypatch.setenv("SECTION_EDGE_GATEWAY_URL", "http://env-gw")
+    monkeypatch.setenv("SECTION_EDGE_API_KEY", "env-key")
 
     parser = cli._build_parser()
     args = parser.parse_args(
@@ -49,8 +49,8 @@ def test_start_args_override_env(monkeypatch):
 
 
 def test_start_args_default_to_env(monkeypatch):
-    monkeypatch.setenv("PRAESIDIO_EDGE_GATEWAY_URL", "http://env-gw")
-    monkeypatch.setenv("PRAESIDIO_EDGE_API_KEY", "env-key")
+    monkeypatch.setenv("SECTION_EDGE_GATEWAY_URL", "http://env-gw")
+    monkeypatch.setenv("SECTION_EDGE_API_KEY", "env-key")
 
     parser = cli._build_parser()
     args = parser.parse_args(["start"])
@@ -133,8 +133,8 @@ def test_install_ca_creates_files_and_calls_subprocess(tmp_path: Path, monkeypat
     with redirect_stdout(buf):
         rc = cli.cmd_install_ca(args)
     assert rc == 0
-    assert (tmp_path / "praesidio-ca.crt").exists()
-    assert (tmp_path / "praesidio-ca.key").exists()
+    assert (tmp_path / "section-ca.crt").exists()
+    assert (tmp_path / "section-ca.key").exists()
 
 
 def test_install_ca_propagates_subprocess_failure(tmp_path: Path, monkeypatch, capsys):
@@ -152,7 +152,7 @@ def test_install_ca_propagates_subprocess_failure(tmp_path: Path, monkeypatch, c
 
 
 def test_uninstall_ca_deletes_files(tmp_path: Path, monkeypatch):
-    from praesidio_edge_proxy import ca as ca_mod
+    from section_edge_proxy import ca as ca_mod
 
     ca_mod.ensure_ca(tmp_path)
     monkeypatch.setattr(
@@ -166,13 +166,13 @@ def test_uninstall_ca_deletes_files(tmp_path: Path, monkeypatch):
     args = type("A", (), {"ca_dir": tmp_path})()
     rc = cli.cmd_uninstall_ca(args)
     assert rc == 0
-    assert not (tmp_path / "praesidio-ca.crt").exists()
-    assert not (tmp_path / "praesidio-ca.key").exists()
+    assert not (tmp_path / "section-ca.crt").exists()
+    assert not (tmp_path / "section-ca.key").exists()
 
 
 def test_uninstall_ca_continues_even_if_subprocess_fails(tmp_path: Path, monkeypatch):
     """The on-disk material is cleaned even if the trust-store call fails."""
-    from praesidio_edge_proxy import ca as ca_mod
+    from section_edge_proxy import ca as ca_mod
 
     ca_mod.ensure_ca(tmp_path)
     monkeypatch.setattr(
@@ -186,7 +186,7 @@ def test_uninstall_ca_continues_even_if_subprocess_fails(tmp_path: Path, monkeyp
     args = type("A", (), {"ca_dir": tmp_path})()
     rc = cli.cmd_uninstall_ca(args)
     assert rc == 0  # we always succeed-on-cleanup
-    assert not (tmp_path / "praesidio-ca.crt").exists()
+    assert not (tmp_path / "section-ca.crt").exists()
 
 
 # ---------------------------------------------------------------------------

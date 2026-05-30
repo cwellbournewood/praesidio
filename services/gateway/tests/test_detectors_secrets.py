@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import pytest
 
-from praesidio_gateway.dlp.detectors import secrets as det_secrets
+from section_gateway.dlp.detectors import secrets as det_secrets
 
 
 @pytest.mark.asyncio

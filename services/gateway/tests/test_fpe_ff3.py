@@ -1,6 +1,6 @@
 """FF3-1 backend tests.
 
-Covers round-trip across the alphabets Praesidio uses in production
+Covers round-trip across the alphabets Section uses in production
 (digits-only for PAN-style numbers, uppercase ASCII, alphanumeric for
 IBAN bodies), parameter validation (tweak, key size, min_len), and
 tweak-sensitivity (changing the tweak MUST change the ciphertext).
@@ -12,8 +12,8 @@ import string
 
 import pytest
 
-from praesidio_gateway.anonymize import fpe
-from praesidio_gateway.anonymize._ff3 import FF3Cipher
+from section_gateway.anonymize import fpe
+from section_gateway.anonymize._ff3 import FF3Cipher
 
 # ---------------------------------------------------------------------------
 # Round-trip

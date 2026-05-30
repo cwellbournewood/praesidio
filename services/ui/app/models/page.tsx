@@ -2,7 +2,7 @@
 
 import useSWR from 'swr';
 import { Boxes } from 'lucide-react';
-import { ModelCard } from '@/components/praesidio/ModelCard';
+import { ModelCard } from '@/components/section/ModelCard';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Skeleton } from '@/components/ui/skeleton';
 import { swrFetcher } from '@/lib/api';

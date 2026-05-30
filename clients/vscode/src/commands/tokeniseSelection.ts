@@ -1,5 +1,5 @@
 /**
- * "Praesidio: Tokenise Selection" — companion to scan-selection.
+ * "Section: Tokenise Selection" — companion to scan-selection.
  *
  * Two entry-shapes:
  *  - No args: take editor selection, scan, and if action == "mask"
@@ -32,12 +32,12 @@ export function registerTokeniseSelection(
   deps: TokeniseSelectionDeps,
 ): vscode.Disposable {
   return vscode.commands.registerCommand(
-    "praesidio.tokeniseSelection",
+    "section.tokeniseSelection",
     async (args?: TokeniseArgs) => {
       const target = await resolveTarget(args);
       if (!target) {
         void vscode.window.showWarningMessage(
-          "Praesidio: no editor / range available.",
+          "Section: no editor / range available.",
         );
         return;
       }
@@ -45,7 +45,7 @@ export function registerTokeniseSelection(
       const text = editor.document.getText(range);
       if (!text.trim()) {
         void vscode.window.showWarningMessage(
-          "Praesidio: selection is empty.",
+          "Section: selection is empty.",
         );
         return;
       }
@@ -57,14 +57,14 @@ export function registerTokeniseSelection(
             text,
             client: "vscode",
             url: editor.document.uri.toString(),
-            model: "praesidio-edge-tokenise",
+            model: "section-edge-tokenise",
             session_id: `vscode-tokenise:${editor.document.uri.toString()}`,
           },
           cred,
         );
       } catch (err) {
         void vscode.window.showErrorMessage(
-          `Praesidio tokenise failed: ${(err as Error).message}`,
+          `Section tokenise failed: ${(err as Error).message}`,
         );
         return;
       }
@@ -83,14 +83,14 @@ export function registerTokeniseSelection(
 
       if (resp.action === "block") {
         await vscode.window.showErrorMessage(
-          `Praesidio blocked: ${resp.reason ?? "policy violation"}`,
+          `Section blocked: ${resp.reason ?? "policy violation"}`,
           { modal: true },
         );
         return;
       }
       if (resp.action === "allow") {
         void vscode.window.setStatusBarMessage(
-          "$(check) Praesidio: nothing to tokenise.",
+          "$(check) Section: nothing to tokenise.",
           3000,
         );
         return;
@@ -100,7 +100,7 @@ export function registerTokeniseSelection(
         eb.replace(range, sanitised);
       });
       void vscode.window.setStatusBarMessage(
-        `$(shield) Praesidio: tokenised ${resp.transforms.length} value(s).`,
+        `$(shield) Section: tokenised ${resp.transforms.length} value(s).`,
         4000,
       );
     },

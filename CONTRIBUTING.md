@@ -1,6 +1,6 @@
-# Contributing to Praesidio
+# Contributing to Section
 
-Thanks for considering a contribution. Praesidio is a security control
+Thanks for considering a contribution. Section is a security control
 plane — quality and clarity matter more than speed.
 
 ## Ground rules
@@ -14,8 +14,8 @@ plane — quality and clarity matter more than speed.
 ## Local dev
 
 ```bash
-git clone https://github.com/cwellbournewood/praesidio.git
-cd praesidio
+git clone https://github.com/cwellbournewood/section.git
+cd section
 cp .env.example .env
 make dev
 ```
@@ -38,4 +38,4 @@ workflow.
 
 By participating you agree to the [Contributor Covenant](CODE_OF_CONDUCT.md).
 Report concerns via [GitHub Private Vulnerability
-Reporting](https://github.com/cwellbournewood/praesidio/security/advisories/new).
+Reporting](https://github.com/cwellbournewood/section/security/advisories/new).

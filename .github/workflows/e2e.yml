@@ -2,7 +2,7 @@ name: e2e
 
 # End-to-end check: builds the gateway + UI images locally, brings up
 # the full docker-compose stack, runs the demo, then runs the
-# `praesidio-audit verify` CLI from lane A against the resulting
+# `section-audit verify` CLI from lane A against the resulting
 # audit chain. Artefacts capture /admin/events and /metrics for
 # post-mortem.
 
@@ -41,7 +41,7 @@ jobs:
           restore-keys: |
             buildx-${{ runner.os }}-
 
-      - name: Set up Python (for praesidio-audit CLI)
+      - name: Set up Python (for section-audit CLI)
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -87,26 +87,26 @@ jobs:
         run: |
           mkdir -p artifacts
           curl -fsS 'http://localhost:8080/admin/events?limit=200' \
-            -H 'Authorization: Bearer praesidio-demo-key' \
+            -H 'Authorization: Bearer section-demo-key' \
             -o artifacts/events.json
 
       - name: Capture /metrics
         run: curl -fsS http://localhost:8080/metrics -o artifacts/metrics.prom
 
-      - name: Install gateway (for praesidio-audit CLI)
+      - name: Install gateway (for section-audit CLI)
         working-directory: services/gateway
         run: uv sync --frozen
 
-      - name: Run praesidio-audit verify
+      - name: Run section-audit verify
         working-directory: services/gateway
         env:
-          PRAESIDIO_GATEWAY: http://localhost:8080
-          PRAESIDIO_API_KEY: praesidio-demo-key
-          # praesidio-audit CLI talks to Postgres directly (not the gateway)
+          SECTION_GATEWAY: http://localhost:8080
+          SECTION_API_KEY: section-demo-key
+          # section-audit CLI talks to Postgres directly (not the gateway)
           # to read + verify the hash chain. The dev compose stack maps
-          # postgres to localhost:5432 with the default praesidio creds.
-          DATABASE_URL: postgresql+psycopg://praesidio:praesidio@localhost:5432/praesidio
-        run: uv run praesidio-audit verify --tenant default --since 1h
+          # postgres to localhost:5432 with the default section creds.
+          DATABASE_URL: postgresql+psycopg://section:section@localhost:5432/section
+        run: uv run section-audit verify --tenant default --since 1h
 
       - name: Upload artefacts
         if: always()
@@ -159,10 +159,10 @@ jobs:
         continue-on-error: true
         working-directory: services/gateway
         env:
-          PRAESIDIO_ENV: development
+          SECTION_ENV: development
           DATABASE_URL: "sqlite+aiosqlite:///:memory:"
           REDIS_URL: ""
-          PRAESIDIO_API_KEYS: test-key
+          SECTION_API_KEYS: test-key
         run: uv run pytest tests/test_e2e_real_llm.py -v
 
       - name: Run Alembic regression suite

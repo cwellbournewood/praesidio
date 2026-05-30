@@ -16,8 +16,8 @@ import re
 import pytest
 from fastapi.testclient import TestClient
 
-from praesidio_gateway.dlp.display import LABELS, categories
-from praesidio_gateway.main import create_app
+from section_gateway.dlp.display import LABELS, categories
+from section_gateway.main import create_app
 
 _LABEL_ID_RE = re.compile(r"^[a-z][a-z0-9_]*\.[a-z0-9_]+$")
 

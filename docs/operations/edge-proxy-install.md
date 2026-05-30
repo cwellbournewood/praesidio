@@ -1,6 +1,6 @@
 # Local CA proxy — install + operate
 
-The local CA proxy (`praesidio-edge-proxy`) is the single highest-leverage
+The local CA proxy (`section-edge-proxy`) is the single highest-leverage
 edge component: every IDE assistant and CLI tool that respects
 `HTTPS_PROXY` is covered, no per-tool integration required.
 
@@ -29,15 +29,15 @@ The CA's private key never leaves the machine.
 
 ```powershell
 # Install the wheel (or run from the published container)
-pipx install praesidio-edge-proxy
+pipx install section-edge-proxy
 
 # One-time: generate + trust the CA (requires admin)
-praesidio-edge-proxy install-ca
+section-edge-proxy install-ca
 
 # Start the proxy
-praesidio-edge-proxy start `
+section-edge-proxy start `
     --gateway https://gateway.your-corp.com `
-    --api-key $env:PRAESIDIO_API_KEY `
+    --api-key $env:SECTION_API_KEY `
     --listen 127.0.0.1:8888
 ```
 
@@ -48,15 +48,15 @@ Set `HTTPS_PROXY` system-wide via
 ### macOS
 
 ```bash
-brew tap praesidio/tap
-brew install praesidio-edge-proxy
+brew tap section/tap
+brew install section-edge-proxy
 
 # Install the CA (will prompt for sudo)
-praesidio-edge-proxy install-ca
+section-edge-proxy install-ca
 
-praesidio-edge-proxy start \
+section-edge-proxy start \
     --gateway https://gateway.your-corp.com \
-    --api-key "$PRAESIDIO_API_KEY"
+    --api-key "$SECTION_API_KEY"
 ```
 
 Set `HTTPS_PROXY` in `~/.zshrc` / `~/.bash_profile`:
@@ -69,17 +69,17 @@ export HTTP_PROXY=http://127.0.0.1:8888
 ### Linux
 
 ```bash
-pipx install praesidio-edge-proxy
+pipx install section-edge-proxy
 
 # Debian / Ubuntu
-sudo praesidio-edge-proxy install-ca   # writes to /usr/local/share/ca-certificates/
+sudo section-edge-proxy install-ca   # writes to /usr/local/share/ca-certificates/
 
 # RHEL / Fedora
-sudo praesidio-edge-proxy install-ca   # writes to /etc/pki/ca-trust/source/anchors/
+sudo section-edge-proxy install-ca   # writes to /etc/pki/ca-trust/source/anchors/
 
-praesidio-edge-proxy start \
+section-edge-proxy start \
     --gateway https://gateway.your-corp.com \
-    --api-key "$PRAESIDIO_API_KEY"
+    --api-key "$SECTION_API_KEY"
 ```
 
 ## Per-tool configuration
@@ -149,10 +149,10 @@ gh copilot suggest "list all my open PRs"
 
 | Command | What it does |
 |---|---|
-| `praesidio-edge-proxy status` | Print JSON: pid, listen, gateway, hosts_intercepted, last_decision |
-| `praesidio-edge-proxy stop` | Graceful stop via PID file |
-| `praesidio-edge-proxy install-ca` | Generate (if missing) + install the local CA |
-| `praesidio-edge-proxy uninstall-ca` | Remove from trust store and delete the key |
+| `section-edge-proxy status` | Print JSON: pid, listen, gateway, hosts_intercepted, last_decision |
+| `section-edge-proxy stop` | Graceful stop via PID file |
+| `section-edge-proxy install-ca` | Generate (if missing) + install the local CA |
+| `section-edge-proxy uninstall-ca` | Remove from trust store and delete the key |
 
 ## Threat model
 
@@ -165,8 +165,8 @@ gh copilot suggest "list all my open PRs"
 ## Uninstall
 
 ```bash
-praesidio-edge-proxy uninstall-ca
-pipx uninstall praesidio-edge-proxy   # or brew uninstall, etc.
+section-edge-proxy uninstall-ca
+pipx uninstall section-edge-proxy   # or brew uninstall, etc.
 ```
 
 This removes the CA from the OS trust store **and** deletes the private

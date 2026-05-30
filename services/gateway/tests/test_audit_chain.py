@@ -1,7 +1,7 @@
 """Hash-chain continuity tests."""
 from __future__ import annotations
 
-from praesidio_gateway.audit.chain import compute_chain_hash, verify_chain
+from section_gateway.audit.chain import compute_chain_hash, verify_chain
 
 
 def _row(i: int, tenant: str = "t1") -> dict:

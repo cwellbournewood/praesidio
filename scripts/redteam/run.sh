@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Praesidio red-team runner.
+# Section red-team runner.
 #
 # Reads scripts/redteam/cases.json, POSTs each case through the gateway,
 # pulls the latest /admin/events row, and asserts on decision +
@@ -9,7 +9,7 @@
 #   scripts/redteam/run.sh [GATEWAY_URL]
 #
 # Env:
-#   PRAESIDIO_API_KEY   admin API key (default: praesidio-demo-key)
+#   SECTION_API_KEY   admin API key (default: section-demo-key)
 #   CASES_FILE          path to manifest (default: scripts/redteam/cases.json)
 #   JUNIT_OUT           if set, write JUnit XML for CI ingestion
 #
@@ -18,8 +18,8 @@
 set -eu
 
 GATEWAY_URL="${1:-${GATEWAY_URL:-http://localhost:8080}}"
-API_KEY="${PRAESIDIO_API_KEY:-${PRAESIDIO_API_KEYS%%,*}}"
-API_KEY="${API_KEY:-praesidio-demo-key}"
+API_KEY="${SECTION_API_KEY:-${SECTION_API_KEYS%%,*}}"
+API_KEY="${API_KEY:-section-demo-key}"
 CASES_FILE="${CASES_FILE:-scripts/redteam/cases.json}"
 JUNIT_OUT="${JUNIT_OUT:-}"
 
@@ -153,7 +153,7 @@ print(f":: summary — {passed} pass, {failed} fail, {total_elapsed:.1f}s total"
 
 if JUNIT:
     parts = [
-        f'<testsuite name="praesidio.redteam" tests="{len(results)}" '
+        f'<testsuite name="section.redteam" tests="{len(results)}" '
         f'failures="{failed}" time="{total_elapsed:.3f}">'
     ]
     for r in results:

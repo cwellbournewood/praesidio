@@ -1,4 +1,4 @@
-"""Praesidio gateway latency baseline.
+"""Section gateway latency baseline.
 
 Measures end-to-end latency of the gateway across three scenarios:
 
@@ -284,23 +284,23 @@ async def _asgi_client():
     from httpx import ASGITransport
 
     # Configure the gateway for in-process testing BEFORE we import it.
-    os.environ["PRAESIDIO_ENV"] = "development"
+    os.environ["SECTION_ENV"] = "development"
     os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///:memory:"
     os.environ["REDIS_URL"] = ""
-    os.environ["PRAESIDIO_API_KEYS"] = API_KEY
-    os.environ["PRAESIDIO_RATE_LIMIT_ENABLED"] = "false"
+    os.environ["SECTION_API_KEYS"] = API_KEY
+    os.environ["SECTION_RATE_LIMIT_ENABLED"] = "false"
     os.environ["OPENAI_API_KEY"] = "sk-bench"
 
-    tmp = Path(tempfile.mkdtemp(prefix="praesidio-perf-"))
+    tmp = Path(tempfile.mkdtemp(prefix="section-perf-"))
     bundle = tmp / "bundle"
     (bundle / "policies").mkdir(parents=True)
     (bundle / "manifest.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: Bundle\n"
+        "apiVersion: section/v1\nkind: Bundle\n"
         "metadata: {name: perf, version: '0'}\nspec: {includes: []}\n",
         encoding="utf-8",
     )
     (bundle / "models.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: ModelRegistry\nspec:\n"
+        "apiVersion: section/v1\nkind: ModelRegistry\nspec:\n"
         "  models:\n"
         "    - id: openai/gpt-4o-mini\n"
         "      provider: openai\n"
@@ -312,13 +312,13 @@ async def _asgi_client():
         encoding="utf-8",
     )
     (bundle / "routes.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: Routes\nspec:\n"
+        "apiVersion: section/v1\nkind: Routes\nspec:\n"
         "  - inbound: {path: /v1/chat/completions, requested_model: gpt-4o-mini}\n"
         "    upstream: openai/gpt-4o-mini\n",
         encoding="utf-8",
     )
     (bundle / "policies" / "0001-allow.yaml").write_text(
-        "apiVersion: praesidio/v1\nkind: Policy\n"
+        "apiVersion: section/v1\nkind: Policy\n"
         "metadata: {id: allow, name: allow}\n"
         "spec:\n"
         "  match: {routes: ['/v1/chat/completions'], tenants: ['*']}\n"
@@ -330,12 +330,12 @@ async def _asgi_client():
         "  fail_mode: closed\n",
         encoding="utf-8",
     )
-    os.environ["PRAESIDIO_POLICY_BUNDLE"] = str(bundle)
+    os.environ["SECTION_POLICY_BUNDLE"] = str(bundle)
 
     # Late imports so env is in place.
-    from praesidio_gateway.config import get_settings
+    from section_gateway.config import get_settings
     get_settings.cache_clear()
-    from praesidio_gateway.main import create_app
+    from section_gateway.main import create_app
 
     app = create_app()
 
@@ -476,7 +476,7 @@ def _write_markdown(report: dict[str, Any]) -> None:
         )
 
     lines = [
-        "# Praesidio Gateway — perf baseline",
+        "# Section Gateway — perf baseline",
         "",
         f"_Last run: {report['started_utc']}_",
         f"_Target: `{report['target']}` · "
@@ -501,7 +501,7 @@ def _write_markdown(report: dict[str, Any]) -> None:
         "* Default target is `asgi`: the gateway app is loaded in-process via",
         "  `httpx.ASGITransport`. The OpenAI upstream is replaced with a",
         "  `respx` stub returning a canned `chat.completion` body (~80",
-        "  tokens) or a 40-chunk SSE stream. This isolates Praesidio's own",
+        "  tokens) or a 40-chunk SSE stream. This isolates Section's own",
         "  overhead from upstream provider latency.",
         "* `--target http --url URL` measures a running gateway. The",
         "  operator is responsible for pointing the gateway at a mock",
@@ -526,7 +526,7 @@ def _write_markdown(report: dict[str, Any]) -> None:
         "  full SSE body in one shot, so TTFB ≈ total latency. With a real",
         "  upstream that drips chunks, TTFB is dominated by the upstream",
         "  model's first-token delay (typically 200–800 ms for hosted",
-        "  models); Praesidio's own added TTFB is < 5 ms.",
+        "  models); Section's own added TTFB is < 5 ms.",
         "",
         "## How to reproduce",
         "",
@@ -560,7 +560,7 @@ def _write_markdown(report: dict[str, Any]) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Praesidio perf baseline")
+    parser = argparse.ArgumentParser(description="Section perf baseline")
     parser.add_argument("--requests", "-n", type=int, default=500,
                         help="Requests per scenario (default 500)")
     parser.add_argument("--concurrency", "-c", type=int, default=8,

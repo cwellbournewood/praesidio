@@ -83,11 +83,11 @@ export function installPageBridge(handler: PageBridgeHandler): PageBridge {
 export function injectPageScript(): void {
   try {
     const src = chrome.runtime.getURL('content/inject.js');
-    if (document.querySelector(`script[data-praesidio-inject="${src}"]`)) return;
+    if (document.querySelector(`script[data-section-inject="${src}"]`)) return;
     const s = document.createElement('script');
     s.src = src;
     s.async = false;
-    s.dataset.praesidioInject = src;
+    s.dataset.sectionInject = src;
     (document.head ?? document.documentElement).appendChild(s);
     s.addEventListener('load', () => s.remove());
   } catch {

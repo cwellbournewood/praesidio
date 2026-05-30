@@ -6,11 +6,11 @@ import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { ArrowRight, Loader2, Volume2, VolumeX } from 'lucide-react';
-import { Waveform, type WaveformHandle } from '@/components/praesidio/Waveform';
-import { LiveClock } from '@/components/praesidio/LoginAmbient';
+import { Waveform, type WaveformHandle } from '@/components/section/Waveform';
+import { LiveClock } from '@/components/section/LoginAmbient';
 
 /**
- * Praesidio sign-in — minimal centered card above an arching string field
+ * Section sign-in — minimal centered card above an arching string field
  * that "plucks" with every keystroke. Strip everything else away. Let the
  * instrument speak.
  */
@@ -32,12 +32,12 @@ export default function LoginPage() {
   // start audio anyway, and silent-first respects shared-office contexts.
   const [sound, setSound] = useState(false);
   useEffect(() => {
-    setSound(localStorage.getItem('praesidio.login.sound') === 'on');
+    setSound(localStorage.getItem('section.login.sound') === 'on');
   }, []);
   const toggleSound = () => {
     setSound((s) => {
       const next = !s;
-      localStorage.setItem('praesidio.login.sound', next ? 'on' : 'off');
+      localStorage.setItem('section.login.sound', next ? 'on' : 'off');
       // Pluck once on enable so the user immediately hears the timbre.
       if (next) window.setTimeout(() => wave.current?.touch(undefined, 0.7), 30);
       return next;
@@ -88,7 +88,7 @@ export default function LoginPage() {
             §
           </span>
           <span className="font-serif italic text-[15px] text-text-primary">
-            Praesidio
+            Section
           </span>
         </div>
         <div className="flex items-center gap-4 font-mono text-[10px] tracking-[0.14em] uppercase text-text-tertiary">
@@ -132,7 +132,7 @@ export default function LoginPage() {
           </h1>
           <p className="font-serif italic text-text-tertiary text-[15px] text-center m-0 mt-1.5 mb-10">
             to{' '}
-            <span className="text-vermillion">praesidio</span>
+            <span className="text-vermillion">section</span>
             <span className="text-text-tertiary">.</span>
           </p>
 
@@ -219,7 +219,7 @@ export default function LoginPage() {
       {/* footer — single micro line */}
       <footer className="relative z-30 border-t border-border bg-canvas/95 backdrop-blur-[2px] h-7 flex items-center justify-between px-6 font-mono text-[10px] tracking-[0.18em] uppercase text-text-tertiary">
         <span>
-          realm <span className="text-text-primary">praesidio</span>
+          realm <span className="text-text-primary">section</span>
         </span>
         <span className="font-serif italic normal-case tracking-[0] text-[12px] text-text-secondary">
           Look before you ship.

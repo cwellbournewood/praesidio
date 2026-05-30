@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Verify the Python and TypeScript DLP-label display maps are in sync.
 
-Source of truth: ``services/gateway/praesidio_gateway/dlp/display.py``
+Source of truth: ``services/gateway/section_gateway/dlp/display.py``
 TypeScript twin: ``services/ui/lib/labels.ts``
 
 We compare the *id*, *name*, *short*, *category*, *severity*, and the
@@ -25,7 +25,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-PY_FILE = ROOT / "services/gateway/praesidio_gateway/dlp/display.py"
+PY_FILE = ROOT / "services/gateway/section_gateway/dlp/display.py"
 TS_FILE = ROOT / "services/ui/lib/labels.ts"
 
 # Fields we require to match exactly across the two files.
@@ -37,7 +37,7 @@ def load_python_map() -> dict[str, dict[str, str]]:
     snippet = (
         "import json, sys; "
         "sys.path.insert(0, 'services/gateway'); "
-        "from praesidio_gateway.dlp.display import LABELS; "
+        "from section_gateway.dlp.display import LABELS; "
         "print(json.dumps({k: v.to_dict() for k, v in LABELS.items()}))"
     )
     result = subprocess.run(

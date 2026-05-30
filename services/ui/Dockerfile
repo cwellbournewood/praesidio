@@ -25,12 +25,12 @@ ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
 # Non-root user
-RUN addgroup -g 1001 -S praesidio && adduser -S praesidio -u 1001 -G praesidio
+RUN addgroup -g 1001 -S section && adduser -S section -u 1001 -G section
 
-COPY --from=build --chown=praesidio:praesidio /app/public ./public
-COPY --from=build --chown=praesidio:praesidio /app/.next/standalone ./
-COPY --from=build --chown=praesidio:praesidio /app/.next/static ./.next/static
+COPY --from=build --chown=section:section /app/public ./public
+COPY --from=build --chown=section:section /app/.next/standalone ./
+COPY --from=build --chown=section:section /app/.next/static ./.next/static
 
-USER praesidio
+USER section
 EXPOSE 3000
 CMD ["node", "server.js"]

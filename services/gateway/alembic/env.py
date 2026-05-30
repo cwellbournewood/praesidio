@@ -1,4 +1,4 @@
-"""Alembic environment for Praesidio gateway.
+"""Alembic environment for Section gateway.
 
 This script supports two operating modes:
 
@@ -12,7 +12,7 @@ This script supports two operating modes:
 DSN resolution order:
 
 1. ``-x url=...`` on the command line (highest priority).
-2. ``PRAESIDIO_DATABASE_URL`` environment variable.
+2. ``SECTION_DATABASE_URL`` environment variable.
 3. ``DATABASE_URL`` environment variable.
 4. The placeholder ``sqlalchemy.url`` from ``alembic.ini`` (lowest).
 """
@@ -35,7 +35,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 try:
-    from praesidio_gateway.audit.models import Base  # noqa: E402
+    from section_gateway.audit.models import Base  # noqa: E402
 
     target_metadata = Base.metadata
 except Exception:  # pragma: no cover — autogenerate is optional
@@ -58,13 +58,13 @@ def _resolve_url() -> str:
     cmd_kwargs = context.get_x_argument(as_dictionary=True)
     raw = (
         cmd_kwargs.get("url")
-        or os.environ.get("PRAESIDIO_DATABASE_URL")
+        or os.environ.get("SECTION_DATABASE_URL")
         or os.environ.get("DATABASE_URL")
         or config.get_main_option("sqlalchemy.url")
     )
     if not raw:
         raise RuntimeError(
-            "No database URL configured. Set PRAESIDIO_DATABASE_URL or pass "
+            "No database URL configured. Set SECTION_DATABASE_URL or pass "
             "-x url=... to `alembic`."
         )
     # SQLAlchemy async drivers must be swapped for their sync counterparts.

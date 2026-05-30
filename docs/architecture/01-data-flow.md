@@ -3,7 +3,7 @@
 ```
 sequenceDiagram
     actor U as User / IDE / Agent
-    participant G as Praesidio Gateway
+    participant G as Section Gateway
     participant ID as Identity Resolver
     participant PE as Policy Engine
     participant DLP as DLP Pipeline

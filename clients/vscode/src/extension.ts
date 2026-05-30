@@ -1,5 +1,5 @@
 /**
- * Praesidio VS Code extension — activation entry point.
+ * Section VS Code extension — activation entry point.
  *
  * Wires together:
  *   - settings reader + change subscriber
@@ -23,7 +23,7 @@ import { registerToggleProxy } from "./commands/toggleProxy.js";
 import { registerTokeniseSelection } from "./commands/tokeniseSelection.js";
 import { TokeniseCodeActionProvider } from "./codeActions/tokeniseProvider.js";
 import { DecisionStore, DecisionsTreeProvider } from "./decisionsView.js";
-import { createPraesidioDiagnostics } from "./diagnostics/provider.js";
+import { createSectionDiagnostics } from "./diagnostics/provider.js";
 import { DocumentScanner } from "./diagnostics/scanner.js";
 import { GatewayClient } from "./gateway.js";
 import { ProxyController } from "./proxy/controller.js";
@@ -32,7 +32,7 @@ import {
   readSettings,
   toVscodeSeverity,
 } from "./settings.js";
-import { PraesidioStatusBar } from "./statusbar.js";
+import { SectionStatusBar } from "./statusbar.js";
 
 export function activate(context: vscode.ExtensionContext): void {
   let settings = readSettings();
@@ -47,28 +47,28 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(treeProvider);
   context.subscriptions.push(
     vscode.window.registerTreeDataProvider(
-      "praesidio.decisions",
+      "section.decisions",
       treeProvider,
     ),
   );
   context.subscriptions.push(
-    vscode.commands.registerCommand("praesidio.refreshDecisions", () => {
+    vscode.commands.registerCommand("section.refreshDecisions", () => {
       // Tree refreshes from store events; nothing else to do.
     }),
   );
   context.subscriptions.push(
-    vscode.commands.registerCommand("praesidio.clearDecisions", () => {
+    vscode.commands.registerCommand("section.clearDecisions", () => {
       store.clear();
     }),
   );
 
   // -- status bar ----------------------------------------------------------
-  const statusBar = new PraesidioStatusBar(store, settings);
+  const statusBar = new SectionStatusBar(store, settings);
   context.subscriptions.push(statusBar);
   void auth.hasCredential().then((b) => statusBar.setSignedIn(b));
 
   // -- diagnostics ---------------------------------------------------------
-  const diagnostics = createPraesidioDiagnostics();
+  const diagnostics = createSectionDiagnostics();
   context.subscriptions.push(diagnostics);
   const scanner = new DocumentScanner({
     client,
@@ -165,7 +165,7 @@ export function activate(context: vscode.ExtensionContext): void {
         })
         .catch((err) => {
           void vscode.window.showWarningMessage(
-            `Praesidio: proxy auto-start failed — ${(err as Error).message}`,
+            `Section: proxy auto-start failed — ${(err as Error).message}`,
           );
         });
     });

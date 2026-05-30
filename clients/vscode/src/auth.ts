@@ -1,29 +1,29 @@
 /**
- * Credential management for the Praesidio extension.
+ * Credential management for the Section extension.
  *
  *  - Stores API keys + OIDC bearer tokens in `context.secrets`
  *    (VS Code SecretStorage — backed by the OS keychain).
  *  - Implements the RFC 8628 OIDC device-code flow for enterprise
  *    sign-in.
  *
- * SecretStorage keys (all under the "praesidio.*" namespace):
+ * SecretStorage keys (all under the "section.*" namespace):
  *
- *  praesidio.apiKey      — raw X-API-Key value
- *  praesidio.accessToken — OIDC access token (short TTL)
- *  praesidio.refreshToken — OIDC refresh token (long TTL)
- *  praesidio.tenantId    — tenant claim from the JWT
- *  praesidio.expiresAt   — ms epoch when access token expires
+ *  section.apiKey      — raw X-API-Key value
+ *  section.accessToken — OIDC access token (short TTL)
+ *  section.refreshToken — OIDC refresh token (long TTL)
+ *  section.tenantId    — tenant claim from the JWT
+ *  section.expiresAt   — ms epoch when access token expires
  */
 
 import * as vscode from "vscode";
 
 import type { Credential } from "./gateway.js";
 
-const KEY_API = "praesidio.apiKey";
-const KEY_ACCESS = "praesidio.accessToken";
-const KEY_REFRESH = "praesidio.refreshToken";
-const KEY_TENANT = "praesidio.tenantId";
-const KEY_EXPIRES = "praesidio.expiresAt";
+const KEY_API = "section.apiKey";
+const KEY_ACCESS = "section.accessToken";
+const KEY_REFRESH = "section.refreshToken";
+const KEY_TENANT = "section.tenantId";
+const KEY_EXPIRES = "section.expiresAt";
 
 export interface DeviceCodeChallenge {
   device_code: string;
@@ -161,7 +161,7 @@ export class AuthManager {
     const open = opts.openExternal ?? vscode.env.openExternal;
     await open(vscode.Uri.parse(verify));
     void vscode.window.showInformationMessage(
-      `Praesidio: enter code ${challenge.user_code} in the browser to finish sign-in.`,
+      `Section: enter code ${challenge.user_code} in the browser to finish sign-in.`,
     );
 
     // Poll for the token.
@@ -232,7 +232,7 @@ function sleep(ms: number): Promise<void> {
 
 /**
  * Best-effort JWT tenant extraction. Reads the `tenant`, `tid`, or
- * `praesidio_tenant` claim from an unverified JWT. We do NOT validate
+ * `section_tenant` claim from an unverified JWT. We do NOT validate
  * the signature here — the gateway does that on every request.
  */
 export function decodeTenantClaim(token: string): string | undefined {
@@ -247,7 +247,7 @@ export function decodeTenantClaim(token: string): string | undefined {
     ).toString("utf-8");
     const claims = JSON.parse(json) as Record<string, unknown>;
     const t =
-      claims["praesidio_tenant"] ?? claims["tenant"] ?? claims["tid"];
+      claims["section_tenant"] ?? claims["tenant"] ?? claims["tid"];
     return typeof t === "string" ? t : undefined;
   } catch {
     return undefined;

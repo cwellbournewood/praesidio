@@ -7,14 +7,14 @@ variable "location" {
 variable "name_prefix" {
   description = "Prefix for all resources."
   type        = string
-  default     = "praesidio"
+  default     = "section"
 }
 
 variable "tags" {
   description = "Tags applied to all resources."
   type        = map(string)
   default = {
-    project    = "praesidio"
+    project    = "section"
     managed_by = "terraform"
   }
 }
@@ -70,7 +70,7 @@ variable "postgres_storage_mb" {
 variable "postgres_admin_user" {
   description = "Postgres admin user."
   type        = string
-  default     = "praesidio"
+  default     = "section"
 }
 
 variable "redis_sku" {

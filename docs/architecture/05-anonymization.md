@@ -25,7 +25,7 @@ did.
 
 ## Token vault
 
-Storage: Redis, encrypted at rest with `PRAESIDIO_VAULT_KEY` (AES-256-GCM,
+Storage: Redis, encrypted at rest with `SECTION_VAULT_KEY` (AES-256-GCM,
 per-tenant derived key via HKDF). Schema:
 
 ```
@@ -63,8 +63,8 @@ to handle these well; we benchmark against
 ## FPE (FF3-1)
 
 NIST SP 800-38G FF3-1 implementation (see
-`services/gateway/praesidio_gateway/anonymize/fpe.py`). Tweak per entity-type
-+ tenant; key from `PRAESIDIO_FPE_KEY`. Alphabets:
+`services/gateway/section_gateway/anonymize/fpe.py`). Tweak per entity-type
++ tenant; key from `SECTION_FPE_KEY`. Alphabets:
 
 | Entity | Alphabet | Min length |
 |---|---|---|

@@ -17,7 +17,7 @@ test.describe('chatgpt fixture intercept', () => {
     page,
   }) => {
     await page.goto('chatgpt.html');
-    // Inject the praesidio intercept BEFORE the fixture's own
+    // Inject the section intercept BEFORE the fixture's own
     // click handler can run. We do this by replacing the send button
     // with a clone (which drops its event listeners), then attaching
     // our own click handler that mimics the real flow: scan, rewrite
@@ -32,7 +32,7 @@ test.describe('chatgpt fixture intercept', () => {
       const newBtn = oldBtn.cloneNode(true) as HTMLButtonElement;
       oldBtn.replaceWith(newBtn);
       newBtn.addEventListener('click', () => {
-        if (newBtn.dataset.praesidioPass) {
+        if (newBtn.dataset.sectionPass) {
           setTimeout(() => {
             out.textContent = `Assistant: I received ${ta.value}`;
           }, 50);
@@ -43,9 +43,9 @@ test.describe('chatgpt fixture intercept', () => {
           '<EMAIL_A2B3>',
         );
         ta.value = sanitised;
-        newBtn.dataset.praesidioPass = '1';
+        newBtn.dataset.sectionPass = '1';
         newBtn.click();
-        delete newBtn.dataset.praesidioPass;
+        delete newBtn.dataset.sectionPass;
       });
     });
 

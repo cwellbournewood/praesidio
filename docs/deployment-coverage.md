@@ -1,10 +1,10 @@
 # Deployment & coverage
 
 No single install point catches every way an employee, app, or agent might
-call an AI system. Praesidio's job is to make the *union* of enforcement
+call an AI system. Section's job is to make the *union* of enforcement
 points cheap to deploy, easy to operate, and impossible to silently bypass.
 
-This page explains how Praesidio is installed across an enterprise, in
+This page explains how Section is installed across an enterprise, in
 what order to roll the pieces out, and how the product is engineered for
 sub-five-minute Time-To-First-Value (TTFV) on the first install.
 
@@ -32,7 +32,7 @@ sub-five-minute Time-To-First-Value (TTFV) on the first install.
 
 ```
                        ┌───────────────────────────────────────┐
-                       │          Praesidio Control Plane       │
+                       │          Section Control Plane       │
                        │  policy · vault · DLP · audit · lineage│
                        └───────────────────────────────────────┘
                                   ▲      ▲      ▲      ▲      ▲
@@ -56,7 +56,7 @@ sub-five-minute Time-To-First-Value (TTFV) on the first install.
 |---|-----|---------------|----------------|-------------|--------------|--------|
 | 1 | **Reverse-proxy gateway** | API SDK calls (`api.openai.com`-shaped) | env var swap (`OPENAI_BASE_URL`) | server-side, hard | fail-closed (configurable) | shipped |
 | 2 | **Forward proxy / SWG** | TLS-MITM browser → AI web UI | MDM-pushed root CA + SWG rule | server-side, hard | fail-open (SWG-default) | alpha |
-| 3 | **Browser extension + local CA edge-proxy** | client-side textarea + `HTTPS_PROXY` | Chrome Enterprise / Edge GPO; `pip install praesidio-edge-proxy` | client-side, soft | telemetry-only fallback | shipped |
+| 3 | **Browser extension + local CA edge-proxy** | client-side textarea + `HTTPS_PROXY` | Chrome Enterprise / Edge GPO; `pip install section-edge-proxy` | client-side, soft | telemetry-only fallback | shipped |
 | 4 | **IDE plugin** | VS Code / JetBrains commands + diagnostics | VSIX / JetBrains marketplace | client-side, inline | telemetry-only fallback | shipped |
 | 5 | **MCP / agent middleware** | MCP tool calls + agent prompts | install as MCP server, wrap agent runtime | server-side, hard | fail-closed | alpha (tool allowlist enforced; capability broker architected) |
 
@@ -68,8 +68,8 @@ Bedrock client libraries, etc. is redirected by changing one environment
 variable:
 
 ```bash
-OPENAI_BASE_URL=https://praesidio.corp/v1
-OPENAI_API_KEY=<praesidio-issued-key>
+OPENAI_BASE_URL=https://section.corp/v1
+OPENAI_API_KEY=<section-issued-key>
 ```
 
 The gateway authenticates the principal, inspects the body, transforms
@@ -86,7 +86,7 @@ turns on.
 A `CONNECT`-aware HTTPS proxy with TLS-MITM. The corp root CA is pushed
 via MDM / Intune / Jamf; the SWG (Zscaler, Netskope, Cisco Umbrella, Palo
 Alto Prisma, in-house Squid) is configured to forward egress to a
-curated list of AI domains through Praesidio.
+curated list of AI domains through Section.
 
 This is the only layer that catches employees pasting into consumer AI
 web UIs without going through an SDK — and the politically hardest to
@@ -100,11 +100,11 @@ network-side MITM is not viable. Two artefacts:
 - **Manifest V3 browser extension** (`clients/browser/`) covering
   ChatGPT, Claude, Gemini, Copilot, Perplexity, and Mistral chat. Pushed
   via Chrome Enterprise / Edge `ExtensionInstallForcelist`.
-- **`praesidio-edge-proxy`** (`services/edge-proxy/`) — a local CA proxy
+- **`section-edge-proxy`** (`services/edge-proxy/`) — a local CA proxy
   that any `HTTPS_PROXY`-respecting tool can use. One install covers
   Cursor, Claude Code, Continue, aider, Cline, Copilot CLI, and Zed.
 
-Failure mode is telemetry-only: if the client can't reach Praesidio it
+Failure mode is telemetry-only: if the client can't reach Section it
 logs locally and lets the prompt through, because client-side blocking
 that breaks the user's workflow is worse than a missed event.
 
@@ -120,7 +120,7 @@ plugin maps cleanly to commit history and reviewer identity.
 
 ### 2.5 PEP 5 — MCP / agent middleware
 
-Praesidio ships as an MCP server that wraps tool invocations and as
+Section ships as an MCP server that wraps tool invocations and as
 middleware for the Claude Agent SDK, OpenAI Agents SDK, and LangGraph.
 Every tool call, prompt expansion, and inter-agent message is inspected.
 
@@ -205,7 +205,7 @@ visible, signed, lineage-attached *decision*.
 - **Mock-mode UI.** If the gateway is unreachable, the UI degrades to
   synthetic data so the operator can navigate the product while the
   gateway is still pulling images.
-- **Single-tenant default key.** `PRAESIDIO_API_KEYS=praesidio-demo-key`
+- **Single-tenant default key.** `SECTION_API_KEYS=section-demo-key`
   is baked into `.env.example`; the operator never has to mint a key for
   the quickstart.
 - **Inline demo runner in the wizard.** The onboarding page POSTs the
@@ -253,7 +253,7 @@ Helm chart with HA gateway, External-Secrets-backed vault,
 NetworkPolicies, PodSecurity, HPA, PDBs, Prometheus + Grafana
 dashboards. Terraform reference modules for AWS / Azure / GCP create
 the cluster, KMS keys, RDS Postgres, ElastiCache Redis, and the
-Praesidio Helm release. For real production.
+Section Helm release. For real production.
 
 The onboarding wizard surfaces the right docs at the right time. It
 does **not** try to be a cluster installer — Helm + Terraform are the
@@ -273,7 +273,7 @@ console:
 - **Identity** (`/settings?tab=identity`) — OIDC configuration once the
   operator is past the demo.
 - **Bundles** — policy bundles are pulled from a signed (cosign) git
-  repository; the onboarding wizard's last step is "point Praesidio at
+  repository; the onboarding wizard's last step is "point Section at
   your policy repo" but it ships with a sane default so this is
   optional.
 
@@ -281,7 +281,7 @@ console:
 
 Classification is one of the genuinely hard parts of any DLP product —
 what counts as "sensitive" varies by jurisdiction, industry, and team.
-Praesidio doesn't ask the operator to declare an industry up front,
+Section doesn't ask the operator to declare an industry up front,
 because (a) most orgs span several, and (b) self-declaration is the
 wrong shape of question to front-load on Day 0.
 
@@ -362,17 +362,17 @@ The wizard can be re-opened from `/settings` any time.
 ## 9. Anti-patterns we explicitly avoid
 
 - **The 10-step CLI quickstart.** Every additional command halves the
-  audience. Praesidio's quickstart is one compose command + one curl.
+  audience. Section's quickstart is one compose command + one curl.
 - **The "configure your tenant first" screen.** Tenancy, RBAC, and SSO
   are Day-1+ concerns; forcing them on Day-0 destroys TTFV.
-- **The dark, illegible ops UI.** Praesidio's console is light-first on
+- **The dark, illegible ops UI.** Section's console is light-first on
   every screen, including the onboarding wizard.
 - **The hidden "what about consumer-AI" gap.** The Coverage page
   surfaces uninstrumented populations rather than letting them be
   invisible.
-- **The proprietary agent stack.** Praesidio integrates with whatever
+- **The proprietary agent stack.** Section integrates with whatever
   agent framework the customer already uses (Claude Agent SDK, OpenAI
-  Agents, LangGraph, MCP). We do not require them to adopt a Praesidio
+  Agents, LangGraph, MCP). We do not require them to adopt a Section
   runtime.
 
 ## 10. Reading guide

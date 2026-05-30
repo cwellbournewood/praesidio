@@ -37,11 +37,11 @@ regressions in how the gateway parses, anonymises, and restores them.
 
    ```bash
    export OPENAI_API_KEY=sk-...          # use a low-spend test key
-   export PRAESIDIO_API_KEYS=recorder
-   export PRAESIDIO_POLICY_BUNDLE=$PWD/examples/policies
-   export PRAESIDIO_ENV=development
+   export SECTION_API_KEYS=recorder
+   export SECTION_POLICY_BUNDLE=$PWD/examples/policies
+   export SECTION_ENV=development
    cd services/gateway
-   uv run praesidio-gateway
+   uv run section-gateway
    ```
 
 3. **Send the inbound request you want to capture** through the gateway

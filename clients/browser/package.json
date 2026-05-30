@@ -1,9 +1,9 @@
 {
-  "name": "@praesidio/browser-extension",
+  "name": "@section/browser-extension",
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Praesidio browser extension (MV3) — scan + mask prompts for consumer AI sites before they leave the browser.",
+  "description": "Section browser extension (MV3) — scan + mask prompts for consumer AI sites before they leave the browser.",
   "license": "Apache-2.0",
   "scripts": {
     "dev": "vite build --watch --mode development",

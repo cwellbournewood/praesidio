@@ -16,8 +16,8 @@ import httpx
 import pytest
 import respx
 
-from praesidio_gateway.proxy.base import UpstreamRequest
-from praesidio_gateway.proxy.bedrock import BedrockAdapter
+from section_gateway.proxy.base import UpstreamRequest
+from section_gateway.proxy.bedrock import BedrockAdapter
 
 
 class _StubSigner:

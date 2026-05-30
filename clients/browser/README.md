@@ -1,8 +1,8 @@
-# Praesidio browser extension
+# Section browser extension
 
 Manifest V3 extension for Chrome / Edge / Brave / Arc / Opera. Scans
 prompts entered on consumer AI sites against your operator-deployed
-[Praesidio gateway](../../services/gateway/) and rewrites or blocks them
+[Section gateway](../../services/gateway/) and rewrites or blocks them
 before they leave the tab.
 
 Install + operate guide: [`docs/operations/browser-extension-install.md`](../../docs/operations/browser-extension-install.md).
@@ -51,7 +51,7 @@ Open the popup and either:
 For enterprises that prefer their own update server:
 
 ```bash
-npm run build:crx     # produces dist-zip/praesidio-browser-extension-<ver>.crx
+npm run build:crx     # produces dist-zip/section-browser-extension-<ver>.crx
 ```
 
 Drop the `.crx` and an `updates.xml` manifest on an internal HTTPS host.
@@ -74,7 +74,7 @@ picture. Headlines:
 - Secrets (API key, OIDC tokens) live in `chrome.storage.local` and are
   **never** synced across the user's Google Account. Settings (gateway
   URL, per-site toggles) live in `chrome.storage.sync`.
-- The background worker fires a `__praesidio_heartbeat__` scan every 5
+- The background worker fires a `__section_heartbeat__` scan every 5
   minutes. SIEM dashboards can alert on heartbeat gaps to detect agents
   taken offline.
 - The signed `.crx` artifact uses `cosign keyless` + SLSA-3 provenance
@@ -82,7 +82,7 @@ picture. Headlines:
 
 ## Screenshots
 
-The popup is a 380px-wide React panel on the Praesidio ivory canvas
+The popup is a 380px-wide React panel on the Section ivory canvas
 (`#FAFAF7`) with the indigo accent (`#4F46E5`). It shows, from top to
 bottom:
 
@@ -113,7 +113,7 @@ Configuration:
 
 | Env var | Default | Purpose |
 |---|---|---|
-| `PRAESIDIO_CRX_KEY` | `./key.pem` | Path to RSA key for `.crx` signing. |
+| `SECTION_CRX_KEY` | `./key.pem` | Path to RSA key for `.crx` signing. |
 
 ## License
 

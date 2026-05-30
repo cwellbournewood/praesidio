@@ -1,5 +1,5 @@
 ################################################################################
-# Praesidio reference Terraform — Azure
+# Section reference Terraform — Azure
 #
 # !!! STUB QUALITY !!! Reference starting point, not turnkey production.
 ################################################################################
@@ -151,8 +151,8 @@ resource "azurerm_postgresql_flexible_server" "this" {
   depends_on = [azurerm_private_dns_zone_virtual_network_link.postgres]
 }
 
-resource "azurerm_postgresql_flexible_server_database" "praesidio" {
-  name      = "praesidio"
+resource "azurerm_postgresql_flexible_server_database" "section" {
+  name      = "section"
   server_id = azurerm_postgresql_flexible_server.this.id
   collation = "en_US.utf8"
   charset   = "UTF8"
@@ -228,7 +228,7 @@ resource "azurerm_kubernetes_cluster" "this" {
 }
 
 ################################################################################
-# Federated identity for the praesidio gateway ServiceAccount (Workload Identity)
+# Federated identity for the section gateway ServiceAccount (Workload Identity)
 ################################################################################
 
 resource "azurerm_user_assigned_identity" "gateway" {
@@ -243,7 +243,7 @@ resource "azurerm_federated_identity_credential" "gateway" {
   parent_id           = azurerm_user_assigned_identity.gateway.id
   audience            = ["api://AzureADTokenExchange"]
   issuer              = azurerm_kubernetes_cluster.this.oidc_issuer_url
-  subject             = "system:serviceaccount:praesidio:praesidio"
+  subject             = "system:serviceaccount:section:section"
 }
 
 resource "azurerm_role_assignment" "gateway_kv_secrets" {

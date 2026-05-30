@@ -9,7 +9,7 @@ import httpx
 import pytest
 import respx
 
-from praesidio_gateway.audit.sinks.webhook import SiemWebhookSink, sign
+from section_gateway.audit.sinks.webhook import SiemWebhookSink, sign
 
 
 def test_sign_matches_known_hmac_sha256():
@@ -33,7 +33,7 @@ async def test_webhook_fires_with_signature():
 
     def _handler(request: httpx.Request) -> httpx.Response:
         captured["body"] = request.content
-        captured["sig"] = request.headers.get("x-praesidio-signature")
+        captured["sig"] = request.headers.get("x-section-signature")
         captured["ct"] = request.headers.get("content-type")
         return httpx.Response(200, text="ok")
 
@@ -65,7 +65,7 @@ async def test_webhook_emits_without_signature_when_no_secret():
     captured: dict[str, object] = {}
 
     def _handler(request: httpx.Request) -> httpx.Response:
-        captured["sig"] = request.headers.get("x-praesidio-signature")
+        captured["sig"] = request.headers.get("x-section-signature")
         return httpx.Response(200)
 
     with respx.mock(assert_all_called=True) as router:

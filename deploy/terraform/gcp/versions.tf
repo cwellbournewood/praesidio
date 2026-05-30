@@ -19,6 +19,6 @@ terraform {
   # State backend — uncomment and configure for your environment.
   # backend "gcs" {
   #   bucket = "my-tf-state"
-  #   prefix = "praesidio/gcp"
+  #   prefix = "section/gcp"
   # }
 }

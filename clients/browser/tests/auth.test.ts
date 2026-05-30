@@ -6,7 +6,7 @@ import {
 } from '../src/lib/auth.js';
 
 const ISSUER = 'https://idp.example.com';
-const CLIENT_ID = 'praesidio-edge';
+const CLIENT_ID = 'section-edge';
 
 function makeFetch(responses: Array<{ url: string; status: number; body: unknown }>) {
   let i = 0;

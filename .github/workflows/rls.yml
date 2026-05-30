@@ -9,7 +9,7 @@ on:
     paths:
       - "services/gateway/migrations/**"
       - "services/gateway/alembic/**"
-      - "services/gateway/praesidio_gateway/audit/**"
+      - "services/gateway/section_gateway/audit/**"
       - "services/gateway/tests/test_rls_postgres.py"
       - ".github/workflows/rls.yml"
   push:
@@ -33,13 +33,13 @@ jobs:
       postgres:
         image: postgres:16-alpine
         env:
-          POSTGRES_USER: praesidio
-          POSTGRES_PASSWORD: praesidio
-          POSTGRES_DB: praesidio
+          POSTGRES_USER: section
+          POSTGRES_PASSWORD: section
+          POSTGRES_DB: section
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U praesidio"
+          --health-cmd "pg_isready -U section"
           --health-interval 5s
           --health-timeout 3s
           --health-retries 10
@@ -65,30 +65,30 @@ jobs:
       - name: Apply schema via Alembic
         working-directory: services/gateway
         env:
-          PRAESIDIO_DATABASE_URL: postgresql+psycopg://praesidio:praesidio@localhost:5432/praesidio
+          SECTION_DATABASE_URL: postgresql+psycopg://section:section@localhost:5432/section
         run: uv run alembic upgrade head
 
       - name: Provision app role for "no setting -> no rows" test
         env:
-          PGPASSWORD: praesidio
+          PGPASSWORD: section
         run: |
-          psql -h localhost -U praesidio -d praesidio <<'SQL'
+          psql -h localhost -U section -d section <<'SQL'
               -- App role exercises the policy without owner bypass.
-              CREATE ROLE praesidio_app_test NOLOGIN;
+              CREATE ROLE section_app_test NOLOGIN;
               GRANT SELECT, INSERT, UPDATE, DELETE
                   ON audit_events, lineage_nodes, lineage_edges
-                  TO praesidio_app_test;
-              -- Allow the test connection (which logs in as praesidio) to
-              -- SET ROLE praesidio_app_test.
-              GRANT praesidio_app_test TO praesidio;
+                  TO section_app_test;
+              -- Allow the test connection (which logs in as section) to
+              -- SET ROLE section_app_test.
+              GRANT section_app_test TO section;
           SQL
 
       - name: Run RLS tests
         working-directory: services/gateway
         env:
-          PRAESIDIO_PG_DSN: postgresql+asyncpg://praesidio:praesidio@localhost:5432/praesidio
-          DATABASE_URL: postgresql+asyncpg://praesidio:praesidio@localhost:5432/praesidio
-          PRAESIDIO_ENV: development
-          PRAESIDIO_VAULT_KEY: ""
-          PRAESIDIO_FPE_KEY: ""
+          SECTION_PG_DSN: postgresql+asyncpg://section:section@localhost:5432/section
+          DATABASE_URL: postgresql+asyncpg://section:section@localhost:5432/section
+          SECTION_ENV: development
+          SECTION_VAULT_KEY: ""
+          SECTION_FPE_KEY: ""
         run: uv run pytest -m postgres -v tests/test_rls_postgres.py

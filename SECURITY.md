@@ -4,7 +4,7 @@
 
 All security reports go through **GitHub Private Vulnerability Reporting**:
 
-> https://github.com/cwellbournewood/praesidio/security/advisories/new
+> https://github.com/cwellbournewood/section/security/advisories/new
 
 PVR routes the report to the maintainer, opens a private draft advisory, and
 lets us coordinate the fix, CVE, and disclosure timeline without ever
@@ -63,7 +63,7 @@ The two most recent minor versions receive security fixes. See
 ## Scope
 
 In scope:
-- Praesidio gateway, UI, edge clients (browser extension, VS Code and
+- Section gateway, UI, edge clients (browser extension, VS Code and
   JetBrains extensions, local CA proxy), Helm chart, Terraform modules,
   official container images, policy bundle reference implementation.
 - The default policy bundle and detector packs.

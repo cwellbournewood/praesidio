@@ -89,8 +89,8 @@ class _FakeQdrant:
 
 @pytest.mark.asyncio
 async def test_persist_emits_sanitised_points():
-    from praesidio_gateway.vectors.base import VectorDocument
-    from praesidio_gateway.vectors.qdrant import QdrantConnector
+    from section_gateway.vectors.base import VectorDocument
+    from section_gateway.vectors.qdrant import QdrantConnector
 
     text = "Reach out to bob@example.com for details."
     scanner = _FakeScanner(
@@ -115,16 +115,16 @@ async def test_persist_emits_sanitised_points():
     payload = client.upserts[0]["payload"]
     assert "bob@example.com" not in payload["sanitised_text"]
     assert payload["sanitised_text"].startswith("Reach out to <EMAIL_")
-    assert payload["metadata"].get("praesidio.tenant_id") == "acme"
-    assert payload["metadata"].get("praesidio.placeholder_count") == 1
+    assert payload["metadata"].get("section.tenant_id") == "acme"
+    assert payload["metadata"].get("section.placeholder_count") == 1
     # Vault must have recorded the reversal.
     assert any(v == "bob@example.com" for v in vault.store.values())
 
 
 @pytest.mark.asyncio
 async def test_secret_findings_block_upsert():
-    from praesidio_gateway.vectors.base import VectorDocument
-    from praesidio_gateway.vectors.qdrant import QdrantConnector
+    from section_gateway.vectors.base import VectorDocument
+    from section_gateway.vectors.qdrant import QdrantConnector
 
     text = "AKIAIOSFODNN7EXAMPLE is our key"
     scanner = _FakeScanner(
@@ -148,7 +148,7 @@ async def test_secret_findings_block_upsert():
 
 @pytest.mark.asyncio
 async def test_validate_retrieval_filters_unowned_docs():
-    from praesidio_gateway.vectors.qdrant import QdrantConnector
+    from section_gateway.vectors.qdrant import QdrantConnector
 
     scanner = _FakeScanner({})
     vault = _MemVault()
@@ -183,7 +183,7 @@ async def test_validate_retrieval_filters_unowned_docs():
 @pytest.mark.asyncio
 async def test_validate_retrieval_supports_dict_hits():
     """The connector must cope with hits returned as plain dicts too."""
-    from praesidio_gateway.vectors.qdrant import QdrantConnector
+    from section_gateway.vectors.qdrant import QdrantConnector
 
     scanner = _FakeScanner({})
     vault = _MemVault()
@@ -215,7 +215,7 @@ async def test_validate_retrieval_supports_dict_hits():
 
 @pytest.mark.asyncio
 async def test_close_propagates_to_client():
-    from praesidio_gateway.vectors.qdrant import QdrantConnector
+    from section_gateway.vectors.qdrant import QdrantConnector
 
     scanner = _FakeScanner({})
     vault = _MemVault()
@@ -231,7 +231,7 @@ async def test_close_propagates_to_client():
 @pytest.mark.asyncio
 async def test_constructor_requires_client_or_url():
     """No client + no URL is a configuration error, not a silent default."""
-    from praesidio_gateway.vectors.qdrant import QdrantConnector
+    from section_gateway.vectors.qdrant import QdrantConnector
 
     with pytest.raises(ValueError):
         QdrantConnector(

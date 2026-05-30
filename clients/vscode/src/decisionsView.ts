@@ -1,5 +1,5 @@
 /**
- * The "Recent Decisions" tree view shown in the Praesidio activity-bar
+ * The "Recent Decisions" tree view shown in the Section activity-bar
  * container. Backed by an in-memory ring buffer of the last N decisions
  * the user has seen (~50). Never persisted.
  */
@@ -60,7 +60,7 @@ export class DecisionsTreeProvider
     item.description = element.occurredAt;
     item.tooltip = tooltipFor(element);
     item.iconPath = new vscode.ThemeIcon(iconFor(element.action));
-    item.contextValue = `praesidio.decision.${element.action}`;
+    item.contextValue = `section.decision.${element.action}`;
     return item;
   }
 
@@ -85,7 +85,7 @@ function titleFor(d: DecisionRecord): string {
 
 function tooltipFor(d: DecisionRecord): vscode.MarkdownString {
   const md = new vscode.MarkdownString();
-  md.appendMarkdown(`**Praesidio decision** — \`${d.action}\`\n\n`);
+  md.appendMarkdown(`**Section decision** — \`${d.action}\`\n\n`);
   md.appendMarkdown(`- request: \`${d.request_id}\`\n`);
   md.appendMarkdown(`- at: ${d.occurredAt}\n`);
   if (d.uri) md.appendMarkdown(`- file: \`${d.uri}\`\n`);

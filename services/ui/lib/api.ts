@@ -8,7 +8,7 @@
 //      interactive instead of going blank. (A WARN line is logged once per
 //      session per endpoint.)
 //
-// Every outbound request carries `X-Praesidio-Tenant: <id>` (when a tenant is
+// Every outbound request carries `X-Section-Tenant: <id>` (when a tenant is
 // selected) so the gateway can scope authorisation. The header is added
 // transparently — call-sites should never have to thread it through.
 
@@ -38,7 +38,7 @@ import { currentTenant, MOCK_TENANTS } from './tenant';
 function gatewayBase(): string {
   if (typeof window === 'undefined') {
     return (
-      process.env.PRAESIDIO_GATEWAY_INTERNAL_URL ??
+      process.env.SECTION_GATEWAY_INTERNAL_URL ??
       process.env.NEXT_PUBLIC_GATEWAY_URL ??
       'http://localhost:8080'
     );
@@ -56,7 +56,7 @@ function shouldUseMock(): boolean {
 
 function tenantHeaders(): Record<string, string> {
   const id = currentTenant();
-  return id ? { 'X-Praesidio-Tenant': id } : {};
+  return id ? { 'X-Section-Tenant': id } : {};
 }
 
 const warned = new Set<string>();
@@ -64,7 +64,7 @@ function warnFallback(path: string, err: unknown): void {
   if (warned.has(path)) return;
   warned.add(path);
   // eslint-disable-next-line no-console
-  console.warn(`[praesidio.api] ${path} unreachable — serving mock data.`, err);
+  console.warn(`[section.api] ${path} unreachable — serving mock data.`, err);
 }
 
 async function safeFetch<T>(

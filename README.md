@@ -6,8 +6,8 @@
   <sub><i>The operator console. Every decision, every tenant, every model — printed afresh as data arrives.</i></sub>
 </p>
 
-**The AI Security Control Plane.** Semantic DLP, reversible anonymisation, and
-runtime governance for every prompt, response, embedding, and agent action.
+**Semantic DLP for the LLM era.** Reversible anonymisation and runtime policy
+for every prompt, response, embedding, and agent action.
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-D14B2C.svg)](LICENSE)
 [![CI](https://github.com/cwellbournewood/praesidio/actions/workflows/ci.yml/badge.svg)](https://github.com/cwellbournewood/praesidio/actions/workflows/ci.yml)

@@ -6,7 +6,6 @@ import starlight from "@astrojs/starlight";
 // Source markdown lives in ../docs and is mirrored into src/content/docs/
 // by scripts/sync-docs.mjs (run automatically before build).
 export default defineConfig({
-  site: "https://praesidio.dev",
   outDir: "./dist",
   integrations: [
     starlight({
@@ -18,10 +17,10 @@ export default defineConfig({
         replacesTitle: false,
       },
       social: {
-        github: "https://github.com/praesidio/praesidio",
+        github: "https://github.com/cwellbournewood/praesidio",
       },
       editLink: {
-        baseUrl: "https://github.com/praesidio/praesidio/edit/main/docs/",
+        baseUrl: "https://github.com/cwellbournewood/praesidio/edit/main/docs/",
       },
       lastUpdated: true,
       customCss: ["./src/styles/praesidio.css"],
@@ -36,7 +35,6 @@ export default defineConfig({
               label: "Architecture overview",
               link: "/architecture/00-overview/",
             },
-            { label: "Design system", link: "/design-system/" },
           ],
         },
         {
@@ -77,8 +75,6 @@ export default defineConfig({
         {
           label: "Reference",
           items: [
-            { label: "RFP traceability", link: "/rfp-traceability/" },
-            { label: "Self-score", link: "/evaluation-self-score/" },
             { label: "Market research", link: "/market-research/" },
             { label: "Benchmarks", link: "/benchmarks/" },
             { label: "Third-party notices", link: "/third_party/" },

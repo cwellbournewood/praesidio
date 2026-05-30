@@ -275,7 +275,7 @@ manifests that target an LLM endpoint without routing through Praesidio.
 
 ## 7. Red-team plan
 
-Documented in `docs/redteam/playbook.md` (roadmap). Includes:
+Documented in [`docs/redteam/playbook.md`](redteam/playbook.md). Covers:
 - adversarial-prompt suites against detectors,
 - payload-encoding bypass attempts,
 - streaming-boundary injection,

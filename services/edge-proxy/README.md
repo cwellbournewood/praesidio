@@ -3,10 +3,9 @@
 > Local CA MITM proxy that routes LLM-API traffic from CLIs / IDEs
 > through the Praesidio gateway for scan, mask, and restore.
 
-`praesidio-edge-proxy` is the **Lane E** piece of [Praesidio's edge
-coverage](../../docs/edge-rfp.md). It runs as a local HTTPS proxy
-on `127.0.0.1:8888` (configurable) and intercepts requests to a fixed
-allowlist of LLM provider hosts. For each request, it:
+`praesidio-edge-proxy` runs as a local HTTPS proxy on `127.0.0.1:8888`
+(configurable) and intercepts requests to a fixed allowlist of LLM
+provider hosts. For each request, it:
 
 1. Extracts the prompt text from the provider-specific JSON body.
 2. POSTs the prompt to the gateway's `/v1/scan` endpoint.
@@ -26,13 +25,10 @@ indistinguishable from gateway-originated ones (modulo the
 
 ## Threat model
 
-See the edge-proxy row in [`docs/edge-rfp.md`](../../docs/edge-rfp.md#threat-model-deltas-vs-docsthreat-modelmd):
-
-> **MITM proxy CA cert used by attacker** — Per-machine CA is
-> generated locally and never leaves the machine; private key in OS
-> keychain (Windows DPAPI / macOS Keychain / Linux libsecret). Cert is
-> non-exportable. CA install requires admin on Windows and `sudo` on
-> macOS/Linux.
+The per-machine CA is generated locally and never leaves the machine; the
+private key is stored under user-only filesystem permissions. CA install
+requires admin on Windows and `sudo` on macOS / Linux. See
+[`docs/threat-model.md`](../../docs/threat-model.md) for the full picture.
 
 ## Intercepted hosts
 

@@ -1,12 +1,10 @@
 # Local CA proxy — install + operate
 
 The local CA proxy (`praesidio-edge-proxy`) is the single highest-leverage
-component in Praesidio 1.0: every IDE assistant and CLI tool that respects
-`HTTPS_PROXY` is covered by it, no per-tool integration required.
+edge component: every IDE assistant and CLI tool that respects
+`HTTPS_PROXY` is covered, no per-tool integration required.
 
-For the architectural background, see
-[`docs/edge-rfp.md`](../edge-rfp.md). For the per-provider /
-per-client status, see [`docs/edge-coverage-matrix.md`](../edge-coverage-matrix.md).
+Per-provider / per-client status: [`docs/edge-coverage-matrix.md`](../edge-coverage-matrix.md).
 
 ## What it does
 

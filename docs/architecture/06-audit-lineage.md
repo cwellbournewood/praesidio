@@ -106,9 +106,9 @@ The lineage tracker hooks the following events into the DAG:
 | Embedding write | `embedding` ← `prompt` |
 | Memory write | `memory_write` ← `prompt` and/or `output` |
 
-The UI's lineage view (see [design-system §9](../design-system.md#9-components-shadcn-style-primitives-in-servicesuicomponentsui))
-renders this as an interactive force-directed graph, clicking any node
-opens the corresponding audit event.
+The UI's lineage view (`services/ui/components/praesidio/LineageGraph`)
+renders this as an interactive DAG; clicking any node opens the
+corresponding audit event.
 
 ## Retention
 

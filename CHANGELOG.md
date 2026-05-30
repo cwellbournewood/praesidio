@@ -107,8 +107,6 @@ are `pii`, `financial`, `healthcare`, `credential`, `network`, `code`,
   PyCharm, GoLand, WebStorm, Rider, RubyMine, PhpStorm, builds 232.0
   through 252.*). Same surface as VS Code via native Action and
   Inspection extensions. PasswordSafe for credentials.
-- **`docs/edge-rfp.md`** — full edge spec: scope, threat model
-  deltas, audit row schema, distribution, acceptance criteria.
 - **`docs/edge-coverage-matrix.md`** — per-client × per-provider status
   grid; CI keeps the PASS cells honest.
 - **`docs/operations/edge-proxy-install.md`**, **`browser-extension-install.md`**,

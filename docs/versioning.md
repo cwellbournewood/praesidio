@@ -135,14 +135,3 @@ window with explicit notice in `SECURITY.md`.
   for chart-only changes.
 * **Gateway ↔ policy bundle `apiVersion`**: the gateway accepts the
   current and the previous `apiVersion` simultaneously.
-
-## Pre-1.0
-
-We are currently in the `0.x.y` line. SemVer permits arbitrary breaking
-changes in any `0.x` bump. **In practice, we treat `0.y.z → 0.(y+1).0`
-as if it were a major bump under the policy above** — i.e. you get
-the same announce-warn-12-month process. We will not silently break
-your integration on a 0.x bump.
-
-When we hit `1.0.0`, the full policy above applies without the "0.x
-permits anything" caveat.

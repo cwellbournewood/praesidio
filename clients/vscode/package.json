@@ -9,12 +9,12 @@
   "icon": "icon.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/praesidio/praesidio"
+    "url": "https://github.com/cwellbournewood/praesidio"
   },
   "bugs": {
-    "url": "https://github.com/praesidio/praesidio/issues"
+    "url": "https://github.com/cwellbournewood/praesidio/issues"
   },
-  "homepage": "https://github.com/praesidio/praesidio/tree/main/clients/vscode",
+  "homepage": "https://github.com/cwellbournewood/praesidio/tree/main/clients/vscode",
   "categories": [
     "Other",
     "Linters",

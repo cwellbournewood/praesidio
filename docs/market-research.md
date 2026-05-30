@@ -58,12 +58,13 @@ not the architectural centre.
    The standard incumbent UX is clickops in a console.
 5. **Cryptographic audit chain**. Few competitors offer tamper-evident
    logs out of the box.
-6. **Designed for the agent era, not just chat**. Capability tokens,
-   signed MCP manifests, sandbox model — architected up front rather
-   than retrofitted.
-7. **Light-first, calm UI**. Most competitor UIs are dark dashboards with
-   threat-hunter chrome; analyst spending a day in Praesidio finds it
-   less fatiguing.
+6. **Designed for the agent era, not just chat**. Tool-call allowlist
+   enforcement ships today; capability tokens, signed MCP manifests,
+   and sandboxed tool execution are architected up front rather than
+   retrofitted.
+7. **Light-first, calm UI**. Most competitor UIs are dark dashboards
+   with threat-hunter chrome; an analyst spending a day in Praesidio
+   finds it less fatiguing.
 
 ## Where we deliberately don't compete
 
@@ -86,24 +87,17 @@ not the architectural centre.
 | Hash-chained audit | ✅ | rare | rare |
 | Air-gapped install | ✅ | rare | rare |
 | Apache-2.0 OSS | ✅ | ❌ | ❌ (mostly) |
-| Agent capability tokens | ✅ (architected) | ❌ | emerging |
-| MCP-aware | ✅ (architected) | ❌ | emerging |
+| Tool-call allowlist enforced | ✅ | ❌ | emerging |
+| Agent capability tokens | architected | ❌ | emerging |
+| MCP-aware | architected | ❌ | emerging |
 
 ## Buyer personas and their first question
 
 | Persona | First question | Praesidio's answer |
 |---|---|---|
-| CISO | "Will this stop our IP leaving on a prompt?" | DLP + anonymisation + audit. Live demo in 5 min via `make demo`. |
+| CISO | "Will this stop our IP leaving on a prompt?" | DLP + anonymisation + audit; live demo in 5 min via `bash scripts/demo.sh` |
 | Data protection officer | "Show me GDPR Art. 30 evidence" | Audit export pack |
 | Platform engineer | "How do I roll this out without breaking dev velocity?" | OpenAI-compatible drop-in + simulation mode + canary |
 | SOC analyst | "How does this fit Splunk?" | Native HEC sink |
-| Application owner | "Will my chatbot still work after you anonymise stuff?" | Reversible tokenisation; answer quality benchmarks |
-| AI engineer building agents | "Will this slow my tools down?" | Sub-15ms p50 DLP; agent broker SDK |
-
-## Pricing model (suggested for downstream commercialisation)
-
-The OSS repo is the entire product. Commercial offerings layer on:
-- a managed control plane (multi-tenant SaaS hosting),
-- premium classifiers (sector-specific models),
-- 24/7 support + SLAs,
-- compliance evidence packs and assessor liaison.
+| Application owner | "Will my chatbot still work after you anonymise stuff?" | Reversible tokenisation; answer-quality benchmarks |
+| AI engineer building agents | "Will this slow my tools down?" | Sub-millisecond fast-path DLP; tool-call allowlist enforced

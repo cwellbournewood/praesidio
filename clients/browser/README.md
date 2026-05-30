@@ -5,9 +5,7 @@ prompts entered on consumer AI sites against your operator-deployed
 [Praesidio gateway](../../services/gateway/) and rewrites or blocks them
 before they leave the tab.
 
-Part of the **Praesidio edge coverage** RFP. See
-[`docs/edge-rfp.md`](../../docs/edge-rfp.md) for the full
-architecture and the threat model deltas.
+Install + operate guide: [`docs/operations/browser-extension-install.md`](../../docs/operations/browser-extension-install.md).
 
 ## Supported sites
 
@@ -24,18 +22,17 @@ architecture and the threat model deltas.
 events before our capture-phase handler runs; the page-world fetch
 hook is the canonical interception path for that site.
 
-Per-site selectors are marked `TODO 1.1.1: verify selectors` — the
-selector packs ship with the most-common variants and should track the
-sites; if any site refactors we update under that tag in the next
-patch.
+Selectors are tracked per site; if a vendor refactors its composer DOM,
+we update in a patch release.
 
 ## Install
 
-### Chrome Web Store
+### Distribution
 
-The 1.1 cut ships a packaged `.zip` to the Web Store. Operators can
-either install from the public listing or sideload the same artifact
-internally.
+The release pipeline emits a cosign-signed `.crx` and `.zip` per tag.
+Operators install via Chrome Enterprise policy
+(`ExtensionInstallForcelist`) or sideload the artefact from a GitHub
+release.
 
 ### Sideload (developer / self-host)
 
@@ -67,8 +64,8 @@ the install in place across updates.
 
 ## Threat model
 
-See [`docs/edge-rfp.md` §threat-model-deltas](../../docs/edge-rfp.md#threat-model-deltas-vs-docsthreat-modelmd)
-for the full extension-specific deltas. Headlines:
+See [`docs/threat-model.md`](../../docs/threat-model.md) for the full
+picture. Headlines:
 
 - The extension only sends prompts to the operator-configured gateway URL.
   `connect-src` in the manifest constrains the set of hosts; if you need

@@ -69,7 +69,7 @@ changelog {
     keepUnreleasedSection = true
     unreleasedTerm = "[Unreleased]"
     groups = listOf("Added", "Changed", "Fixed", "Removed")
-    repositoryUrl = "https://github.com/praesidio/praesidio"
+    repositoryUrl = "https://github.com/cwellbournewood/praesidio"
 }
 
 ktlint {

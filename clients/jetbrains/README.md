@@ -44,7 +44,7 @@ sideloading:
 ```bash
 cosign verify-blob \
   --signature praesidio-jetbrains-<version>.zip.sig \
-  --certificate-identity-regexp 'https://github.com/praesidio/praesidio/.*' \
+  --certificate-identity-regexp 'https://github.com/cwellbournewood/praesidio/.*' \
   --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
   praesidio-jetbrains-<version>.zip
 ```

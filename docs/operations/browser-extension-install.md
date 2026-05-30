@@ -4,9 +4,9 @@ The Praesidio browser extension (Manifest V3) intercepts prompt submission
 on the six most-used consumer AI sites and routes prompts through the
 gateway's `/v1/scan` before they leave the browser.
 
-For the threat model and architectural background, see
-[`docs/edge-rfp.md`](../edge-rfp.md). For the supported-sites
-status, see [`docs/edge-coverage-matrix.md`](../edge-coverage-matrix.md).
+For the supported-sites status see
+[`docs/edge-coverage-matrix.md`](../edge-coverage-matrix.md); for the
+threat model see [`docs/threat-model.md`](../threat-model.md).
 
 ## Supported sites
 
@@ -22,8 +22,11 @@ for the listed sites, so it can't intercept anything else.
 
 The same MV3 binary works in all Chromium-derived browsers.
 
-1. Open the Chrome Web Store page (link TBD on first release).
-2. Click **Add to Chrome**.
+1. Download the signed `.crx` from the latest [GitHub
+   release](https://github.com/cwellbournewood/praesidio/releases/latest)
+   (or use the operator-hosted update server below).
+2. Drag the `.crx` into `chrome://extensions` (with **Developer mode**
+   enabled), or push it via Chrome Enterprise policy.
 3. Click the Praesidio icon in the toolbar.
 4. Either paste an API key OR click **Sign in with OIDC** and approve
    in the popup tab.
@@ -52,7 +55,7 @@ SLSA-3 provenance attestation per release.
 ## Install for developers
 
 ```bash
-git clone https://github.com/praesidio-project/praesidio
+git clone https://github.com/cwellbournewood/praesidio
 cd praesidio/clients/browser
 npm install
 npm run build

@@ -63,7 +63,7 @@ In CI, the identity used is the GitHub OIDC token of the workflow run,
 producing certificates whose SAN extension looks like:
 
 ```
-https://github.com/<org>/<repo>/.github/workflows/release.yml@refs/tags/v1.0.0
+https://github.com/cwellbournewood/praesidio/.github/workflows/release.yml@refs/tags/v1.0.0
 ```
 
 This identity is what the gateway will verify against (see below).

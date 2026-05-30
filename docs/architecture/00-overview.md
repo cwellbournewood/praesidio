@@ -152,6 +152,5 @@ gateway only ever holds short-lived data-encryption keys derived from them.
 | RAG / vector DB controls | [09-rag-vector.md](09-rag-vector.md) |
 | Deployment & operations | [10-deployment.md](10-deployment.md) |
 | Threat model | [../threat-model.md](../threat-model.md) |
-| RFP traceability | [../rfp-traceability.md](../rfp-traceability.md) |
 | Compliance mappings | [../compliance/](../compliance/) |
 | ADRs (decisions) | [../adr/](../adr/) |

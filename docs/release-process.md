@@ -6,10 +6,10 @@ goals are: every release is reproducible, verifiable, and reversible.
 
 ## Cadence
 
-* **Patch** (`0.1.x`) — as needed for security or stability fixes.
-* **Minor** (`0.x.0`) — every 4–6 weeks during the 0.x line.
-* **Major** (`x.0.0`) — coordinated with deprecation window
-  (`docs/versioning.md`) and a public RFC.
+* **Patch** — as needed for security or stability fixes.
+* **Minor** — when there's enough landed to ship.
+* **Major** — coordinated with a deprecation window
+  ([`versioning.md`](versioning.md)) and a public RFC.
 
 ## Pre-tag checklist
 
@@ -67,7 +67,7 @@ extra ground-truth.
 4. Generates SLSA-3 build provenance per image
    (`slsa-framework/slsa-github-generator`).
 5. Packages the Helm chart and pushes it to
-   `oci://ghcr.io/<org>/charts/praesidio:vX.Y.Z`, cosign-signed.
+   `oci://ghcr.io/cwellbournewood/charts/praesidio:vX.Y.Z`, cosign-signed.
 6. Creates the GitHub Release with:
    - chart `.tgz`
    - per-image SBOM
@@ -94,10 +94,9 @@ extra ground-truth.
    `docs-site/` to GitHub Pages on every push to `main`; for a release we
    also publish a versioned snapshot under `/vX.Y/`.
 
-4. **Cut the announcement.**
-   - Update `README.md` Status badge if appropriate.
-   - Discuss board: GitHub Discussions release thread.
-   - Social: short post with the headline change and verification link.
+4. **Announce.**
+   - GitHub Discussions release thread.
+   - Short post with the headline change and verification link.
 
 ## Rollback / yank
 

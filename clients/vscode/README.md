@@ -11,7 +11,7 @@ findings with an inline quick-fix.
 
 The whole flow stays inside your machine and the operator-configured
 gateway. No third-party endpoints, no telemetry. Source: [Apache-2.0,
-github.com/praesidio/praesidio](https://github.com/praesidio/praesidio).
+github.com/cwellbournewood/praesidio](https://github.com/cwellbournewood/praesidio).
 
 ## What you get
 
@@ -168,7 +168,7 @@ in VS Code and hit `F5`. A second window opens with the extension loaded.
 - **Reproducible builds.** Apache-2.0 source, cosign-signed `.vsix`
   attached to GitHub releases (see `.github/workflows/edge.yml`).
 
-For the threat model, see `docs/edge-rfp.md` in the repo root.
+For the threat model, see [`docs/threat-model.md`](../../docs/threat-model.md).
 
 ## License
 

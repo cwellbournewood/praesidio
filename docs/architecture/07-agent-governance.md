@@ -1,9 +1,9 @@
 # 07 · Agent & Tool Runtime Governance
 
-Status: **architected**. Interfaces defined, sandbox sketched, full
-implementation on roadmap. This document specifies the contract Praesidio
-exposes to agent frameworks (AutoGen, CrewAI, LangGraph, custom) and to MCP
-servers.
+Status: tool-call allowlist is enforced today; the capability-token broker
+and sandboxed tool executor are architected here. This document specifies
+the contract Praesidio exposes to agent frameworks (AutoGen, CrewAI,
+LangGraph, custom) and to MCP servers.
 
 ## Threat picture
 

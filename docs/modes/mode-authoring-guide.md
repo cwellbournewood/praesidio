@@ -45,7 +45,7 @@ metadata:
   description: |
     HIPAA Safe-Harbor + GDPR Art.9 tuning. Designed for clinical assistants,
     discharge-summary drafting, and de-identification of PHI for analytics.
-  homepage: https://praesidio.dev/modes/healthcare
+  homepage: https://github.com/cwellbournewood/praesidio/tree/main/examples/policies/modes/healthcare
   license: Apache-2.0
 spec:
   extends: pii-strict          # baseline policy this mode layers on; or "none"

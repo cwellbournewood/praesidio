@@ -17,9 +17,7 @@ Both extensions wrap the same surface around the gateway:
   editor
 * **Tool view** — recent decisions, gateway status
 
-For the architectural background, see
-[`docs/edge-rfp.md`](../edge-rfp.md). For per-tool support, see
-[`docs/edge-coverage-matrix.md`](../edge-coverage-matrix.md).
+Per-tool support: [`docs/edge-coverage-matrix.md`](../edge-coverage-matrix.md).
 
 ## VS Code
 

@@ -2,26 +2,17 @@
 
 ## Reporting a vulnerability
 
-We strongly prefer **GitHub Private Vulnerability Reporting** (PVR) for all
-security reports against Praesidio:
+All security reports go through **GitHub Private Vulnerability Reporting**:
 
 > https://github.com/cwellbournewood/praesidio/security/advisories/new
 
-PVR routes the report directly to the maintainer security team, opens a
-private draft advisory, and lets us coordinate the fix, CVE, and
-disclosure timeline without ever creating a public issue.
+PVR routes the report to the maintainer, opens a private draft advisory, and
+lets us coordinate the fix, CVE, and disclosure timeline without ever
+creating a public issue.
 
-If GitHub PVR is unavailable to you (e.g. you are reporting from an
-account that cannot create advisories), email **security@praesidio.dev**
-with the report encrypted to our PGP key:
-
-* **Fingerprint:** `0000 0000 0000 0000 0000  0000 0000 0000 0000 0000`
-* **Key:** `https://praesidio.dev/.well-known/pgp-key.txt`
-  (also mirrored under `security/pgp.txt` in this repository).
-
-Do not open public GitHub issues, public discussions, or pull requests
-that demonstrate the vulnerability. If you have already done so, contact
-us via PVR immediately and we will assist in coordinating remediation.
+Do not open public GitHub issues, discussions, or pull requests that
+demonstrate the vulnerability. If you have already done so, contact us via
+PVR immediately and we will assist in coordinating remediation.
 
 ## What to include
 
@@ -66,16 +57,15 @@ We will not pursue or support legal action against researchers who:
 
 ## Supported versions
 
-Pre-1.0 alpha: only the latest minor receives security fixes. After 1.0,
-the two most recent minor versions receive security fixes; see
-`docs/versioning.md` for the full policy.
+The two most recent minor versions receive security fixes. See
+[`docs/versioning.md`](docs/versioning.md) for the full policy.
 
 ## Scope
 
 In scope:
-- Praesidio gateway, UI, agent broker SDK, Helm chart, Terraform
-  modules, official container images, policy bundle reference
-  implementation.
+- Praesidio gateway, UI, edge clients (browser extension, VS Code and
+  JetBrains extensions, local CA proxy), Helm chart, Terraform modules,
+  official container images, policy bundle reference implementation.
 - The default policy bundle and detector packs.
 - The published documentation site insofar as it can be used to harm
   users (XSS, SSRF, etc.).

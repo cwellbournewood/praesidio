@@ -49,7 +49,7 @@ groups:
             /v1/chat/completions is burning the 30d error budget at
             > 14.4× the sustainable rate. At this pace the entire 30d
             budget is consumed in ~2 days.
-          runbook_url: "https://github.com/<org>/praesidio/blob/main/docs/operations/runbooks/slo-fast-burn.md"
+          runbook_url: "https://github.com/cwellbournewood/praesidio/blob/main/docs/operations/runbooks/slo-fast-burn.md"
 
       # ---- Slow burn (TICKET) -------------------------------------------
       - alert: PraesidioSlowBurn6h
@@ -76,7 +76,7 @@ groups:
             Sustained 5xx error rate over both the last 6h and last 30m
             is burning the 30d budget at > 6× the sustainable rate.
             File a ticket; investigate within the day.
-          runbook_url: "https://github.com/<org>/praesidio/blob/main/docs/operations/runbooks/slo-slow-burn.md"
+          runbook_url: "https://github.com/cwellbournewood/praesidio/blob/main/docs/operations/runbooks/slo-slow-burn.md"
 
       # ---- Hard breach ---------------------------------------------------
       - alert: PraesidioErrorBudgetExhausted

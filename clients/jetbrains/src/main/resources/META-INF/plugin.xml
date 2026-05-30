@@ -9,7 +9,7 @@
 <idea-plugin>
     <id>io.praesidio.edge</id>
     <name>Praesidio — Semantic DLP for AI Coding Tools</name>
-    <vendor email="security@praesidio.io" url="https://github.com/praesidio/praesidio">Praesidio</vendor>
+    <vendor url="https://github.com/cwellbournewood/praesidio">Praesidio</vendor>
 
     <description><![CDATA[
         <p><strong>Praesidio</strong> brings semantic data-loss prevention to

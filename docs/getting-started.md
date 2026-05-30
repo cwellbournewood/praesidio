@@ -1,9 +1,8 @@
 # Getting started
 
 A five-minute happy path: bring up the full stack, run the demo, and
-open the admin UI. Everything below has been wired into the
-`quickstart` CI workflow — if these steps stop working, that workflow
-goes red on the next PR.
+open the admin UI. The same steps run in the `quickstart` CI workflow —
+if they break, that workflow goes red on the next PR.
 
 ## Prerequisites
 
@@ -11,16 +10,16 @@ goes red on the next PR.
 |---|---|---|
 | `git` | any recent | clone the repo |
 | `docker` + `docker compose` | Docker Engine 24+ / Compose v2 | `compose v1` (the standalone binary) is unsupported |
-| `bash` | 4+ | macOS users: the demo script also runs in Git Bash on Windows |
+| `bash` | 4+ | the demo script also runs in Git Bash on Windows |
 | `curl` | any | used by the demo script |
 
-Nothing else is required for the quickstart — `uv`, `pnpm`, and
-`make` are only needed for local source-level development.
+Nothing else is required for the quickstart — `uv`, `pnpm`, and `make`
+are only needed for local source-level development.
 
 ## 1. Clone and copy the env template
 
 ```bash
-git clone https://github.com/praesidio/praesidio.git
+git clone https://github.com/cwellbournewood/praesidio.git
 cd praesidio
 cp .env.example .env
 ```
@@ -73,16 +72,16 @@ there:
 - **Events** — every request the gateway processed, with severity,
   decision, and findings.
 - **Policies** — the loaded bundle, with simulation diffs.
-- **Simulator** — the [lane-B `/simulator` route](http://localhost:3000/simulator)
-  for paste-and-test against the live gateway. The header carries a
-  live indicator badge: green if the gateway is reachable, amber if
-  the UI is using cached / mock data.
+- **Simulator** — [`/simulator`](http://localhost:3000/simulator) for
+  paste-and-test against the live gateway. The header carries a live
+  indicator: green if the gateway is reachable, amber if the UI is
+  using cached / mock data.
 - **Tenants** — switch between demo tenants from the top-right.
 
 ## 5. Try the admin API directly (optional)
 
-The gateway exposes a small admin surface (lane-A's
-`praesidio-audit verify` CLI uses these too):
+The gateway exposes a small admin surface (the `praesidio-audit verify`
+CLI uses these too):
 
 ```bash
 # Replay a stored prompt through current policy, without side effects

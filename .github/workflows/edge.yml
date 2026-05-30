@@ -7,7 +7,6 @@ on:
       - 'services/edge-proxy/**'
       - 'clients/**'
       - 'services/gateway/praesidio_gateway/api/v1/scan.py'
-      - 'docs/edge-rfp.md'
       - 'docs/edge-coverage-matrix.md'
       - '.github/workflows/edge.yml'
   pull_request:

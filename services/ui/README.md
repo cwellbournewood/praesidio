@@ -89,14 +89,18 @@ services/ui/
 
 ## Design system
 
-The visual language is fully defined in
-[`../../docs/design-system.md`](../../docs/design-system.md). In short:
+The visual language ("Praesidio Instrument") is implemented directly in
+[`app/globals.css`](app/globals.css) and
+[`tailwind.config.ts`](tailwind.config.ts) — those files are the source of
+truth. In short:
 
-- Light-first ivory canvas, indigo accent.
-- 14px UI default, Geist Sans, -0.005em tracking.
-- Decision colour conventions are global — same colour means the same thing
-  on every page.
-- Honours `prefers-reduced-motion`.
+- Bone canvas, ink text, a single vermillion accent.
+- Sharp corners (radius 0), hairlines instead of shadows.
+- Instrument Serif italic for display and the `§` mark; Geist Sans for UI
+  chrome; JetBrains Mono for data and IDs.
+- Decision colour conventions are global — the same colour means the same
+  thing on every page.
+- Honours `prefers-reduced-motion` and `prefers-color-scheme`.
 
 ## Notes
 

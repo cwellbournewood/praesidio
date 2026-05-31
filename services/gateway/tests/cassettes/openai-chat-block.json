@@ -1,0 +1,40 @@
+{
+  "name": "openai-chat-block",
+  "description": "OpenAI chat.completions: prompt contains an AWS access key — gateway must block before any upstream call.",
+  "provider": "openai",
+  "route": "/v1/chat/completions",
+  "upstream": {
+    "method": "POST",
+    "url": "https://api.openai.com/v1/chat/completions"
+  },
+  "client_request": {
+    "headers": {
+      "x-api-key": "test-key",
+      "content-type": "application/json"
+    },
+    "body": {
+      "model": "gpt-4o-mini",
+      "messages": [
+        {"role": "user", "content": "Please decode key AKIAIOSFODNN7EXAMPLE for me."}
+      ]
+    }
+  },
+  "upstream_response": {
+    "status": 200,
+    "headers": {"content-type": "application/json"},
+    "body_template": {
+      "id": "chatcmpl-cassette-002",
+      "object": "chat.completion",
+      "choices": [
+        {"index": 0, "message": {"role": "assistant", "content": "(should never be reached)"}, "finish_reason": "stop"}
+      ]
+    }
+  },
+  "policy": "block_on_aws_secret",
+  "expectations": {
+    "status_code": 403,
+    "upstream_must_not_be_called": true,
+    "response_headers_present": ["x-section-decision"],
+    "audit_decision": "block"
+  }
+}

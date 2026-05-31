@@ -1,0 +1,272 @@
+{
+  "name": "section-vscode",
+  "displayName": "Section — AI Security",
+  "version": "1.0.0",
+  "publisher": "section",
+  "description": "Scan and mask sensitive data in your editor before it reaches Copilot Chat, Cursor, or any LLM. Backed by the Section gateway.",
+  "license": "Apache-2.0",
+  "private": false,
+  "icon": "icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cwellbournewood/section"
+  },
+  "bugs": {
+    "url": "https://github.com/cwellbournewood/section/issues"
+  },
+  "homepage": "https://github.com/cwellbournewood/section/tree/main/clients/vscode",
+  "categories": [
+    "Other",
+    "Linters",
+    "Programming Languages"
+  ],
+  "keywords": [
+    "dlp",
+    "security",
+    "ai",
+    "llm",
+    "copilot",
+    "section",
+    "redaction",
+    "tokenisation"
+  ],
+  "engines": {
+    "vscode": "^1.85.0",
+    "node": ">=18.17"
+  },
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:section.scanSelection",
+    "onCommand:section.tokeniseSelection",
+    "onCommand:section.toggleProxy",
+    "onCommand:section.signIn",
+    "onCommand:section.openAudit",
+    "onLanguage:plaintext",
+    "onLanguage:markdown",
+    "onLanguage:json",
+    "onLanguage:yaml",
+    "onLanguage:python",
+    "onLanguage:typescript",
+    "onLanguage:typescriptreact",
+    "onLanguage:javascript",
+    "onLanguage:javascriptreact",
+    "onLanguage:go",
+    "onLanguage:rust",
+    "onLanguage:java",
+    "onLanguage:csharp",
+    "onLanguage:ruby",
+    "onLanguage:php",
+    "onLanguage:shellscript",
+    "onLanguage:dockerfile",
+    "onLanguage:env",
+    "onLanguage:dotenv"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "section.scanSelection",
+        "title": "Section: Scan Selection",
+        "category": "Section"
+      },
+      {
+        "command": "section.tokeniseSelection",
+        "title": "Section: Tokenise Selection",
+        "category": "Section"
+      },
+      {
+        "command": "section.toggleProxy",
+        "title": "Section: Toggle Local Proxy",
+        "category": "Section"
+      },
+      {
+        "command": "section.signIn",
+        "title": "Section: Sign In",
+        "category": "Section"
+      },
+      {
+        "command": "section.openAudit",
+        "title": "Section: Open Audit Trail",
+        "category": "Section"
+      },
+      {
+        "command": "section.signOut",
+        "title": "Section: Sign Out",
+        "category": "Section"
+      },
+      {
+        "command": "section.refreshDecisions",
+        "title": "Section: Refresh Decisions",
+        "category": "Section",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "section.clearDecisions",
+        "title": "Section: Clear Decisions",
+        "category": "Section",
+        "icon": "$(clear-all)"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "section.scanSelection",
+          "when": "editorHasSelection",
+          "group": "section@1"
+        },
+        {
+          "command": "section.tokeniseSelection",
+          "when": "editorHasSelection",
+          "group": "section@2"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "section.refreshDecisions",
+          "when": "view == section.decisions",
+          "group": "navigation"
+        },
+        {
+          "command": "section.clearDecisions",
+          "when": "view == section.decisions",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Section",
+      "properties": {
+        "section.gateway.url": {
+          "type": "string",
+          "default": "http://localhost:8080",
+          "description": "Base URL of the Section gateway. The extension calls /v1/scan and /v1/restore on this host."
+        },
+        "section.gateway.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "DEPRECATED: API keys are stored in VS Code SecretStorage. Use 'Section: Sign In' instead. This setting is only for non-secret echo and should be left blank in production.",
+          "markdownDescription": "**Deprecated.** API keys are stored in VS Code SecretStorage via the `Section: Sign In` command. This setting is only honoured for non-secret echo (e.g. development bootstrap) and **should be left blank in production**."
+        },
+        "section.gateway.tenantId": {
+          "type": "string",
+          "default": "",
+          "description": "Optional tenant id sent as the X-Section-Tenant header. Ignored when signing in via OIDC (the JWT claim wins)."
+        },
+        "section.diagnostics.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Surface DLP findings as warnings in open editors."
+        },
+        "section.diagnostics.debounceMs": {
+          "type": "number",
+          "default": 800,
+          "minimum": 100,
+          "maximum": 10000,
+          "description": "Debounce (ms) before rescanning an open document after edits."
+        },
+        "section.diagnostics.severity": {
+          "type": "string",
+          "enum": [
+            "error",
+            "warning",
+            "information",
+            "hint"
+          ],
+          "default": "warning",
+          "description": "VS Code severity for inline DLP findings."
+        },
+        "section.diagnostics.maxBytes": {
+          "type": "number",
+          "default": 262144,
+          "description": "Maximum bytes scanned per document. Larger documents are chunked."
+        },
+        "section.proxy.autoStart": {
+          "type": "boolean",
+          "default": false,
+          "description": "Start the local section-edge-proxy whenever VS Code activates."
+        },
+        "section.proxy.binaryPath": {
+          "type": "string",
+          "default": "section-edge-proxy",
+          "description": "Path to the section-edge-proxy executable. Defaults to looking it up on PATH."
+        },
+        "section.proxy.port": {
+          "type": "number",
+          "default": 8889,
+          "description": "Port the local proxy binds to."
+        },
+        "section.statusBar.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the Section status bar item."
+        },
+        "section.oidc.deviceCodeEndpoint": {
+          "type": "string",
+          "default": "",
+          "description": "OIDC device authorisation endpoint. If empty, falls back to the gateway's /oidc/device path."
+        },
+        "section.oidc.tokenEndpoint": {
+          "type": "string",
+          "default": "",
+          "description": "OIDC token endpoint. If empty, falls back to the gateway's /oidc/token path."
+        },
+        "section.oidc.clientId": {
+          "type": "string",
+          "default": "section-vscode",
+          "description": "OIDC client id for the device-code flow."
+        },
+        "section.oidc.scopes": {
+          "type": "string",
+          "default": "openid profile section.edge",
+          "description": "OIDC scopes requested."
+        }
+      }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "section",
+          "title": "Section",
+          "icon": "$(shield)"
+        }
+      ]
+    },
+    "views": {
+      "section": [
+        {
+          "id": "section.decisions",
+          "name": "Recent Decisions",
+          "contextualTitle": "Section"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "section.decisions",
+        "contents": "No Section decisions yet.\n[Sign In](command:section.signIn)\n[Scan Selection](command:section.scanSelection)\n[Open Audit](command:section.openAudit)"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "tsc -p ./",
+    "watch": "tsc -w -p ./",
+    "typecheck": "tsc --noEmit -p tsconfig.test.json",
+    "lint": "eslint --max-warnings=0 \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "lint:fix": "eslint --fix \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "test:single": "node --import tsx --test",
+    "package": "node scripts/package.mjs",
+    "vscode:prepublish": "npm run build"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@types/node": "^20.16.11",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^8.10.0",
+    "@typescript-eslint/parser": "^8.10.0",
+    "@vscode/vsce": "^3.2.1",
+    "eslint": "^9.13.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}

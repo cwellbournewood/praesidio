@@ -1,0 +1,99 @@
+apiVersion: section/v1
+kind: Entities
+metadata:
+  mode: healthcare
+spec:
+  presidio:
+    - { id: PERSON,           threshold: 0.7 }
+    - { id: LOCATION,         threshold: 0.8 }
+    - { id: NRP,              threshold: 0.7 }
+    - { id: DATE_TIME,        threshold: 0.6 }
+    - { id: US_DRIVER_LICENSE,threshold: 0.7 }
+    - { id: MEDICAL_LICENSE,  threshold: 0.6 }
+    - { id: US_SSN,           threshold: 0.85 }
+    - { id: EMAIL_ADDRESS,    threshold: 0.8 }
+    - { id: PHONE_NUMBER,     threshold: 0.7 }
+    - { id: IP_ADDRESS,       threshold: 0.7 }
+    - { id: URL,              threshold: 0.6 }
+
+  regex:
+    - id: regex.mrn
+      label: "Medical Record Number"
+      pattern: '(?i)\bMRN[:\s#-]*([A-Z0-9]{6,12})\b'
+      score: 0.85
+      context: [chart, record, patient, admission, mrn]
+
+    - id: regex.npi
+      label: "National Provider Identifier"
+      pattern: '\b\d{10}\b'
+      score: 0.55
+      context: [npi, provider, physician, ordering, attending]
+
+    - id: regex.health_plan_beneficiary
+      label: "Health Plan Beneficiary Number"
+      pattern: '(?i)\b(?:HPID|member\s*id|policy\s*#?)[:\s-]*([A-Z0-9]{6,20})\b'
+      score: 0.8
+      context: [plan, member, beneficiary, insurance]
+
+    - id: regex.device_identifier
+      label: "Device / UDI"
+      pattern: '(?i)\b(?:UDI|serial\s*no|device\s*id)[:\s#-]*([A-Z0-9-]{8,25})\b'
+      score: 0.8
+      context: [device, implant, pacemaker, pump, serial, udi]
+
+    - id: regex.dob
+      label: "Date of Birth"
+      pattern: '(?i)\b(?:DOB|date\s*of\s*birth|born)[:\s-]*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})\b'
+      score: 0.9
+      context: [dob, birth, born]
+
+    - id: regex.account_number
+      label: "Account Number"
+      pattern: '(?i)\b(?:acct|account)[:\s#-]*(\d{6,18})\b'
+      score: 0.8
+      context: [account, acct, billing]
+
+    - id: regex.vehicle_identifier
+      label: "Vehicle Identifier (VIN)"
+      pattern: '\b[A-HJ-NPR-Z0-9]{17}\b'
+      score: 0.75
+      context: [vin, vehicle, plate]
+
+    - id: regex.icd10
+      label: "ICD-10 Code"
+      pattern: '\b[A-TV-Z][0-9][A-Z0-9](?:\.[A-Z0-9]{1,4})?\b'
+      score: 0.6
+      context: [diagnosis, icd, code, dx]
+
+    - id: regex.cpt
+      label: "CPT / HCPCS Code"
+      pattern: '\b\d{5}\b'
+      score: 0.5
+      context: [cpt, procedure, hcpcs, code]
+
+    - id: regex.lab_value
+      label: "Lab Value with Reference Range"
+      pattern: '(?i)\b(?:hba1c|glucose|creatinine|hemoglobin|wbc|platelet|ldl|hdl)\s*[:=]?\s*\d+(?:\.\d+)?\s*(?:%|mg/dl|mmol/l|g/dl|k/ul)?\b'
+      score: 0.7
+      context: [lab, result, value, reference]
+
+  classifiers:
+    - id: cls.adverse_event
+      label: "Adverse Drug Event"
+      prompt_ref: prompts/adverse-event.md
+      model: ollama/llama3.1-70b
+      score_threshold: 0.75
+      cache_ttl: 24h
+      description: |
+        Identifies free-text descriptions of adverse drug reactions that may
+        trigger FDA MedWatch / EU EudraVigilance reporting obligations.
+
+    - id: cls.behavioural_health
+      label: "Behavioural Health / 42 CFR Part 2"
+      prompt_ref: prompts/behavioural-health.md
+      model: ollama/llama3.1-70b
+      score_threshold: 0.8
+      cache_ttl: 7d
+      description: |
+        Detects substance-use-disorder records covered by 42 CFR Part 2, which
+        require stricter consent than baseline HIPAA.

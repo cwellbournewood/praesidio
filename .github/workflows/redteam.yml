@@ -1,0 +1,84 @@
+name: redteam
+
+# Nightly red-team run against a fresh docker-compose stack.
+# Also triggerable on demand from the Actions tab.
+
+on:
+  schedule:
+    - cron: "17 3 * * *"   # 03:17 UTC nightly
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "scripts/redteam/**"
+      - "examples/policies/**"
+      - "docs/redteam/**"
+      - ".github/workflows/redteam.yml"
+
+concurrency:
+  group: redteam-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  redteam:
+    name: red-team cases
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Prepare env
+        run: |
+          cp .env.example .env
+          sed -i 's|REPLACE_WITH_BASE64_32_BYTES|'"$(openssl rand -base64 32)"'|' .env
+          sed -i 's|REPLACE_WITH_HEX_KEY|'"$(openssl rand -hex 32)"'|' .env
+          sed -i 's|REPLACE_WITH_HEX_TWEAK|'"$(openssl rand -hex 7)"'|' .env
+
+      - name: docker compose up
+        run: docker compose up --build -d
+
+      - name: Wait for gateway /healthz
+        run: |
+          for i in $(seq 1 90); do
+            if curl -fsS http://localhost:8080/healthz >/dev/null 2>&1; then
+              echo "gateway healthy after ${i}s"
+              exit 0
+            fi
+            sleep 1
+          done
+          docker compose logs --no-color || true
+          exit 1
+
+      - name: Run red-team suite
+        env:
+          NO_COLOR: "1"
+          GATEWAY_URL: http://localhost:8080
+          SECTION_API_KEY: section-demo-key
+          JUNIT_OUT: artifacts/redteam-junit.xml
+        run: |
+          mkdir -p artifacts
+          bash scripts/redteam/run.sh
+
+      - name: Capture full event tail
+        if: always()
+        run: |
+          mkdir -p artifacts
+          curl -fsS 'http://localhost:8080/admin/events?limit=500' \
+            -H 'Authorization: Bearer section-demo-key' \
+            -o artifacts/events.json || true
+
+      - name: Upload artefacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: redteam-results
+          path: artifacts/
+
+      - name: Tear down
+        if: always()
+        run: docker compose down -v --remove-orphans || true

@@ -1,0 +1,20 @@
+{
+  "name": "Break-glass re-identification — compliance officer with justification",
+  "description": "Re-ID flow. A compliance officer with MFA + justification can resolve a session token. Test asserts a warning-level audit event is written.",
+  "input": {
+    "principal": {
+      "user_id": "compliance-officer-1",
+      "groups": ["compliance-officer"],
+      "mfa_verified": true,
+      "purpose": "operations",
+      "justification": "Investigating audit anomaly TKT-4421"
+    },
+    "operation": "reidentify",
+    "token": "PERSON_a1b2c3d4"
+  },
+  "expected": {
+    "action": "allow",
+    "audit_severity_min": "warning",
+    "audit_fields_required": ["principal.user_id", "principal.purpose", "justification"]
+  }
+}

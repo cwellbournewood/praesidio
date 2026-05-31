@@ -1,0 +1,108 @@
+{
+  "manifest_version": 3,
+  "name": "Section — AI prompt DLP",
+  "short_name": "Section",
+  "version": "1.1.0",
+  "description": "Scan and mask sensitive data in prompts to consumer AI sites before they leave your browser.",
+  "default_locale": "en",
+  "minimum_chrome_version": "120",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwIZc0SosWaN3S84+G+XAvsMaSBcXhGx+Ha6zRBjo7oTpXnbvH6CoVrYOzDnaUb3QqVmCZqBC+8eWvA23WhsDwbFHSWFuel/Mr3Rtx8bTKpz0Fyv29PiprTqKyrYy6A1xHVokysNKoVdANBwpfLC0gDk9JVhCjAqlC1CRi9L2dQWAGpTKvaJcHfrT6f8j/1qze2dug5EdbRWB5iPJsa2HNQXIpgIYkRDNkqzgYdSsUQIcRdkiudHlJG2yp1tTz9x1JsKlVc7V4jcBsn2qamv6fbB97scOvbX9NLvXJYOp6k1Ojn0xBC3tgOwa8uKsagigSaG0O/xNZruCuJorXtIIMQIDAQAB",
+  "icons": {
+    "16": "icons/16.png",
+    "32": "icons/32.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  },
+  "action": {
+    "default_title": "Section",
+    "default_popup": "popup/index.html",
+    "default_icon": {
+      "16": "icons/16.png",
+      "32": "icons/32.png",
+      "48": "icons/48.png",
+      "128": "icons/128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": [
+    "storage",
+    "alarms",
+    "scripting",
+    "tabs",
+    "notifications"
+  ],
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://chat.openai.com/*",
+    "https://claude.ai/*",
+    "https://gemini.google.com/*",
+    "https://copilot.microsoft.com/*",
+    "https://www.perplexity.ai/*",
+    "https://perplexity.ai/*",
+    "https://chat.mistral.ai/*",
+    "http://localhost:8000/*",
+    "http://localhost:8080/*",
+    "https://localhost:8000/*",
+    "https://localhost:8080/*",
+    "https://*.section.local/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://chatgpt.com/*", "https://chat.openai.com/*"],
+      "js": ["content/chatgpt.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    },
+    {
+      "matches": ["https://claude.ai/*"],
+      "js": ["content/claude.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    },
+    {
+      "matches": ["https://gemini.google.com/*"],
+      "js": ["content/gemini.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    },
+    {
+      "matches": ["https://copilot.microsoft.com/*"],
+      "js": ["content/copilot.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    },
+    {
+      "matches": ["https://www.perplexity.ai/*", "https://perplexity.ai/*"],
+      "js": ["content/perplexity.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    },
+    {
+      "matches": ["https://chat.mistral.ai/*"],
+      "js": ["content/mistral.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["content/inject.js"],
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*",
+        "https://claude.ai/*",
+        "https://gemini.google.com/*",
+        "https://copilot.microsoft.com/*",
+        "https://www.perplexity.ai/*",
+        "https://perplexity.ai/*",
+        "https://chat.mistral.ai/*"
+      ]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://localhost:8000 http://localhost:8000 https://localhost:8080 http://localhost:8080 https://*.section.local"
+  }
+}

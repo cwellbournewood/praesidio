@@ -1,0 +1,60 @@
+apiVersion: section/v1
+kind: VaultProfile
+metadata:
+  mode: healthcare
+spec:
+  defaults:
+    scope: session
+    ttl: 30m
+    deterministic: true            # same plaintext → same token within scope
+
+  per_entity:
+    # Identifiers that should round-trip within a clinical workflow
+    regex.mrn:                     { scope: tenant,  ttl: 7d,   deterministic: true }
+    regex.health_plan_beneficiary: { scope: tenant,  ttl: 7d,   deterministic: true }
+    regex.npi:                     { scope: tenant,  ttl: 30d,  deterministic: true }
+    regex.device_identifier:       { scope: tenant,  ttl: 30d,  deterministic: true }
+
+    # PII tokens — session-scoped only
+    pii.person:               { scope: session, ttl: 1h,   deterministic: true }
+    pii.location:             { scope: session, ttl: 1h }
+    pii.email:        { scope: session, ttl: 1h }
+    pii.phone:         { scope: session, ttl: 1h }
+
+    # Special-category — irreversible
+    cls.adverse_event:             { scope: tenant,  ttl: 30d,  irreversible: true }
+    cls.behavioural_health:        { scope: tenant,  ttl: 30d,  irreversible: true }
+    pii.us_ssn:               { irreversible: true }
+
+  reidentify:
+    allowed_roles:
+      - clinician
+      - treating-physician
+      - case-manager
+    require_purpose: true          # caller must declare TPO purpose
+    allowed_purposes:
+      - treatment
+      - payment
+      - operations
+      - research-irb-approved
+    audit_severity: warning
+    rate_limit:
+      per_user_per_hour: 200       # protect against bulk re-identification
+
+  break_glass:
+    enabled: true
+    allowed_roles: ["compliance-officer", "privacy-officer"]
+    mfa_required: true
+    max_duration: 15m
+    auto_revoke: true
+    require_justification: true    # free-text written into audit
+    notify:
+      - security@acme.example
+      - privacy@acme.example
+      - compliance@acme.example
+
+  encryption:
+    algorithm: AES-256-GCM
+    kdf: HKDF-SHA256
+    per_tenant_key: true           # HKDF salt is tenant_id
+    key_rotation_days: 90

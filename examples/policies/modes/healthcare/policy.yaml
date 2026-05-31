@@ -1,0 +1,107 @@
+apiVersion: section/v1
+kind: Policy
+metadata:
+  id: healthcare
+  name: "HIPAA Safe-Harbor + GDPR Art.9 anonymisation"
+  owner: privacy@acme.example
+  description: |
+    Tokenises 17 of the 18 HIPAA Safe Harbor identifier categories detected
+    in text; routes inference to BAA-covered upstreams; fails closed.
+    Behavioural-health (42 CFR Part 2) and adverse-event findings escalate
+    to irreversible redaction unless the caller asserts a treating-physician
+    purpose.
+spec:
+  match:
+    routes: ["/v1/chat/completions", "/anthropic/v1/messages"]
+    tenants: ["healthcare-*", "clinical-*"]
+
+  detect:
+    enable:
+      # baseline PII
+      - pii.person
+      - pii.location
+      - pii.nationality
+      - pii.date
+      - pii.us_ssn
+      - pii.email
+      - pii.phone
+      - network.ip_address
+      - pii.url
+      - pii.us_drivers_license
+      - healthcare.medical_license
+      # PHI-specific
+      - regex.mrn
+      - regex.npi
+      - regex.health_plan_beneficiary
+      - regex.device_identifier
+      - regex.dob
+      - regex.account_number
+      - regex.vehicle_identifier
+      - regex.icd10
+      - regex.cpt
+      - regex.lab_value
+      # classifiers
+      - cls.adverse_event
+      - cls.behavioural_health
+      # secrets (always-on for any mode)
+      - secrets.aws
+      - secrets.gcp
+      - secrets.azure
+      - credential.generic_high_entropy
+
+  decide:
+    rules:
+      # 1. Credential leakage — always block.
+      - when: "any(findings, .label in ['secrets.aws','secrets.gcp','secrets.azure','credential.generic_high_entropy'])"
+        action: block
+        reason: "Credential leakage attempt in clinical context"
+        severity: critical
+
+      # 2. 42 CFR Part 2 substance-use data — block unless treating-physician.
+      - when: "any(findings, .label == 'cls.behavioural_health') && !('treating-physician' in principal.groups)"
+        action: block
+        reason: "42 CFR Part 2 record requires treating-physician role"
+        severity: high
+
+      # 3. Adverse event — irreversible redaction + audit escalation.
+      - when: "any(findings, .label == 'cls.adverse_event')"
+        action: transform
+        severity: high
+        transforms:
+          - { label: "cls.adverse_event", method: redact, replacement: "[ADVERSE_EVENT_REDACTED]" }
+          - { label: "*",                 method: tokenise, scope: session, ttl: 30m }
+
+      # 4. SSN — always redact, never tokenise.
+      - when: "any(findings, .label == 'pii.us_ssn')"
+        action: transform
+        transforms:
+          - { label: "pii.us_ssn", method: redact, replacement: "[REDACTED_SSN]" }
+          - { label: "*",               method: tokenise, scope: session, ttl: 30m }
+
+      # 5. Any other PHI finding — reversible tokenise, session-scoped.
+      - when: "len(findings) > 0"
+        action: transform
+        transforms:
+          - { label: "*", method: tokenise, scope: session, ttl: 30m }
+
+      - when: "true"
+        action: allow
+
+  route:
+    # BAA-covered upstreams only. The gateway will refuse to start if none of
+    # these are present in models.yaml with a BAA safety_certification.
+    upstream: "azure/gpt-4o-eu"
+    fallback: "anthropic/claude-3-5-sonnet"
+    require_certifications: ["BAA"]
+
+  fail_mode: closed
+
+  audit:
+    severity_min: info
+    retention_days: 2555           # 7 years — HIPAA §164.316(b)(2)(i)
+    sinks: ["postgres", "splunk-hec"]
+    fields_required:
+      - principal.user_id
+      - principal.purpose          # treatment / payment / operations / research
+      - findings_hash
+      - decision

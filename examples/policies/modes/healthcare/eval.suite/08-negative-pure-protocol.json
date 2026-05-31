@@ -1,0 +1,16 @@
+{
+  "name": "Negative — pure clinical protocol with no identifiers",
+  "description": "Anti-over-firing test. Should produce zero findings and allow.",
+  "input": {
+    "messages": [
+      {
+        "role": "user",
+        "content": "What is the standard protocol for managing hypertensive urgency in an outpatient setting?"
+      }
+    ]
+  },
+  "expected": {
+    "action": "allow",
+    "findings_max_count": 0
+  }
+}

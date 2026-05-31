@@ -1,0 +1,442 @@
+# Section detector catalogue
+# --------------------------------------------------------------------------
+# Single source of truth that maps every stable detector ID (used in policy
+# rules, vault profiles, and audit events) to a human-readable display name,
+# a plain-English description, the data family it belongs to, the regulatory
+# frameworks that typically govern it, and a default sensitivity tier.
+#
+# The catalogue is consumed by:
+#   - the UI (Events, Policies, Recommendations, Onboarding) for labelling
+#   - the policy bundle compiler for validation + linting
+#   - the docs site for the "Detector reference" page
+#
+# Adding a new detector? Add an entry here first; if the ID is missing
+# from this file the bundle compiler will refuse to ship a policy that
+# references it (CI guard).
+#
+# Schema:
+#   <stable.id>:
+#     display_name:        short, plain-English label                (required)
+#     family:              one of the FAMILIES block below           (required)
+#     description:         one sentence, no jargon                   (required)
+#     default_sensitivity: public | internal | confidential | restricted  (required)
+#     default_action:      observe | transform | redact | block      (required)
+#     frameworks:          list of frameworks (see FRAMEWORKS below) (optional)
+#     aliases:             list of alternative IDs / raw entity names (optional)
+#     example:             one short illustrative snippet            (optional)
+# --------------------------------------------------------------------------
+
+apiVersion: section/v1
+kind: DetectorCatalogue
+metadata:
+  name: section-detector-catalogue
+  version: 0.1.0
+
+# --------------------------------------------------------------------------
+# Families: how we group detectors for the UI and the recommendations engine.
+# Families are observation-led, not industry-led — a finance team and a
+# hospital both see "Personal data" and "Credentials & secrets"; only the
+# specific detectors that fire differ.
+# --------------------------------------------------------------------------
+families:
+  personal_data:
+    display_name: "Personal data"
+    description: "Information that identifies or relates to a natural person."
+  health_data:
+    display_name: "Health data"
+    description: "Clinical, medical, or insurance information about a person's health."
+  payment_data:
+    display_name: "Payment card data"
+    description: "Cardholder data governed by PCI-DSS."
+  financial_data:
+    display_name: "Financial data"
+    description: "Bank accounts, routing, IBAN, and other money-movement identifiers."
+  credentials:
+    display_name: "Credentials & secrets"
+    description: "API keys, tokens, private keys, and connection strings."
+  source_code:
+    display_name: "Source code"
+    description: "Code blocks and proprietary code markers."
+  network:
+    display_name: "Network identifiers"
+    description: "IP addresses, MACs, hostnames, and other network metadata."
+  business_confidential:
+    display_name: "Business confidential"
+    description: "Internal-only documents, projects, or labels marked confidential."
+  intent:
+    display_name: "Intent signals"
+    description: "Prompt-injection patterns, jailbreak attempts, exfiltration hints."
+
+# --------------------------------------------------------------------------
+# Frameworks: regulatory or contractual regimes a finding may be subject to.
+# A finding can map to several (e.g. an SSN is both PII under GDPR and PHI
+# under HIPAA when it appears in a clinical context).
+# --------------------------------------------------------------------------
+frameworks:
+  gdpr:       "EU General Data Protection Regulation"
+  ccpa:       "California Consumer Privacy Act"
+  hipaa:      "US Health Insurance Portability and Accountability Act"
+  pci_dss:    "Payment Card Industry Data Security Standard"
+  sox:        "US Sarbanes-Oxley Act"
+  glba:       "US Gramm-Leach-Bliley Act"
+  iso27001:   "ISO/IEC 27001 information security"
+  soc2:       "AICPA SOC 2 trust services"
+  internal:   "Internal company policy (no external framework)"
+
+# --------------------------------------------------------------------------
+# Detectors
+# --------------------------------------------------------------------------
+detectors:
+
+  # --- Personal data (regex + presidio NER) -------------------------------
+  pii.email:
+    display_name: "Email address"
+    family: personal_data
+    description: "Any RFC-5322-shaped email address."
+    default_sensitivity: internal
+    default_action: transform
+    frameworks: [gdpr, ccpa]
+    aliases: [pii.email, presidio.EMAIL_ADDRESS]
+    example: "alice@example.com"
+
+  pii.phone:
+    display_name: "Phone number"
+    family: personal_data
+    description: "International or national phone numbers with 7-15 digits."
+    default_sensitivity: internal
+    default_action: transform
+    frameworks: [gdpr, ccpa]
+    aliases: [pii.phone, presidio.PHONE_NUMBER]
+    example: "+1 (415) 555-0142"
+
+  pii.us_ssn:
+    display_name: "US Social Security number"
+    family: personal_data
+    description: "Nine-digit US Social Security number (validated format)."
+    default_sensitivity: restricted
+    default_action: redact
+    frameworks: [hipaa, glba, ccpa]
+    aliases: [pii.us_ssn]
+    example: "123-45-6789"
+
+  infra.uuid:
+    display_name: "UUID"
+    family: personal_data
+    description: "RFC-4122 universally unique identifier; often a user or session ID."
+    default_sensitivity: internal
+    default_action: transform
+
+  regex.date_of_birth:
+    display_name: "Date of birth"
+    family: personal_data
+    description: "A calendar date asserted as a person's birthday."
+    default_sensitivity: confidential
+    default_action: transform
+    frameworks: [hipaa, gdpr]
+    aliases: [regex.dob]
+
+  pii.person:
+    display_name: "Person name"
+    family: personal_data
+    description: "A natural-person name, detected by NER."
+    default_sensitivity: internal
+    default_action: transform
+    frameworks: [gdpr, ccpa, hipaa]
+
+  pii.location:
+    display_name: "Location"
+    family: personal_data
+    description: "Place names: cities, regions, addresses."
+    default_sensitivity: internal
+    default_action: transform
+    frameworks: [gdpr, hipaa]
+
+  pii.organization:
+    display_name: "Organisation name"
+    family: personal_data
+    description: "Companies, agencies, or other named organisations."
+    default_sensitivity: public
+    default_action: observe
+    aliases: [pii.organization]
+
+  pii.date:
+    display_name: "Date or time"
+    family: personal_data
+    description: "Calendar date or timestamp; sensitive under HIPAA when paired with health context."
+    default_sensitivity: internal
+    default_action: observe
+    aliases: [presidio.DATE_TIME]
+    frameworks: [hipaa]
+
+  pii.nationality:
+    display_name: "Nationality, religion, or political group"
+    family: personal_data
+    description: "Special-category personal data under GDPR Article 9."
+    default_sensitivity: restricted
+    default_action: redact
+    frameworks: [gdpr]
+
+  pii.us_drivers_license:
+    display_name: "US driver's licence"
+    family: personal_data
+    description: "US driver's licence number."
+    default_sensitivity: restricted
+    default_action: redact
+    frameworks: [hipaa, ccpa]
+    aliases: [regex.us_drivers_license]
+
+  # --- Health data --------------------------------------------------------
+  healthcare.medical_license:
+    display_name: "Medical licence number"
+    family: health_data
+    description: "Practitioner medical-licence identifier."
+    default_sensitivity: confidential
+    default_action: transform
+    frameworks: [hipaa]
+
+  regex.medical_record_number:
+    display_name: "Medical record number"
+    family: health_data
+    description: "MRN that links a person to their clinical record."
+    default_sensitivity: restricted
+    default_action: redact
+    frameworks: [hipaa]
+    aliases: [regex.mrn]
+
+  regex.health_plan_beneficiary:
+    display_name: "Health-plan beneficiary number"
+    family: health_data
+    description: "Insurance beneficiary or member ID."
+    default_sensitivity: restricted
+    default_action: redact
+    frameworks: [hipaa]
+
+  regex.npi:
+    display_name: "US National Provider Identifier"
+    family: health_data
+    description: "Ten-digit NPI assigned to US healthcare providers."
+    default_sensitivity: confidential
+    default_action: transform
+    frameworks: [hipaa]
+
+  regex.icd10:
+    display_name: "ICD-10 diagnosis code"
+    family: health_data
+    description: "WHO ICD-10 clinical diagnosis code."
+    default_sensitivity: confidential
+    default_action: transform
+    frameworks: [hipaa]
+
+  regex.cpt:
+    display_name: "CPT procedure code"
+    family: health_data
+    description: "AMA Current Procedural Terminology code."
+    default_sensitivity: confidential
+    default_action: transform
+    frameworks: [hipaa]
+
+  regex.lab_value:
+    display_name: "Lab result value"
+    family: health_data
+    description: "Numeric lab value with clinical units (e.g. mg/dL, mmol/L)."
+    default_sensitivity: confidential
+    default_action: transform
+    frameworks: [hipaa]
+
+  regex.device_identifier:
+    display_name: "Medical device identifier"
+    family: health_data
+    description: "Serial number or UDI for a regulated medical device."
+    default_sensitivity: confidential
+    default_action: transform
+    frameworks: [hipaa]
+
+  regex.vehicle_identifier:
+    display_name: "Vehicle identifier"
+    family: personal_data
+    description: "VIN or licence-plate number; PHI when linked to a patient."
+    default_sensitivity: confidential
+    default_action: transform
+    frameworks: [hipaa]
+
+  # --- Payment data -------------------------------------------------------
+  financial.credit_card:
+    display_name: "Payment card number"
+    family: payment_data
+    description: "13-19 digit card number that passes the Luhn check."
+    default_sensitivity: restricted
+    default_action: redact
+    frameworks: [pci_dss]
+    aliases: [financial.credit_card, financial.credit_card]
+    example: "4111 1111 1111 1111"
+
+  # --- Financial data -----------------------------------------------------
+  financial.iban:
+    display_name: "IBAN (bank account)"
+    family: financial_data
+    description: "International Bank Account Number, 15-34 chars after stripping separators."
+    default_sensitivity: confidential
+    default_action: redact
+    frameworks: [glba, gdpr]
+    aliases: [financial.iban]
+    example: "DE89 3704 0044 0532 0130 00"
+
+  regex.us_account_number:
+    display_name: "US bank account number"
+    family: financial_data
+    description: "Domestic US account number, often paired with a routing number."
+    default_sensitivity: restricted
+    default_action: redact
+    frameworks: [glba]
+    aliases: [regex.account_number]
+
+  # --- Credentials & secrets ---------------------------------------------
+  credential.aws_access_key:
+    display_name: "AWS access key ID"
+    family: credentials
+    description: "AKIA/ASIA/AIDA/AROA-prefixed 20-character key ID."
+    default_sensitivity: restricted
+    default_action: block
+    frameworks: [iso27001, soc2]
+    aliases: [secrets.aws]
+
+  credential.aws_secret_key:
+    display_name: "AWS secret access key"
+    family: credentials
+    description: "40-character base64-ish AWS secret found in code or config."
+    default_sensitivity: restricted
+    default_action: block
+    frameworks: [iso27001, soc2]
+
+  credential.gcp_service_account:
+    display_name: "GCP service-account key"
+    family: credentials
+    description: "Service-account JSON key (matched on the `type: service_account` marker)."
+    default_sensitivity: restricted
+    default_action: block
+    frameworks: [iso27001, soc2]
+    aliases: [secrets.gcp]
+
+  credential.azure_storage_key:
+    display_name: "Azure storage connection string"
+    family: credentials
+    description: "DefaultEndpointsProtocol-style connection string with an AccountKey."
+    default_sensitivity: restricted
+    default_action: block
+    frameworks: [iso27001, soc2]
+    aliases: [secrets.azure]
+
+  credential.github_pat:
+    display_name: "GitHub personal access token"
+    family: credentials
+    description: "Classic `ghp_…` or fine-grained `github_pat_…` token."
+    default_sensitivity: restricted
+    default_action: block
+    aliases: [secrets.github]
+
+  credential.openai_api_key:
+    display_name: "OpenAI API key"
+    family: credentials
+    description: "`sk-…` API key (including project-scoped `sk-proj-…`)."
+    default_sensitivity: restricted
+    default_action: block
+
+  credential.anthropic_api_key:
+    display_name: "Anthropic API key"
+    family: credentials
+    description: "`sk-ant-…` Claude API key."
+    default_sensitivity: restricted
+    default_action: block
+
+  credential.slack_bot_token:
+    display_name: "Slack bot / user token"
+    family: credentials
+    description: "`xoxb-`, `xoxp-`, `xoxa-`, `xoxr-`, `xoxs-` Slack tokens."
+    default_sensitivity: restricted
+    default_action: block
+    aliases: [secrets.slack]
+
+  credential.stripe_api_key:
+    display_name: "Stripe API key"
+    family: credentials
+    description: "`sk_live_…`, `sk_test_…`, `rk_live_…` or `rk_test_…` keys."
+    default_sensitivity: restricted
+    default_action: block
+
+  credential.private_key:
+    display_name: "Private cryptographic key"
+    family: credentials
+    description: "PEM-encoded RSA/EC/DSA/OpenSSH/PGP private key."
+    default_sensitivity: restricted
+    default_action: block
+    frameworks: [iso27001, soc2]
+
+  credential.generic_high_entropy:
+    display_name: "High-entropy secret (generic)"
+    family: credentials
+    description: "Long high-entropy token that doesn't match a known issuer."
+    default_sensitivity: confidential
+    default_action: transform
+
+  credential.jwt:
+    display_name: "JSON Web Token"
+    family: credentials
+    description: "Three-segment base64url-encoded JWT."
+    default_sensitivity: confidential
+    default_action: transform
+
+  # --- Source code --------------------------------------------------------
+  code.block:
+    display_name: "Code block"
+    family: source_code
+    description: "Fenced code block (```…```)."
+    default_sensitivity: internal
+    default_action: observe
+    aliases: [code.lang]
+
+  code.dense:
+    display_name: "Code-dense text"
+    family: source_code
+    description: "Free text with a high density of code symbols."
+    default_sensitivity: internal
+    default_action: observe
+
+  code.proprietary_marker:
+    display_name: "Internal / proprietary code marker"
+    family: business_confidential
+    description: "Labels like `Internal use only`, `Do not distribute`, `Proprietary and confidential`."
+    default_sensitivity: confidential
+    default_action: block
+    frameworks: [internal]
+
+  # --- Network identifiers -----------------------------------------------
+  network.ipv4:
+    display_name: "IPv4 address"
+    family: network
+    description: "Dotted-quad IPv4 address."
+    default_sensitivity: internal
+    default_action: observe
+    aliases: [network.ip_address, presidio.IP_ADDRESS]
+
+  network.ipv6:
+    display_name: "IPv6 address"
+    family: network
+    description: "Colon-separated IPv6 address."
+    default_sensitivity: internal
+    default_action: observe
+
+  network.mac_address:
+    display_name: "MAC address"
+    family: network
+    description: "48-bit hardware address (colon or hyphen separated)."
+    default_sensitivity: internal
+    default_action: observe
+
+  regex.web_url_with_account:
+    display_name: "URL containing account identifier"
+    family: network
+    description: "URL where the path or query string embeds an account or user ID."
+    default_sensitivity: confidential
+    default_action: transform
+    frameworks: [hipaa, gdpr]
+    aliases: [presidio.URL]

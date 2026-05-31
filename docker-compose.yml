@@ -1,0 +1,104 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: section
+      POSTGRES_PASSWORD: section
+      POSTGRES_DB: section
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # NOTE: ./services/gateway/migrations is the legacy raw-SQL bootstrap.
+      # Schema is now owned by Alembic (run by the gateway entrypoint), so
+      # mounting those scripts into /docker-entrypoint-initdb.d causes
+      # a duplicate-table race against Alembic. Keep them in-repo for the
+      # bare-metal install docs only.
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "section"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    ports:
+      - "6379:6379"
+
+  gateway:
+    build:
+      context: ./services/gateway
+      dockerfile: Dockerfile
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://section:section@postgres:5432/section
+      REDIS_URL: redis://redis:6379/0
+      SECTION_POLICY_BUNDLE: /etc/section/policies
+    volumes:
+      - ./examples/policies:/etc/section/policies:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys;urllib.request.urlopen('http://localhost:8080/healthz')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ui:
+    build:
+      context: ./services/ui
+      dockerfile: Dockerfile
+    environment:
+      NEXT_PUBLIC_GATEWAY_URL: http://localhost:8080
+      SECTION_GATEWAY_INTERNAL_URL: http://gateway:8080
+    depends_on:
+      gateway:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/', r => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # Edge: optional CA proxy sidecar. Operators opt in with
+  #   docker compose --profile edge up
+  # Pre-mint the CA on a build host (`section-edge-proxy install-ca`),
+  # mount it into /data — the container will NOT auto-generate, because
+  # we don't want the private key trapped in an ephemeral pod.
+  edge-proxy:
+    profiles: ["edge"]
+    build:
+      context: ./services/edge-proxy
+    environment:
+      SECTION_EDGE_GATEWAY_URL: http://gateway:8080
+      SECTION_EDGE_API_KEY: ${SECTION_API_KEY:-section-demo-key}
+      SECTION_EDGE_LISTEN_HOST: 0.0.0.0
+      SECTION_EDGE_LISTEN_PORT: "8888"
+    depends_on:
+      gateway:
+        condition: service_healthy
+    ports:
+      - "8888:8888"
+    volumes:
+      - section-edge-ca:/data
+
+volumes:
+  pgdata:
+  redisdata:
+  section-edge-ca:

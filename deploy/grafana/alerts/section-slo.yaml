@@ -1,0 +1,111 @@
+# Section SLO burn-rate alerts.
+#
+# Follows the Google SRE workbook's multi-window multi-burn-rate model.
+# SLO: 99.9% availability for /v1/chat/completions over a 30-day window.
+#
+# An error budget of 0.1% over 30 days = 43.2 minutes of full outage. We
+# raise two pairs of alerts, each combining a long and a short window so
+# we both react fast and avoid false pages on brief blips:
+#
+#   - fast (page): burn rate × 14.4 over BOTH 1h AND 5m windows.
+#       Consumes 2% of the 30d budget in 1h.
+#   - slow (ticket): burn rate × 6 over BOTH 6h AND 30m windows.
+#       Consumes 5% of the 30d budget in 6h.
+#
+# Both windows must trip for an alert to fire, which suppresses false
+# positives from short spikes that drop off before doing real damage.
+#
+# Load into Prometheus by mounting at /etc/prometheus/rules/ (see
+# deploy/grafana/README.md for a Helm/compose example) or via the
+# Prometheus Operator's `PrometheusRule` CRD (uncomment the wrapper).
+
+groups:
+  - name: section.slo.availability
+    interval: 30s
+    rules:
+      # ---- Fast burn (PAGE) ---------------------------------------------
+      - alert: SectionFastBurn1h
+        expr: |
+          (
+            sum(rate(request_total{route="/v1/chat/completions",status=~"5.."}[1h]))
+            /
+            clamp_min(sum(rate(request_total{route="/v1/chat/completions"}[1h])), 1e-9)
+          ) > (14.4 * 0.001)
+          AND
+          (
+            sum(rate(request_total{route="/v1/chat/completions",status=~"5.."}[5m]))
+            /
+            clamp_min(sum(rate(request_total{route="/v1/chat/completions"}[5m])), 1e-9)
+          ) > (14.4 * 0.001)
+        for: 2m
+        labels:
+          severity: page
+          slo: section.chat.availability
+          burn_rate_class: fast
+        annotations:
+          summary: "Section /v1/chat/completions burning error budget very fast"
+          description: |
+            Over both the last 1h and the last 5m, the 5xx error rate on
+            /v1/chat/completions is burning the 30d error budget at
+            > 14.4× the sustainable rate. At this pace the entire 30d
+            budget is consumed in ~2 days.
+          runbook_url: "https://github.com/cwellbournewood/section/blob/main/docs/operations/runbooks/slo-fast-burn.md"
+
+      # ---- Slow burn (TICKET) -------------------------------------------
+      - alert: SectionSlowBurn6h
+        expr: |
+          (
+            sum(rate(request_total{route="/v1/chat/completions",status=~"5.."}[6h]))
+            /
+            clamp_min(sum(rate(request_total{route="/v1/chat/completions"}[6h])), 1e-9)
+          ) > (6 * 0.001)
+          AND
+          (
+            sum(rate(request_total{route="/v1/chat/completions",status=~"5.."}[30m]))
+            /
+            clamp_min(sum(rate(request_total{route="/v1/chat/completions"}[30m])), 1e-9)
+          ) > (6 * 0.001)
+        for: 15m
+        labels:
+          severity: ticket
+          slo: section.chat.availability
+          burn_rate_class: slow
+        annotations:
+          summary: "Section /v1/chat/completions error-budget burn elevated"
+          description: |
+            Sustained 5xx error rate over both the last 6h and last 30m
+            is burning the 30d budget at > 6× the sustainable rate.
+            File a ticket; investigate within the day.
+          runbook_url: "https://github.com/cwellbournewood/section/blob/main/docs/operations/runbooks/slo-slow-burn.md"
+
+      # ---- Hard breach ---------------------------------------------------
+      - alert: SectionErrorBudgetExhausted
+        expr: |
+          (
+            sum(increase(request_total{route="/v1/chat/completions",status=~"5.."}[30d]))
+            /
+            clamp_min(sum(increase(request_total{route="/v1/chat/completions"}[30d])), 1)
+          ) > 0.001
+        for: 10m
+        labels:
+          severity: ticket
+          slo: section.chat.availability
+        annotations:
+          summary: "30-day error budget for /v1/chat/completions exhausted"
+          description: |
+            The realised 30d error rate exceeds the 0.1% SLO target.
+            New feature releases on the chat path should pause until the
+            budget recovers.
+
+# ---------------------------------------------------------------------------
+# Prometheus Operator wrapper (uncomment to deploy as a `PrometheusRule`):
+# ---------------------------------------------------------------------------
+# apiVersion: monitoring.coreos.com/v1
+# kind: PrometheusRule
+# metadata:
+#   name: section-slo
+#   namespace: section
+#   labels:
+#     release: kube-prometheus-stack
+# spec:
+#   groups: [ ... copy the `groups:` block above here ... ]

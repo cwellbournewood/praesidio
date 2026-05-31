@@ -1,0 +1,17 @@
+# Mounts the canonical Section dashboards from deploy/grafana/dashboards/
+# (no duplication — single source of truth for both Helm and compose).
+apiVersion: 1
+
+providers:
+  - name: Section
+    orgId: 1
+    folder: Section
+    folderUid: section
+    type: file
+    disableDeletion: false
+    editable: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: false
+    options:
+      path: /var/lib/grafana/dashboards/section
+      foldersFromFilesStructure: false

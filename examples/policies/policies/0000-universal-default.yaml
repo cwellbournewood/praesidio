@@ -1,0 +1,169 @@
+apiVersion: section/v1
+kind: Policy
+metadata:
+  id: universal-default
+  name: "Universal default"
+  owner: section@acme.example
+  description: |
+    The policy every tenant gets out of the box. It is industry-agnostic:
+    every detector is on, decisions are keyed off the sensitivity tier
+    declared in detectors.yaml rather than off the tenant's industry.
+
+    Philosophy:
+      - Observe everything, decide proportionately.
+      - Restricted findings (secrets, card numbers, SSNs, special-category
+        personal data) are blocked or redacted by default — no industry
+        opt-in required.
+      - Confidential findings (IBAN, MRN, NPI, ICD-10, JWT, proprietary
+        markers) are transformed (tokenise / FPE / redact) so the
+        downstream model still gets shape but never the literal value.
+      - Internal findings (names, emails, phones, IPs) are tokenised
+        reversibly so authorised users can re-identify them on return.
+      - Public findings (org names) are observed only and pass through.
+
+    Industry-specific overlays (e.g. examples/policies/policies/0100-healthcare.yaml)
+    exist to add stricter actions or longer retention; they are NOT a
+    prerequisite for catching the same data — this default catches it too.
+spec:
+  match:
+    routes: ["*"]
+    tenants: ["*"]
+  detect:
+    enable:
+      # Personal data
+      - pii.email
+      - pii.phone
+      - pii.us_ssn
+      - infra.uuid
+      - regex.date_of_birth
+      - pii.person
+      - pii.location
+      - pii.organization
+      - pii.date
+      - pii.nationality
+      - pii.us_drivers_license
+      # Health data — universal coverage, not gated to healthcare tenants
+      - healthcare.medical_license
+      - regex.medical_record_number
+      - regex.health_plan_beneficiary
+      - regex.npi
+      - regex.icd10
+      - regex.cpt
+      - regex.lab_value
+      - regex.device_identifier
+      - regex.vehicle_identifier
+      # Payment + financial
+      - financial.credit_card
+      - financial.iban
+      - regex.us_account_number
+      # Credentials & secrets
+      - secrets.aws
+      - secrets.gcp
+      - secrets.azure
+      - secrets.github
+      - credential.openai_api_key
+      - credential.anthropic_api_key
+      - secrets.slack
+      - credential.stripe_api_key
+      - credential.private_key
+      - credential.generic_high_entropy
+      - credential.jwt
+      # Source code & business-confidential
+      - code.block
+      - code.dense
+      - code.proprietary_marker
+      # Network identifiers
+      - network.ipv4
+      - network.ipv6
+      - network.mac_address
+      - regex.web_url_with_account
+    thresholds:
+      pii.person: 0.7
+      pii.location: 0.8
+      pii.organization: 0.85
+  decide:
+    # Decisions cascade from most restrictive to least; first match wins per
+    # finding. We key off sensitivity tiers declared in detectors.yaml so a
+    # new detector inherits sane defaults the moment it ships.
+    rules:
+      # ---- BLOCK: restricted-tier credentials & proprietary markers -----
+      - when: |
+          any(findings, .label in [
+            'secrets.aws','secrets.gcp','secrets.azure','secrets.github',
+            'credential.openai_api_key','credential.anthropic_api_key','secrets.slack',
+            'credential.stripe_api_key','credential.private_key',
+            'code.proprietary_marker'
+          ])
+        action: block
+        reason: "Restricted material would leave the tenant boundary."
+        severity: critical
+
+      # ---- REDACT: restricted-tier identifiers ---------------------------
+      - when: |
+          any(findings, .label in [
+            'pii.us_ssn','financial.credit_card','pii.nationality',
+            'pii.us_drivers_license','regex.us_drivers_license',
+            'regex.medical_record_number','regex.mrn',
+            'regex.health_plan_beneficiary',
+            'regex.us_account_number','regex.account_number'
+          ])
+        action: transform
+        transforms:
+          - { label: pii.us_ssn,                       method: redact, replacement: "[REDACTED_SSN]" }
+          - { label: financial.credit_card,                        method: redact, replacement: "[REDACTED_PAN]" }
+          - { label: pii.nationality,                    method: redact, replacement: "[REDACTED_SPECIAL]" }
+          - { label: pii.us_drivers_license,      method: redact, replacement: "[REDACTED_DL]" }
+          - { label: regex.us_drivers_license,        method: redact, replacement: "[REDACTED_DL]" }
+          - { label: regex.medical_record_number,     method: redact, replacement: "[REDACTED_MRN]" }
+          - { label: regex.mrn,                       method: redact, replacement: "[REDACTED_MRN]" }
+          - { label: regex.health_plan_beneficiary,   method: redact, replacement: "[REDACTED_HPB]" }
+          - { label: regex.us_account_number,         method: redact, replacement: "[REDACTED_ACCT]" }
+          - { label: regex.account_number,            method: redact, replacement: "[REDACTED_ACCT]" }
+
+      # ---- TRANSFORM: confidential-tier — reversible tokenisation / FPE -
+      - when: |
+          any(findings, .label in [
+            'financial.iban','credential.jwt','credential.generic_high_entropy',
+            'regex.date_of_birth','regex.dob',
+            'healthcare.medical_license',
+            'regex.npi','regex.icd10','regex.cpt','regex.lab_value',
+            'regex.device_identifier','regex.vehicle_identifier',
+            'regex.web_url_with_account'
+          ])
+        action: transform
+        transforms:
+          - { label: financial.iban,                   method: redact, replacement: "[REDACTED_IBAN]" }
+          - { label: credential.jwt,                    method: redact, replacement: "[REDACTED_JWT]" }
+          - { label: credential.generic_high_entropy,              method: tokenise, scope: tenant, ttl: 1d }
+          - { label: regex.date_of_birth,          method: tokenise, scope: tenant, ttl: 30d, deterministic: true }
+          - { label: regex.dob,                    method: tokenise, scope: tenant, ttl: 30d, deterministic: true }
+          - { label: healthcare.medical_license,     method: tokenise, scope: tenant, ttl: 30d, deterministic: true }
+          - { label: regex.npi,                    method: tokenise, scope: tenant, ttl: 30d, deterministic: true }
+          - { label: regex.icd10,                  method: tokenise, scope: tenant, ttl: 30d, deterministic: true }
+          - { label: regex.cpt,                    method: tokenise, scope: tenant, ttl: 30d, deterministic: true }
+          - { label: regex.lab_value,              method: fpe }
+          - { label: regex.device_identifier,      method: tokenise, scope: tenant, ttl: 30d, deterministic: true }
+          - { label: regex.vehicle_identifier,     method: tokenise, scope: tenant, ttl: 30d, deterministic: true }
+          - { label: regex.web_url_with_account,   method: redact, replacement: "[REDACTED_URL]" }
+
+      # ---- TRANSFORM: internal-tier — reversible session tokens ---------
+      - when: |
+          any(findings, .label in [
+            'pii.email','pii.phone','infra.uuid',
+            'pii.person','pii.location','pii.date'
+          ])
+        action: transform
+        transforms:
+          - { label: pii.email,        method: tokenise, scope: session, ttl: 1h, deterministic: true }
+          - { label: pii.phone,        method: fpe }
+          - { label: infra.uuid,         method: tokenise, scope: session, ttl: 1h }
+          - { label: pii.person,    method: tokenise, scope: session, ttl: 1h, deterministic: true }
+          - { label: pii.location,  method: tokenise, scope: session, ttl: 1h }
+          - { label: pii.date,      method: tokenise, scope: session, ttl: 1h }
+
+      # ---- OBSERVE: everything else (public + network) ------------------
+      - when: "true"
+        action: allow
+  fail_mode: closed
+  audit:
+    severity_min: info

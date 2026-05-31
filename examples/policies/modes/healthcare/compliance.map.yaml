@@ -1,0 +1,100 @@
+apiVersion: section/v1
+kind: ComplianceMap
+metadata:
+  mode: healthcare
+spec:
+  mappings:
+    # HIPAA Safe Harbor identifiers — 45 CFR §164.514(b)(2)(i)
+    - entity: pii.person
+      clauses:
+        - { reg: HIPAA,      ref: "45 CFR §164.514(b)(2)(i)(A)", note: "Names" }
+        - { reg: GDPR-Art-9, ref: "Art. 4(1)",                   note: "Personal data" }
+
+    - entity: pii.location
+      clauses:
+        - { reg: HIPAA, ref: "45 CFR §164.514(b)(2)(i)(B)", note: "Geographic subdivisions smaller than a state" }
+
+    - entity: pii.date
+      clauses:
+        - { reg: HIPAA, ref: "45 CFR §164.514(b)(2)(i)(C)", note: "All elements of dates (except year) related to an individual" }
+
+    - entity: regex.dob
+      clauses:
+        - { reg: HIPAA, ref: "45 CFR §164.514(b)(2)(i)(C)", note: "Date of birth" }
+
+    - entity: pii.phone
+      clauses:
+        - { reg: HIPAA, ref: "45 CFR §164.514(b)(2)(i)(D)", note: "Telephone numbers" }
+
+    - entity: pii.email
+      clauses:
+        - { reg: HIPAA, ref: "45 CFR §164.514(b)(2)(i)(F)", note: "Electronic mail addresses" }
+        - { reg: GDPR-Art-9, ref: "Art. 9(1)",              note: "Health data when linkable" }
+
+    - entity: pii.us_ssn
+      clauses:
+        - { reg: HIPAA, ref: "45 CFR §164.514(b)(2)(i)(G)", note: "Social security numbers" }
+
+    - entity: regex.mrn
+      clauses:
+        - { reg: HIPAA, ref: "45 CFR §164.514(b)(2)(i)(H)", note: "Medical record numbers" }
+        - { reg: NHS-DSPT, ref: "Data Security Standard 1", note: "NHS number / patient identifier" }
+
+    - entity: regex.health_plan_beneficiary
+      clauses:
+        - { reg: HIPAA, ref: "45 CFR §164.514(b)(2)(i)(I)", note: "Health plan beneficiary numbers" }
+
+    - entity: regex.account_number
+      clauses:
+        - { reg: HIPAA, ref: "45 CFR §164.514(b)(2)(i)(J)", note: "Account numbers" }
+
+    - entity: pii.us_drivers_license
+      clauses:
+        - { reg: HIPAA, ref: "45 CFR §164.514(b)(2)(i)(K)", note: "Certificate / license numbers" }
+
+    - entity: regex.vehicle_identifier
+      clauses:
+        - { reg: HIPAA, ref: "45 CFR §164.514(b)(2)(i)(L)", note: "Vehicle identifiers and serial numbers" }
+
+    - entity: regex.device_identifier
+      clauses:
+        - { reg: HIPAA, ref: "45 CFR §164.514(b)(2)(i)(M)", note: "Device identifiers and serial numbers" }
+
+    - entity: pii.url
+      clauses:
+        - { reg: HIPAA, ref: "45 CFR §164.514(b)(2)(i)(N)", note: "Web URLs" }
+
+    - entity: network.ip_address
+      clauses:
+        - { reg: HIPAA, ref: "45 CFR §164.514(b)(2)(i)(O)", note: "IP addresses" }
+
+    - entity: regex.npi
+      clauses:
+        - { reg: HIPAA, ref: "45 CFR §164.514(b)(2)(i)(R)", note: "Any other unique identifying number" }
+
+    - entity: healthcare.medical_license
+      clauses:
+        - { reg: HIPAA, ref: "45 CFR §164.514(b)(2)(i)(K)", note: "Provider license numbers" }
+
+    # Special categories
+    - entity: regex.icd10
+      clauses:
+        - { reg: GDPR-Art-9, ref: "Art. 9(1)", note: "Diagnosis codes are health data" }
+        - { reg: HIPAA,      ref: "45 CFR §160.103", note: "Diagnoses are PHI when linked to individual" }
+
+    - entity: regex.cpt
+      clauses:
+        - { reg: GDPR-Art-9, ref: "Art. 9(1)", note: "Procedure codes are health data" }
+
+    - entity: regex.lab_value
+      clauses:
+        - { reg: GDPR-Art-9, ref: "Art. 9(1)", note: "Laboratory results are health data" }
+
+    - entity: cls.adverse_event
+      clauses:
+        - { reg: HIPAA,  ref: "45 CFR §164.512(b)", note: "FDA reporting permitted disclosure" }
+        - { reg: HITECH, ref: "§13402",             note: "Breach notification thresholds" }
+
+    - entity: cls.behavioural_health
+      clauses:
+        - { reg: HIPAA, ref: "42 CFR Part 2", note: "Substance use disorder records — stricter consent" }

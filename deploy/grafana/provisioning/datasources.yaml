@@ -1,0 +1,26 @@
+# Grafana provisioning — datasources.
+# Place this file at /etc/grafana/provisioning/datasources/datasources.yaml
+# or mount it via the Grafana Helm chart's `datasources` value.
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    uid: prometheus
+    type: prometheus
+    access: proxy
+    isDefault: true
+    url: http://prometheus-server.monitoring.svc.cluster.local:9090
+    jsonData:
+      timeInterval: 30s
+      httpMethod: POST
+      manageAlerts: false
+    editable: false
+
+  - name: Loki
+    uid: loki
+    type: loki
+    access: proxy
+    url: http://loki-gateway.monitoring.svc.cluster.local
+    jsonData:
+      maxLines: 1000
+    editable: false

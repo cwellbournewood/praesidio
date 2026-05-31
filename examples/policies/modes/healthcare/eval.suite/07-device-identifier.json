@@ -1,0 +1,20 @@
+{
+  "name": "Device identifier (UDI) detected and tokenised",
+  "description": "UDI must round-trip across the session — tenant-scoped token with 30d TTL.",
+  "input": {
+    "messages": [
+      {
+        "role": "user",
+        "content": "Pacemaker check: device id UDI 01234567890123 reporting battery EOL within 6 months."
+      }
+    ]
+  },
+  "expected": {
+    "action": "transform",
+    "findings": [
+      { "label": "regex.device_identifier", "min_count": 1 }
+    ],
+    "egress_contains_none": ["01234567890123"],
+    "vault_scope": "tenant"
+  }
+}

@@ -1,0 +1,177 @@
+<!--
+  Section JetBrains plugin descriptor.
+
+  See https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html
+  for the schema. Identity here MUST match build.gradle.kts (group/name/version
+  are patched in by the gradle-intellij-plugin's `patchPluginXml` task at build
+  time — the values below are placeholders for IDE-side dev.)
+-->
+<idea-plugin>
+    <id>io.section.edge</id>
+    <name>Section — Semantic DLP for AI Coding Tools</name>
+    <vendor url="https://github.com/cwellbournewood/section">Section</vendor>
+
+    <description><![CDATA[
+        <p><strong>Section</strong> brings semantic data-loss prevention to
+        your JetBrains IDE.</p>
+
+        <p>Anything you paste into Copilot Chat, AI Assistant, Cody, Continue,
+        aider, Cursor — anywhere a prompt leaves your laptop — gets scanned
+        for secrets, customer PII, financial data, and regulated information
+        before it reaches the model.</p>
+
+        <ul>
+          <li><strong>Scan selection.</strong> Right-click any selection →
+            "Section: Scan Selection" to inspect it before sending.</li>
+          <li><strong>Tokenise selection.</strong> Replace sensitive spans
+            in-place with reversible placeholders the model can reason
+            about safely.</li>
+          <li><strong>Sensitive-data inspection.</strong> Findings surface
+            as IDE warnings in any open file with a "Tokenise" quick-fix.</li>
+          <li><strong>Local proxy.</strong> Toggle the Section edge proxy
+            to MITM AI-tool traffic on the loopback interface — covers
+            Cursor, Claude Code, Continue, aider, and Copilot CLI.</li>
+          <li><strong>Tool window.</strong> See your recent gateway decisions,
+            sign-in status, and proxy state at a glance.</li>
+        </ul>
+
+        <p>API key or OIDC device-code authentication; credentials stored in
+        the IDE's <code>PasswordSafe</code>. Open-source, Apache-2.0.</p>
+    ]]></description>
+
+    <change-notes><![CDATA[
+        <h3>1.1.0</h3>
+        <ul>
+          <li>Initial release.</li>
+          <li>Scan-selection, tokenise, sensitive-data inspection with
+            quick-fix.</li>
+          <li>Tool window with recent decisions.</li>
+          <li>OIDC device-code + API key auth.</li>
+          <li>Local edge-proxy controller.</li>
+        </ul>
+    ]]></change-notes>
+
+    <!--
+      IntelliJ Platform compatibility range. 232 = 2023.2, 252 = 2025.2.
+      We deliberately avoid plugins that pin us to a single product
+      (e.g. com.intellij.modules.java) so the plugin loads in PyCharm,
+      WebStorm, GoLand, Rider, RubyMine, PhpStorm, and DataGrip alike.
+    -->
+    <idea-version since-build="232.0" until-build="252.*"/>
+    <depends>com.intellij.modules.platform</depends>
+
+    <resource-bundle>messages.SectionBundle</resource-bundle>
+
+    <!-- =================================================================
+         Application-level services
+         ================================================================= -->
+    <extensions defaultExtensionNs="com.intellij">
+
+        <!-- Persistent settings (gateway URL, toggles). -->
+        <applicationService
+            serviceImplementation="io.section.edge.settings.SectionSettings"/>
+
+        <!-- Settings panel surfaced under Settings → Tools → Section. -->
+        <applicationConfigurable
+            parentId="tools"
+            id="io.section.edge.settings.SectionConfigurable"
+            displayName="Section"
+            instance="io.section.edge.settings.SectionConfigurable"/>
+
+        <!-- Tool window — right anchor, opens on demand. -->
+        <toolWindow
+            id="Section"
+            anchor="right"
+            icon="/icons/sectionToolWindow.svg"
+            secondary="false"
+            factoryClass="io.section.edge.toolwindow.SectionToolWindowFactory"/>
+
+        <!--
+          Sensitive-data inspection. Plain-text language ID means it runs
+          on every editable file the user opens; downstream throttling
+          lives in the inspection itself.
+        -->
+        <localInspection
+            language=""
+            implementationClass="io.section.edge.inspections.SensitiveDataInspection"
+            displayName="Section sensitive data"
+            groupKey="section.inspection.group"
+            enabledByDefault="true"
+            level="WARNING"
+            bundle="messages.SectionBundle"
+            shortName="SectionSensitiveData"/>
+
+        <!-- Notification group — used for toast messages on errors. -->
+        <notificationGroup
+            id="Section"
+            displayType="BALLOON"
+            isLogByDefault="true"/>
+
+        <!--
+          Application startup hook. We can't use the deprecated
+          ApplicationComponent so register via a postStartupActivity-style
+          ApplicationInitializedListener instead.
+        -->
+        <applicationService
+            serviceImplementation="io.section.edge.SectionApp"/>
+
+        <postStartupActivity
+            implementation="io.section.edge.SectionStartupActivity"/>
+    </extensions>
+
+    <!-- =================================================================
+         Actions
+         ================================================================= -->
+    <actions>
+        <group id="io.section.edge.MainMenuGroup"
+               text="_Section"
+               description="Section: semantic DLP for AI tools"
+               popup="true">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+
+            <action id="io.section.edge.actions.ScanSelectionAction"
+                    class="io.section.edge.actions.ScanSelectionAction"
+                    text="Scan _Selection"
+                    description="Scan the current editor selection for sensitive data via the Section gateway"
+                    icon="AllIcons.Actions.Find"/>
+
+            <action id="io.section.edge.actions.TokeniseSelectionAction"
+                    class="io.section.edge.actions.TokeniseSelectionAction"
+                    text="_Tokenise Selection"
+                    description="Replace sensitive spans in the selection with reversible placeholders"
+                    icon="AllIcons.Actions.Replace"/>
+
+            <separator/>
+
+            <action id="io.section.edge.actions.ToggleProxyAction"
+                    class="io.section.edge.actions.ToggleProxyAction"
+                    text="Toggle Edge _Proxy"
+                    description="Start or stop the local section-edge-proxy"/>
+
+            <action id="io.section.edge.actions.SignInAction"
+                    class="io.section.edge.actions.SignInAction"
+                    text="Sign _In…"
+                    description="Authenticate with the gateway via OIDC device code"/>
+        </group>
+
+        <!-- Right-click editor menu — only the two operations a user
+             would actually invoke in flight from inside an editor. -->
+        <group id="io.section.edge.EditorPopupGroup"
+               text="Section"
+               popup="true">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <reference ref="io.section.edge.actions.ScanSelectionAction"/>
+            <reference ref="io.section.edge.actions.TokeniseSelectionAction"/>
+        </group>
+    </actions>
+
+    <!-- =================================================================
+         Listeners
+         ================================================================= -->
+    <applicationListeners>
+        <listener
+            class="io.section.edge.SectionAppLifecycleListener"
+            topic="com.intellij.ide.AppLifecycleListener"/>
+    </applicationListeners>
+
+</idea-plugin>

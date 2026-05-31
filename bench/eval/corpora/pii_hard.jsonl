@@ -1,0 +1,400 @@
+{"id": "h001", "text": "Patient Sarah Connor (DOB 1985-03-14) presented with persistent fever and fatigue lasting four days.", "labels": ["pii.person", "pii.date"]}
+{"id": "h002", "text": "Dr. Aisha Patel (NPI 1234567893) authorized the discharge plan and follow-up imaging.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h003", "text": "MRN-FAKE-44128 — patient Henry Morales, admitted via the ED on 2024-11-02 with chest pain.", "labels": ["pii.person", "pii.date"]}
+{"id": "h004", "text": "Dr. Ravi Iyer (license MD123456) reviewed the chart and approved the consult with cardiology.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h005", "text": "Patient Maria Vasquez was scheduled for outpatient follow-up on 2025-01-08 at 0900.", "labels": ["pii.person", "pii.date"]}
+{"id": "h006", "text": "Operative note for Eleanor Wright, DOB 1962-07-19 — laparoscopic cholecystectomy without complication.", "labels": ["pii.person", "pii.date"]}
+{"id": "h007", "text": "Discharge summary: Mr. Daniel Park, hospital day 4, transferred to skilled nursing per plan.", "labels": ["pii.person"]}
+{"id": "h008", "text": "Dr. Tomoko Yamada (medical license number MD987654) signed off on the imaging report.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h009", "text": "Lab values for Olivia Banks (DOB 1991-04-22): WBC slightly elevated, otherwise within range.", "labels": ["pii.person", "pii.date"]}
+{"id": "h010", "text": "Following up with patient Marcus Williams about his metformin titration on 2025-02-15.", "labels": ["pii.person", "pii.date"]}
+{"id": "h011", "text": "Dr. Priya Singh (NPI 1003008915) reviewed the abnormal lipid panel and recommended a statin trial.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h012", "text": "Encounter note 2024-10-31: patient Lucia Romero reported intermittent migraines for two weeks.", "labels": ["pii.person", "pii.date"]}
+{"id": "h013", "text": "Consult requested by Dr. James O'Brien for patient Amelia Chen, DOB 1978-11-09.", "labels": ["pii.person", "pii.date"]}
+{"id": "h014", "text": "Cardiology evaluation for patient Robert Diaz, scheduled 2025-03-04, prior MI documented.", "labels": ["pii.person", "pii.date"]}
+{"id": "h015", "text": "Triage note: patient Hannah Lewis presented at 0245 with abdominal pain, vitals stable.", "labels": ["pii.person"]}
+{"id": "h016", "text": "Dr. Anika Subramanian (license number MD562341) approved a same-day MRI for the patient.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h017", "text": "ICU note: patient Jonas Becker, day 6, weaned from pressors overnight, family updated.", "labels": ["pii.person"]}
+{"id": "h018", "text": "Mr. Theodore Wallace (DOB 1944-12-03) requires anticoagulation reconciliation before procedure.", "labels": ["pii.person", "pii.date"]}
+{"id": "h019", "text": "Therapy note for Avery Reynolds: patient reports improved sleep since starting CBT-I in January.", "labels": ["pii.person"]}
+{"id": "h020", "text": "Patient Sofia Cabrera's labs from 2024-09-14 show normalization of liver enzymes.", "labels": ["pii.person", "pii.date"]}
+{"id": "h021", "text": "Dr. Marcus Adebayo (NPI 1093856420) covering nights this week for the hospitalist team.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h022", "text": "Imaging note: patient Felix Romanoff, CT chest on 2025-01-22, no acute findings.", "labels": ["pii.person", "pii.date"]}
+{"id": "h023", "text": "Patient Helen Yoo declined oral chemotherapy in favor of best supportive care, discussed at length.", "labels": ["pii.person"]}
+{"id": "h024", "text": "Dr. Asha Mehta (medical license MD223455) noted the patient's anticoagulation was paused.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h025", "text": "OB note: patient Camille Dubois, G2P1, 32 weeks, vitals reassuring, follow-up in two weeks.", "labels": ["pii.person"]}
+{"id": "h026", "text": "Dr. Walter Okonkwo (NPI 1500238877) signed off on the orthopedic post-op plan.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h027", "text": "Mr. Stephen Quintero (DOB 1957-02-11) was advised on dietary changes for his diabetes.", "labels": ["pii.person", "pii.date"]}
+{"id": "h028", "text": "Patient Andrea Bianchi tolerated the infusion well, no acute reaction noted by nursing.", "labels": ["pii.person"]}
+{"id": "h029", "text": "Dr. Naomi Klein (license MD448822) recommended outpatient cardiology referral.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h030", "text": "Discharge to home for Mrs. Vivian Carter on 2025-02-28 with PT and OT follow-up arranged.", "labels": ["pii.person", "pii.date"]}
+{"id": "h031", "text": "Patient Liam Murphy (DOB 1998-06-09) presented for a sports-physical clearance check.", "labels": ["pii.person", "pii.date"]}
+{"id": "h032", "text": "Dr. Hiroshi Tanaka (NPI 1077553210) was the consulting endocrinologist.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h033", "text": "Med rec for Janet Hill: Lisinopril 10mg daily continued, atorvastatin 20mg added.", "labels": ["pii.person"]}
+{"id": "h034", "text": "Dr. Petra Schulze (medical license MD779001) reviewed the imaging with the family.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h035", "text": "Triage 2025-03-12: patient Adrian Pollard, fall from standing, no LOC, vitals normal.", "labels": ["pii.person", "pii.date"]}
+{"id": "h036", "text": "Dr. Ekaterina Volkov (NPI 1804922711) covering for the weekend hospitalist block.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h037", "text": "Patient Wei Chen reported worsening shortness of breath despite increased diuretic dosing.", "labels": ["pii.person"]}
+{"id": "h038", "text": "Dr. Lucia Fernandez (license MD331228) discussed end-of-life preferences with the patient's family.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h039", "text": "Pre-op evaluation for Mr. Carter Whitfield, DOB 1949-09-30, optimization required.", "labels": ["pii.person", "pii.date"]}
+{"id": "h040", "text": "Patient Olympia Drake's discharge summary noted improvement on the new beta-blocker regimen.", "labels": ["pii.person"]}
+{"id": "h041", "text": "Dr. Bryan Holloway (NPI 1455098822) was the admitting hospitalist on call.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h042", "text": "Mr. Owen Brennan was instructed to return if symptoms worsened over the weekend.", "labels": ["pii.person"]}
+{"id": "h043", "text": "Dr. Mei Lin Zhao (license MD556692) signed off on the ED disposition.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h044", "text": "Pediatric note: patient Riley Cunningham (DOB 2017-08-21) recovering well post-tonsillectomy.", "labels": ["pii.person", "pii.date"]}
+{"id": "h045", "text": "Dr. Rashid Ali (NPI 1290855601) ordered follow-up labs in two weeks.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h046", "text": "Patient Brianna Walsh's anxiety scores improved with the new SSRI titration plan.", "labels": ["pii.person"]}
+{"id": "h047", "text": "Dr. Carmela Esposito (medical license MD994412) reviewed the patient's home medication list.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h048", "text": "Mr. Frederick Davies (DOB 1972-05-04) requires hepatology referral for elevated liver enzymes.", "labels": ["pii.person", "pii.date"]}
+{"id": "h049", "text": "Dr. Naomi Pierce (NPI 1003488299) was the consulting pulmonologist for the case.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h050", "text": "Patient Selena Marquez declined further imaging at this time, preferences documented.", "labels": ["pii.person"]}
+{"id": "h051", "text": "Endocrinology consult for Mr. Karim Hassan, DOB 1980-12-19, poorly controlled diabetes.", "labels": ["pii.person", "pii.date"]}
+{"id": "h052", "text": "Dr. Tatiana Sokolov (license MD228834) recommended a sleep study based on history.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h053", "text": "Patient Zachary Bell reported tolerating the new dose without dizziness or nausea.", "labels": ["pii.person"]}
+{"id": "h054", "text": "Dr. Hyun-Woo Kim (NPI 1456220088) discussed risks and benefits with the family at length.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h055", "text": "Discharge instructions reviewed with patient Madeleine Roy, written copy provided.", "labels": ["pii.person"]}
+{"id": "h056", "text": "Dr. Bianca Russo (medical license MD662291) reviewed the post-op imaging.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h057", "text": "Patient Beatrice Hollis (DOB 1933-04-18) was started on a low-dose anticoagulant.", "labels": ["pii.person", "pii.date"]}
+{"id": "h058", "text": "Dr. Pavel Novotny (NPI 1083345712) consulted on the rheumatology workup.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h059", "text": "Mrs. Caroline Mitchell's wound healing was progressing as expected at the 2025-03-09 visit.", "labels": ["pii.person", "pii.date"]}
+{"id": "h060", "text": "Dr. Ingrid Sorensen (license MD109377) authorized the home health referral.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h061", "text": "Patient Roman Lebedev's medication reconciliation found two duplicate antihypertensives.", "labels": ["pii.person"]}
+{"id": "h062", "text": "Dr. Stella Brooks (NPI 1772094520) is covering the night shift for hospitalists this weekend.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h063", "text": "Mr. Jeremiah Bowers (DOB 1965-08-25) was advised to schedule a colonoscopy this year.", "labels": ["pii.person", "pii.date"]}
+{"id": "h064", "text": "Dr. Ananya Kulkarni (medical license MD445591) released the patient to outpatient follow-up.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h065", "text": "Patient Eduardo Vasquez tolerated dialysis well and remained hemodynamically stable.", "labels": ["pii.person"]}
+{"id": "h066", "text": "Dr. Saoirse O'Malley (NPI 1882203984) signed the operative report.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h067", "text": "Discharge planning meeting for Mrs. Joan Whitaker scheduled for 2025-04-02.", "labels": ["pii.person", "pii.date"]}
+{"id": "h068", "text": "Dr. Aleksandar Petrov (license MD774820) reviewed the labs and continued the current plan.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h069", "text": "Patient Iris Donovan completed her chemotherapy cycle without significant side effects.", "labels": ["pii.person"]}
+{"id": "h070", "text": "Dr. Rebecca Nightingale (NPI 1455091327) noted the patient's preference for oral therapy.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h071", "text": "Patient Augustus Bennett, admitted via the ED on 2024-12-15, transferred to the floor at 0400.", "labels": ["pii.person", "pii.date"]}
+{"id": "h072", "text": "Dr. Mira Kapoor (medical license MD556774) approved the patient's transfer to step-down.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h073", "text": "Mr. Vincent Hamlin's pain was well-controlled overnight per the nursing notes.", "labels": ["pii.person"]}
+{"id": "h074", "text": "Dr. Tatum Reyes (NPI 1300882244) discussed the imaging findings with the family this morning.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h075", "text": "Patient Esther Kingsley's outpatient follow-up appointment is set for 2025-05-12.", "labels": ["pii.person", "pii.date"]}
+{"id": "h076", "text": "Dr. Owen Caldwell (license MD221199) was the admitting attending physician.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h077", "text": "Mrs. Genevieve Lasalle reported no further chest pain since starting the new medication.", "labels": ["pii.person"]}
+{"id": "h078", "text": "Dr. Indira Banerjee (NPI 1992301177) reviewed the patient's medication list at discharge.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h079", "text": "Patient Alistair MacGregor's gait improved noticeably after the third physical therapy session.", "labels": ["pii.person"]}
+{"id": "h080", "text": "Dr. Yuki Watanabe (medical license MD884413) signed off on the home oxygen prescription.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h081", "text": "Plaintiff John Q Smith vs. Acme Corp, filed 2024-08-12 in the Southern District.", "labels": ["pii.person", "pii.organization", "pii.date"]}
+{"id": "h082", "text": "Counsel for Defendant Margaret Tanaka entered an appearance on behalf of Beacon Holdings LLC.", "labels": ["pii.person", "pii.organization"]}
+{"id": "h083", "text": "Deposition of witness Eleanor Cromwell scheduled for 2025-01-15 at the offices of Pierson and Reed LLP.", "labels": ["pii.person", "pii.organization", "pii.date"]}
+{"id": "h084", "text": "Motion to dismiss filed by Plaintiff Hector Ramos on 2024-09-30 was granted in part by the court.", "labels": ["pii.person", "pii.date"]}
+{"id": "h085", "text": "Settlement agreement between Northstar Materials and Helen Anderson executed 2024-11-04.", "labels": ["pii.person", "pii.organization", "pii.date"]}
+{"id": "h086", "text": "In re estate of Walter Pemberton, executor Lisa Pemberton-Hayes, filing date 2024-06-21.", "labels": ["pii.person", "pii.date"]}
+{"id": "h087", "text": "Counsel David Okafor represents the plaintiff class against MetroBank Financial Group.", "labels": ["pii.person", "pii.organization"]}
+{"id": "h088", "text": "Pretrial conference in Chen v. Riverbend Industries set for 2025-02-08, magistrate Alvarez presiding.", "labels": ["pii.person", "pii.organization", "pii.date"]}
+{"id": "h089", "text": "Plaintiff Maria Rodriguez seeks damages from her former employer Pinewood Logistics Inc.", "labels": ["pii.person", "pii.organization"]}
+{"id": "h090", "text": "Counsel of record for Defendant Carter Holloway is the firm of Marsh, Pearson, and Wallace LLP.", "labels": ["pii.person", "pii.organization"]}
+{"id": "h091", "text": "Affidavit of Olivia Devereaux executed 2024-07-19 in support of the temporary restraining order.", "labels": ["pii.person", "pii.date"]}
+{"id": "h092", "text": "Cross-examination of expert witness Dr. Alfred Greenleaf is scheduled for the afternoon session.", "labels": ["pii.person"]}
+{"id": "h093", "text": "Settlement check payable to Janelle Holcomb in the amount discussed at mediation.", "labels": ["pii.person"]}
+{"id": "h094", "text": "Notice of appearance filed by attorney Sebastian Vogel on behalf of Stillwater Capital Partners.", "labels": ["pii.person", "pii.organization"]}
+{"id": "h095", "text": "Discovery motion granted in the matter of Brennan v. Halcyon Manufacturing on 2024-10-11.", "labels": ["pii.person", "pii.organization", "pii.date"]}
+{"id": "h096", "text": "Class representative Tiffany Brooks reviewed the proposed settlement terms with her counsel.", "labels": ["pii.person"]}
+{"id": "h097", "text": "Mediation between Acme Foundation and Daniel Whitman is set for 2025-03-20.", "labels": ["pii.organization", "pii.person", "pii.date"]}
+{"id": "h098", "text": "Counsel for the defendant requested a continuance citing the unavailability of witness Karen Sloan.", "labels": ["pii.person"]}
+{"id": "h099", "text": "Probate of the estate of Edmund Sterling commenced at the family court on 2024-12-02.", "labels": ["pii.person", "pii.date"]}
+{"id": "h100", "text": "Plaintiff's counsel Felicia Yates argued the motion before Judge Halverson.", "labels": ["pii.person"]}
+{"id": "h101", "text": "Defendant Coastal Industries Ltd filed its answer through counsel on 2024-08-25.", "labels": ["pii.organization", "pii.date"]}
+{"id": "h102", "text": "Plaintiff Roberto Esposito alleges breach of the 2021 supply agreement with Vanguard Foods.", "labels": ["pii.person", "pii.organization"]}
+{"id": "h103", "text": "Witness Camille Bordeaux appeared for deposition at the offices of Whitmore, Sands, and Park.", "labels": ["pii.person", "pii.organization"]}
+{"id": "h104", "text": "Counsel Adrian Solomon filed a brief in support of the summary judgment motion.", "labels": ["pii.person"]}
+{"id": "h105", "text": "Mediation between Tessa Holloway and Quantum Properties failed to produce a settlement.", "labels": ["pii.person", "pii.organization"]}
+{"id": "h106", "text": "Affidavit of service in Carlson v. Sundown Energy filed on 2024-07-30 by process server Wright.", "labels": ["pii.person", "pii.organization", "pii.date"]}
+{"id": "h107", "text": "Attorney Naomi Pham appeared on behalf of the receiver in the Sterling Trust matter.", "labels": ["pii.person"]}
+{"id": "h108", "text": "Plaintiff's exhibit list includes records produced by Liberty Imaging Center on 2024-09-14.", "labels": ["pii.organization", "pii.date"]}
+{"id": "h109", "text": "Pretrial order entered in the case of Wallace v. Crimson Mining Corp on 2024-10-29.", "labels": ["pii.person", "pii.organization", "pii.date"]}
+{"id": "h110", "text": "Counsel for plaintiff Yelena Volkov reserved the right to call additional witnesses.", "labels": ["pii.person"]}
+{"id": "h111", "text": "Settlement conference scheduled for 2025-04-09 before Magistrate Judge Hawthorne.", "labels": ["pii.person", "pii.date"]}
+{"id": "h112", "text": "Defendant Phoenix Logistics Inc. moved for partial summary judgment on the negligence count.", "labels": ["pii.organization"]}
+{"id": "h113", "text": "Counsel Imani Adekunle filed a discovery letter outlining outstanding requests.", "labels": ["pii.person"]}
+{"id": "h114", "text": "Plaintiff Norah Schroeder filed her complaint on 2024-05-11 against Allegheny Trucking Co.", "labels": ["pii.person", "pii.date", "pii.organization"]}
+{"id": "h115", "text": "Attorney Hugh Trenholm represents the family of the late Frederick Murchison in the estate matter.", "labels": ["pii.person"]}
+{"id": "h116", "text": "The court denied the motion to compel filed by counsel for Trenton Manufacturing Group.", "labels": ["pii.organization"]}
+{"id": "h117", "text": "Plaintiff Cassandra Levenson seeks injunctive relief against her former business partner.", "labels": ["pii.person"]}
+{"id": "h118", "text": "Notice of deposition served on witness Antonia Becker for 2025-02-25 at 1000.", "labels": ["pii.person", "pii.date"]}
+{"id": "h119", "text": "Counsel Marcus Hollingsworth filed a brief on behalf of Sentinel Insurance Holdings.", "labels": ["pii.person", "pii.organization"]}
+{"id": "h120", "text": "Plaintiff Henrietta Kane's motion for class certification will be heard on 2025-03-15.", "labels": ["pii.person", "pii.date"]}
+{"id": "h121", "text": "Defendant Briarwood Capital Advisors moved to seal certain financial records.", "labels": ["pii.organization"]}
+{"id": "h122", "text": "Counsel for the plaintiff cited the prior ruling in Henley v. Cascade Energy Holdings.", "labels": ["pii.person", "pii.organization"]}
+{"id": "h123", "text": "Magistrate Judge Olivia Kowalski granted the motion to extend the deadline to 2025-01-30.", "labels": ["pii.person", "pii.date"]}
+{"id": "h124", "text": "Plaintiff Stephen Talbot alleges wrongful termination by Granite Peak Logistics in early 2024.", "labels": ["pii.person", "pii.organization"]}
+{"id": "h125", "text": "Counsel Patricia Underwood entered an appearance on behalf of Defendant Crestline Holdings.", "labels": ["pii.person", "pii.organization"]}
+{"id": "h126", "text": "Order entered 2024-12-18 dismissing all claims against Defendant Larkspur Investments LLC.", "labels": ["pii.date", "pii.organization"]}
+{"id": "h127", "text": "Counsel for plaintiff Octavia Cromwell filed a motion in limine ahead of trial.", "labels": ["pii.person"]}
+{"id": "h128", "text": "Defendant Westgate Holdings Corp moved to dismiss the negligence count as time-barred.", "labels": ["pii.organization"]}
+{"id": "h129", "text": "Plaintiff Bartholomew Stein filed a notice of voluntary dismissal on 2024-11-22.", "labels": ["pii.person", "pii.date"]}
+{"id": "h130", "text": "Witness statement of Magdalena Voss filed under seal pending the protective order ruling.", "labels": ["pii.person"]}
+{"id": "h131", "text": "Counsel Henry Salazar argued that the alleged conduct fell within the safe harbor provisions.", "labels": ["pii.person"]}
+{"id": "h132", "text": "Plaintiff Lorraine Becker seeks recovery of attorneys' fees under the fee-shifting statute.", "labels": ["pii.person"]}
+{"id": "h133", "text": "Defendant Northwood Specialty Insurance Co. denied coverage by letter dated 2024-09-04.", "labels": ["pii.organization", "pii.date"]}
+{"id": "h134", "text": "Counsel for the receiver Norman Eldritch appeared at the case management conference.", "labels": ["pii.person"]}
+{"id": "h135", "text": "Plaintiff Aurora Mendoza filed a motion to compel compliance with the subpoena.", "labels": ["pii.person"]}
+{"id": "h136", "text": "Defendant Sequoia Capital Partners Trust filed a counterclaim alleging breach of fiduciary duty.", "labels": ["pii.organization"]}
+{"id": "h137", "text": "Counsel Wilhelmina Strauss filed a notice of withdrawal as attorney of record.", "labels": ["pii.person"]}
+{"id": "h138", "text": "Plaintiff Maximilian Voigt obtained an emergency temporary restraining order on 2024-08-09.", "labels": ["pii.person", "pii.date"]}
+{"id": "h139", "text": "Defendant Beacon Maritime Logistics LLC filed its answer and affirmative defenses.", "labels": ["pii.organization"]}
+{"id": "h140", "text": "Counsel for plaintiff Esmeralda Quintana filed a request for an extension of fact discovery.", "labels": ["pii.person"]}
+{"id": "h141", "text": "Plaintiff Reginald Albright sued his former employer Birchwood Energy Holdings.", "labels": ["pii.person", "pii.organization"]}
+{"id": "h142", "text": "Witness deposition of Inez Marchetti was rescheduled to 2025-02-18 due to a scheduling conflict.", "labels": ["pii.person", "pii.date"]}
+{"id": "h143", "text": "Counsel for Defendant Sebastian Carmichael argued the motion on damages.", "labels": ["pii.person"]}
+{"id": "h144", "text": "Plaintiff Donovan Reyes alleges his rights were violated during the 2024 arbitration proceeding.", "labels": ["pii.person"]}
+{"id": "h145", "text": "Order entered 2024-10-04 granting the motion to consolidate the related class actions.", "labels": ["pii.date"]}
+{"id": "h146", "text": "Counsel for plaintiff Vivienne Cartwright stipulated to extend the response deadline.", "labels": ["pii.person"]}
+{"id": "h147", "text": "Defendant Hollings Pharmaceutical Inc. agreed to produce additional discovery responses.", "labels": ["pii.organization"]}
+{"id": "h148", "text": "Plaintiff Penelope Aldridge's counsel withdrew citing irreconcilable differences.", "labels": ["pii.person"]}
+{"id": "h149", "text": "Defendant Avalon Insurance Group disputed coverage for the alleged 2023-11 incident.", "labels": ["pii.organization"]}
+{"id": "h150", "text": "Counsel for the trustee Solomon Hendricks filed a status report on 2025-03-01.", "labels": ["pii.person", "pii.date"]}
+{"id": "h151", "text": "Plaintiff Gwendolyn Sutherland seeks reinstatement and back pay from Foundry Industrial Group.", "labels": ["pii.person", "pii.organization"]}
+{"id": "h152", "text": "Defendant Sandstorm Holdings Corp filed a notice of appeal to the Ninth Circuit.", "labels": ["pii.organization"]}
+{"id": "h153", "text": "Counsel Yusuf Almahdi entered a limited appearance for the deposition of witness Hollis.", "labels": ["pii.person"]}
+{"id": "h154", "text": "Plaintiff Cordelia Vanderberg's claims were partially dismissed without prejudice.", "labels": ["pii.person"]}
+{"id": "h155", "text": "Defendant Ironbridge Defense Systems disputed the requested damages calculation.", "labels": ["pii.organization"]}
+{"id": "h156", "text": "Counsel for plaintiff Vladimir Karpovich filed an emergency motion under seal.", "labels": ["pii.person"]}
+{"id": "h157", "text": "Order entered on 2025-01-08 by Magistrate Judge Pemberton in the Atlas Holdings matter.", "labels": ["pii.date", "pii.person", "pii.organization"]}
+{"id": "h158", "text": "Plaintiff Cassidy Larkin sought a protective order to limit the scope of discovery.", "labels": ["pii.person"]}
+{"id": "h159", "text": "Defendant Citadel Resource Group LLC moved to seal financial documents from public access.", "labels": ["pii.organization"]}
+{"id": "h160", "text": "Counsel for plaintiff Octavia Greer filed a supplemental brief addressing the standing argument.", "labels": ["pii.person"]}
+{"id": "h161", "text": "Wire $50,000 from account at JPMorgan Chase to DE89 3704 0044 0532 0130 00 for vendor payment.", "labels": ["pii.organization", "financial.iban"]}
+{"id": "h162", "text": "Please verify card 4242 4242 4242 4242 before completing the transaction on the back-office portal.", "labels": ["financial.credit_card"]}
+{"id": "h163", "text": "Customer Maria Lopez paid using card 5555 5555 5555 4444 at the storefront.", "labels": ["pii.person", "financial.credit_card"]}
+{"id": "h164", "text": "Recurring transfer setup to GB29 NWBK 6016 1331 9268 19 for the quarterly subscription.", "labels": ["financial.iban"]}
+{"id": "h165", "text": "Refund issued to card 4111 1111 1111 1111 by the billing operations team.", "labels": ["financial.credit_card"]}
+{"id": "h166", "text": "Account number FR14 2004 1010 0505 0001 3M02 606 was added to the approved vendor list.", "labels": ["financial.iban"]}
+{"id": "h167", "text": "Card 6011 1111 1111 1117 was declined for the December subscription renewal.", "labels": ["financial.credit_card"]}
+{"id": "h168", "text": "Transfer to ES91 2100 0418 4502 0005 1332 confirmed by the operations desk this morning.", "labels": ["financial.iban"]}
+{"id": "h169", "text": "Test card 3782 822463 10005 will be used for the AMEX integration smoke checks.", "labels": ["financial.credit_card"]}
+{"id": "h170", "text": "Vendor payable settled via IT60 X054 2811 1010 0000 0123 456 per finance ops note.", "labels": ["financial.iban"]}
+{"id": "h171", "text": "Card 5105 1051 0510 5100 was used to set up the autopay schedule for the new account.", "labels": ["financial.credit_card"]}
+{"id": "h172", "text": "Outbound wire to NL91 ABNA 0417 1643 00 cleared on 2024-12-19 per the bank confirmation.", "labels": ["financial.iban", "pii.date"]}
+{"id": "h173", "text": "Stripe test card 4000 0566 5566 5556 was used for the debit flow regression checks.", "labels": ["financial.credit_card"]}
+{"id": "h174", "text": "Settlement account BE68 5390 0754 7034 received the partial payment overnight.", "labels": ["financial.iban"]}
+{"id": "h175", "text": "Card 4000 0025 0000 3155 declined at the gateway with code 'requires action'.", "labels": ["financial.credit_card"]}
+{"id": "h176", "text": "Customer treasury team approved CH93 0076 2011 6238 5295 7 as the inbound funding source.", "labels": ["financial.iban"]}
+{"id": "h177", "text": "Stripe test card 4000 0035 6000 0008 used for the Brazilian Real currency tests.", "labels": ["financial.credit_card"]}
+{"id": "h178", "text": "Sepa instruction to AT61 1904 3002 3457 3201 sent through the corporate portal earlier today.", "labels": ["financial.iban"]}
+{"id": "h179", "text": "Customer Daniel Brooks updated his card on file to 4012 8888 8888 1881 yesterday.", "labels": ["pii.person", "financial.credit_card"]}
+{"id": "h180", "text": "Beneficiary IT78 P030 0203 2800 0040 0162 854 was added to the recurring transfers list.", "labels": ["financial.iban"]}
+{"id": "h181", "text": "Authorisation on card 5454 5454 5454 5454 was reversed after the customer dispute.", "labels": ["financial.credit_card"]}
+{"id": "h182", "text": "Wire instructions to LU28 0019 4006 4475 0000 attached to the email from accounts payable.", "labels": ["financial.iban"]}
+{"id": "h183", "text": "Customer Sarah Murphy provided card 4222 2222 2222 2222 for the auto-renewal setup.", "labels": ["pii.person", "financial.credit_card"]}
+{"id": "h184", "text": "International payable settled via DK50 0040 0440 1162 43 per the treasury team note.", "labels": ["financial.iban"]}
+{"id": "h185", "text": "Card 4000 0566 5566 5556 returned a CVV mismatch during the pre-auth attempt.", "labels": ["financial.credit_card"]}
+{"id": "h186", "text": "Beneficiary FI21 1234 5600 0007 85 was added to the approved vendor file by finance.", "labels": ["financial.iban"]}
+{"id": "h187", "text": "Card 4000 0027 6000 3184 declined with reason code 'three_d_secure_required'.", "labels": ["financial.credit_card"]}
+{"id": "h188", "text": "Settlement account PT50 0002 0123 1234 5678 9015 4 was updated in the vendor profile.", "labels": ["financial.iban"]}
+{"id": "h189", "text": "Customer Felix Marchand paid using card 5200 8282 8282 8210 at the kiosk yesterday afternoon.", "labels": ["pii.person", "financial.credit_card"]}
+{"id": "h190", "text": "Outbound payment to NO93 8601 1117 947 cleared per the morning reconciliation report.", "labels": ["financial.iban"]}
+{"id": "h191", "text": "Card 6011 0009 9013 9424 was used for the Discover network compliance regression tests.", "labels": ["financial.credit_card"]}
+{"id": "h192", "text": "Beneficiary SE45 5000 0000 0583 9825 7466 was approved for the upcoming subscription renewal.", "labels": ["financial.iban"]}
+{"id": "h193", "text": "Stripe test card 4000 0025 0000 3155 requires explicit 3DS confirmation per the docs.", "labels": ["financial.credit_card"]}
+{"id": "h194", "text": "Sepa instruction to IE29 AIBK 9311 5212 3456 78 added to the payment batch.", "labels": ["financial.iban"]}
+{"id": "h195", "text": "Customer Jules Ribeiro updated his payment method to 4263 9826 4026 9299 last week.", "labels": ["pii.person", "financial.credit_card"]}
+{"id": "h196", "text": "Vendor settlement to GR16 0110 1250 0000 0001 2300 695 cleared overnight per treasury.", "labels": ["financial.iban"]}
+{"id": "h197", "text": "Test card 3056 9309 0259 04 used for Diners Club network coverage verification.", "labels": ["financial.credit_card"]}
+{"id": "h198", "text": "Beneficiary CY17 0020 0128 0000 0012 0052 7600 was confirmed on the inbound wire.", "labels": ["financial.iban"]}
+{"id": "h199", "text": "Card 4000 0058 2600 0005 used for the Eurozone settlement currency regression run.", "labels": ["financial.credit_card"]}
+{"id": "h200", "text": "International transfer to PL61 1090 1014 0000 0712 1981 2874 approved by finance leadership.", "labels": ["financial.iban"]}
+{"id": "h201", "text": "Customer Nathalie Kim provided card 4000 0035 6000 0008 for the Brazilian flow regression check.", "labels": ["pii.person", "financial.credit_card"]}
+{"id": "h202", "text": "Account holder Donovan Pierce's IBAN MT84 MALT 0110 0001 2345 MTLC AST0 01S was updated in the vendor file.", "labels": ["pii.person", "financial.iban"]}
+{"id": "h203", "text": "Card 4716 5713 3478 4823 was associated with the test corporate account.", "labels": ["financial.credit_card"]}
+{"id": "h204", "text": "Wire confirmation referencing account SI56 1910 0000 0123 438 received from European bank.", "labels": ["financial.iban"]}
+{"id": "h205", "text": "Customer Aisha Bekele opened a dispute on charge to card 4485 2752 8267 5419.", "labels": ["pii.person", "financial.credit_card"]}
+{"id": "h206", "text": "Quarterly remittance to LV80 BANK 0000 4351 9500 1 finalised by the accounts team.", "labels": ["financial.iban"]}
+{"id": "h207", "text": "Charge of $2,400 on card 4929 5454 5454 5454 was flagged by the fraud team for review.", "labels": ["financial.credit_card"]}
+{"id": "h208", "text": "Vendor IBAN HR12 1001 0051 8630 0016 0 added to the procurement portal yesterday.", "labels": ["financial.iban"]}
+{"id": "h209", "text": "Reimbursement issued to card 6011 0000 0000 1004 by the expense management team.", "labels": ["financial.credit_card"]}
+{"id": "h210", "text": "Wire to vendor account RO49 AAAA 1B31 0075 9384 0000 cleared per finance ops note.", "labels": ["financial.iban"]}
+{"id": "h211", "text": "Customer Beatriz Soto updated her payment method to card 4485 0123 4567 8901 last evening.", "labels": ["pii.person", "financial.credit_card"]}
+{"id": "h212", "text": "International payable LT12 1000 0111 0100 1000 was approved by the treasury committee.", "labels": ["financial.iban"]}
+{"id": "h213", "text": "Card 5424 0000 0000 0015 used for the recurring SaaS subscription billing test.", "labels": ["financial.credit_card"]}
+{"id": "h214", "text": "Refund initiated to account EE38 2200 2210 2014 5685 for the cancelled order.", "labels": ["financial.iban"]}
+{"id": "h215", "text": "Cardholder Vivian Park reported card 4929 1234 5678 9012 as lost yesterday evening.", "labels": ["pii.person", "financial.credit_card"]}
+{"id": "h216", "text": "Settlement account BG80 BNBG 9661 1020 3456 78 confirmed by the partner bank.", "labels": ["financial.iban"]}
+{"id": "h217", "text": "Customer Marco Bellini's authorisation on card 4485 4444 1234 5678 was declined.", "labels": ["pii.person", "financial.credit_card"]}
+{"id": "h218", "text": "Transfer to UA21 3996 2200 0026 0070 5233 5612 1 cleared per the morning bank file.", "labels": ["financial.iban"]}
+{"id": "h219", "text": "Card 5454 5454 5454 5454 was used for the CVC verification test scenario.", "labels": ["financial.credit_card"]}
+{"id": "h220", "text": "Wire to MK07 2501 2000 0058 984 confirmed and reconciled by finance.", "labels": ["financial.iban"]}
+{"id": "h221", "text": "My email is alice.greene@example.com and phone is +1 415 555 0142, dob 1990-05-22.", "labels": ["pii.email", "pii.phone", "pii.date"]}
+{"id": "h222", "text": "Reach out to me at noah.parker@example.net or (212) 555-0166 in the afternoon.", "labels": ["pii.email", "pii.phone"]}
+{"id": "h223", "text": "Mia Ortega here, ping me on mia.ortega@example.org when you're free.", "labels": ["pii.person", "pii.email"]}
+{"id": "h224", "text": "Quick intro: I'm Henrik Larsson, henrik.larsson@example.io, dob 1988-09-11.", "labels": ["pii.person", "pii.email", "pii.date"]}
+{"id": "h225", "text": "Got it, my number is +44 20 7946 0123, email kiera.walsh@example.co.uk if needed.", "labels": ["pii.phone", "pii.email"]}
+{"id": "h226", "text": "Hi all — Samira Khan, samira.khan@example.com, mobile +1 646 555 0100.", "labels": ["pii.person", "pii.email", "pii.phone"]}
+{"id": "h227", "text": "Best way to reach me: oliver.mitchell@example.dev, born 1979-12-30.", "labels": ["pii.email", "pii.date"]}
+{"id": "h228", "text": "Thanks, here's my info: carmen.alvarez@example.com / +1 312 555 0173.", "labels": ["pii.email", "pii.phone"]}
+{"id": "h229", "text": "I'm Jonas Fischer, here is my work email jonas.fischer@example.de.", "labels": ["pii.person", "pii.email"]}
+{"id": "h230", "text": "Forwarding the invite to my partner Laila Ramos at laila.ramos@example.us.", "labels": ["pii.person", "pii.email"]}
+{"id": "h231", "text": "FYI Connor MacAllister will join the call, phone +1 207 555 0149.", "labels": ["pii.person", "pii.phone"]}
+{"id": "h232", "text": "Looping in Nadia Volkov, nadia.volkov@example.com, she'll handle the next steps.", "labels": ["pii.person", "pii.email"]}
+{"id": "h233", "text": "Use grace.huang@example.com for invoicing, dob 1985-02-17.", "labels": ["pii.email", "pii.date"]}
+{"id": "h234", "text": "Hey — Lukas Bauer, lukas.bauer@example.at, please send the schedule when ready.", "labels": ["pii.person", "pii.email"]}
+{"id": "h235", "text": "Best reachable on +1 415 555 0188, email anchored.user@example.com on weekends.", "labels": ["pii.phone", "pii.email"]}
+{"id": "h236", "text": "Hi Maya, I'm Ana Sokolova, my email is ana.sokolova@example.com.", "labels": ["pii.person", "pii.email"]}
+{"id": "h237", "text": "Please CC raj.menon@example.com on the final draft, thanks.", "labels": ["pii.email"]}
+{"id": "h238", "text": "I'm Theresa Klein, born 1995-08-04, reach me at theresa.klein@example.com.", "labels": ["pii.person", "pii.date", "pii.email"]}
+{"id": "h239", "text": "Adding William Drew to the thread, william.drew@example.com, phone +1 503 555 0188.", "labels": ["pii.person", "pii.email", "pii.phone"]}
+{"id": "h240", "text": "Quick note from Pedro Cabral, pedro.cabral@example.br, cell +55 11 95555 0142.", "labels": ["pii.person", "pii.email", "pii.phone"]}
+{"id": "h241", "text": "Hi everyone, signing in as Yara Salem, email yara.salem@example.com.", "labels": ["pii.person", "pii.email"]}
+{"id": "h242", "text": "Please use my new contact: chen.li@example.com, born 1992-11-09 if HR asks.", "labels": ["pii.email", "pii.date"]}
+{"id": "h243", "text": "Reach me on +33 1 70 18 0123 or thomas.legrand@example.fr.", "labels": ["pii.phone", "pii.email"]}
+{"id": "h244", "text": "FYI my correct contact is now liam.donovan@example.io, mobile +1 617 555 0177.", "labels": ["pii.email", "pii.phone"]}
+{"id": "h245", "text": "I'm Sasha Ivanova, dob 1983-06-25 — best on sasha.ivanova@example.com.", "labels": ["pii.person", "pii.date", "pii.email"]}
+{"id": "h246", "text": "Hey, my number changed to +1 305 555 0144, email isabel.rios@example.com.", "labels": ["pii.phone", "pii.email"]}
+{"id": "h247", "text": "Please use my SSN 222-33-4444 only on the offline form, not the portal.", "labels": ["pii.us_ssn"]}
+{"id": "h248", "text": "Submitted my SSN 555-44-3322 with the employment paperwork yesterday.", "labels": ["pii.us_ssn"]}
+{"id": "h249", "text": "Verified my SSN 432-55-6788 in the secure HR portal during onboarding.", "labels": ["pii.us_ssn"]}
+{"id": "h250", "text": "My driver's licence number is D12345678 for the rental car booking.", "labels": ["pii.us_drivers_license"]}
+{"id": "h251", "text": "Phone +1 415-555-0149, email zoe.mclean@example.com, dob 1996-01-19, that should be all.", "labels": ["pii.phone", "pii.email", "pii.date"]}
+{"id": "h252", "text": "Hi, I'm Felipe Castro, my email is felipe.castro@example.com, mobile +52 55 5555 0188.", "labels": ["pii.person", "pii.email", "pii.phone"]}
+{"id": "h253", "text": "Best reached at angelica.wu@example.com or +1 408 555 0117 most days.", "labels": ["pii.email", "pii.phone"]}
+{"id": "h254", "text": "I'm Stefan Andersson, stefan.andersson@example.se, dob 1986-04-08.", "labels": ["pii.person", "pii.email", "pii.date"]}
+{"id": "h255", "text": "Use mariam.osman@example.com going forward; my old address bounces now.", "labels": ["pii.email"]}
+{"id": "h256", "text": "Phone is +1 718 555 0177, email is finn.greenley@example.com if needed urgently.", "labels": ["pii.phone", "pii.email"]}
+{"id": "h257", "text": "Hi, Alexei Petrov here — alexei.petrov@example.com, cell +7 495 555 0143.", "labels": ["pii.person", "pii.email", "pii.phone"]}
+{"id": "h258", "text": "I'm Tomas Karlsson, dob 1990-10-30 — work email tomas.karlsson@example.com.", "labels": ["pii.person", "pii.date", "pii.email"]}
+{"id": "h259", "text": "Looping in beatrice.santoro@example.it, dob 1981-07-12, she'll take it from here.", "labels": ["pii.email", "pii.date"]}
+{"id": "h260", "text": "Hi all, Yumi Sato, yumi.sato@example.jp, mobile +81 90 5555 0143.", "labels": ["pii.person", "pii.email", "pii.phone"]}
+{"id": "h261", "text": "Reach me at vincent.archambeau@example.fr or +33 6 12 34 56 78 during business hours.", "labels": ["pii.email", "pii.phone"]}
+{"id": "h262", "text": "FYI my updated info: simone.holloway@example.com, +44 7700 900142, dob 1993-03-03.", "labels": ["pii.email", "pii.phone", "pii.date"]}
+{"id": "h263", "text": "I'm Karim Hassan, my home address ends with a postcode I'll send via DM separately.", "labels": ["pii.person"]}
+{"id": "h264", "text": "Phone changed last week: please use +1 469 555 0114, email darius.holloway@example.com.", "labels": ["pii.phone", "pii.email"]}
+{"id": "h265", "text": "Use harriet.zhou@example.com for the legal review, dob 1989-05-30.", "labels": ["pii.email", "pii.date"]}
+{"id": "h266", "text": "Hi everyone, I'm Oskar Hansen, oskar.hansen@example.no, mobile +47 4123 0145.", "labels": ["pii.person", "pii.email", "pii.phone"]}
+{"id": "h267", "text": "Best emails reach me at amir.khalil@example.com, cell +971 50 555 0142.", "labels": ["pii.email", "pii.phone"]}
+{"id": "h268", "text": "FYI: Talia Goldberg, talia.goldberg@example.co.il, dob 1988-12-19.", "labels": ["pii.person", "pii.email", "pii.date"]}
+{"id": "h269", "text": "Reach me at ava.duncan@example.com, alternatively +1 213 555 0177 for urgent matters.", "labels": ["pii.email", "pii.phone"]}
+{"id": "h270", "text": "Hi all, I'm Aleksander Nowak, aleksander.nowak@example.pl, born 1976-11-04.", "labels": ["pii.person", "pii.email", "pii.date"]}
+{"id": "h271", "text": "Sharing my updated contact info: chloe.armstrong@example.com / +44 161 496 0142.", "labels": ["pii.email", "pii.phone"]}
+{"id": "h272", "text": "I'm Joaquin Reyes, please use joaquin.reyes@example.com going forward.", "labels": ["pii.person", "pii.email"]}
+{"id": "h273", "text": "Phone +1 503 555 0190, email tessa.bishop@example.com, dob 1991-02-28 for HR records.", "labels": ["pii.phone", "pii.email", "pii.date"]}
+{"id": "h274", "text": "Use the work line +1 312 555 0188 or email nicholas.brennan@example.com after lunch.", "labels": ["pii.phone", "pii.email"]}
+{"id": "h275", "text": "FYI updated: imani.washington@example.com, +1 404 555 0123, dob 1994-09-17.", "labels": ["pii.email", "pii.phone", "pii.date"]}
+{"id": "h276", "text": "Hi, here is my info: gabriela.fernandez@example.com, mobile +34 600 555 142.", "labels": ["pii.email", "pii.phone"]}
+{"id": "h277", "text": "I'm Aiden Murakami, aiden.murakami@example.com, dob 1982-08-14, please update records.", "labels": ["pii.person", "pii.email", "pii.date"]}
+{"id": "h278", "text": "FYI: clara.tremblay@example.ca, cell +1 514 555 0118, dob 1987-06-06.", "labels": ["pii.email", "pii.phone", "pii.date"]}
+{"id": "h279", "text": "Hi all, Mateo Galindo here, mateo.galindo@example.com, +1 305 555 0177.", "labels": ["pii.person", "pii.email", "pii.phone"]}
+{"id": "h280", "text": "Best to reach me at viktoria.hess@example.com, dob 1980-03-15.", "labels": ["pii.email", "pii.date"]}
+{"id": "h281", "text": "Fix the auth check at services/auth.py:42, then ping bob.harrison@company.com for review.", "labels": ["pii.email"]}
+{"id": "h282", "text": "Code owner for the gateway routes is alice.gomez@company.com per the CODEOWNERS file.", "labels": ["pii.email"]}
+{"id": "h283", "text": "Reach out to release.manager+oncall@company.com about the rollback decision.", "labels": ["pii.email"]}
+{"id": "h284", "text": "Carla Rivera is the reviewer on the auth refactor branch, ping her in slack.", "labels": ["pii.person"]}
+{"id": "h285", "text": "Failing test traceback ends in test_helpers.py:88, owner is sam.bishop@company.com.", "labels": ["pii.email"]}
+{"id": "h286", "text": "Patrick Lo signed off on the migration plan in the PR description.", "labels": ["pii.person"]}
+{"id": "h287", "text": "Please direct rollback questions to platform-oncall+rollback@company.com.", "labels": ["pii.email"]}
+{"id": "h288", "text": "Failing CI step paged on-call rotation; primary is dominic.harvey@company.com.", "labels": ["pii.email"]}
+{"id": "h289", "text": "Let's pull in maria.santos@company.com on the cross-team API review tomorrow morning.", "labels": ["pii.email"]}
+{"id": "h290", "text": "Ravi Bhattacharya owns the data ingest service; loop him in early.", "labels": ["pii.person"]}
+{"id": "h291", "text": "Code review feedback addressed; pinged liam.flanagan@company.com for the next pass.", "labels": ["pii.email"]}
+{"id": "h292", "text": "Hannah Tan is the maintainer of the metrics SDK; defer to her on any breaking changes.", "labels": ["pii.person"]}
+{"id": "h293", "text": "Forwarding the canary failure to oncall+release@company.com per the incident runbook.", "labels": ["pii.email"]}
+{"id": "h294", "text": "Esme Reilly approved the deprecation timeline in the policy proposal doc.", "labels": ["pii.person"]}
+{"id": "h295", "text": "Quick patch from felix.diallo@company.com, please review before merge.", "labels": ["pii.email"]}
+{"id": "h296", "text": "Diego Marquez is the new owner of the auth pipeline as of last week.", "labels": ["pii.person"]}
+{"id": "h297", "text": "Pinged the security review queue at security-review+gateway@company.com for visibility.", "labels": ["pii.email"]}
+{"id": "h298", "text": "Lana Petrov rolled out the dashboard change yesterday; minor follow-ups noted.", "labels": ["pii.person"]}
+{"id": "h299", "text": "If you need a quick approval ping connor.olsen@company.com on the policy update.", "labels": ["pii.email"]}
+{"id": "h300", "text": "Yusuf Adeyemi will handle the staged rollout window for the API change.", "labels": ["pii.person"]}
+{"id": "h301", "text": "Code review on PR #4421 by leah.morris@company.com — small nit and a question.", "labels": ["pii.email"]}
+{"id": "h302", "text": "Sergei Volkov updated the ADR with the new sequencing decision yesterday.", "labels": ["pii.person"]}
+{"id": "h303", "text": "Please tag victor.romano@company.com on the SDK breaking change RFC.", "labels": ["pii.email"]}
+{"id": "h304", "text": "Mia Sutherland is the contact for the integration tests; check the test-owner doc.", "labels": ["pii.person"]}
+{"id": "h305", "text": "Bug discovered by ana.delgado@company.com in the metrics pipeline; ticket filed.", "labels": ["pii.email"]}
+{"id": "h306", "text": "Owner of the streaming endpoint is marcus.tate@company.com per the CODEOWNERS file.", "labels": ["pii.email"]}
+{"id": "h307", "text": "Daniel Persson is on call this weekend; ping his work email if escalation is needed.", "labels": ["pii.person"]}
+{"id": "h308", "text": "Please update the runbook owner to hina.tanaka@company.com going forward.", "labels": ["pii.email"]}
+{"id": "h309", "text": "Olga Marinova suggested splitting the migration into two reversible steps.", "labels": ["pii.person"]}
+{"id": "h310", "text": "Pull request reviewer rotation includes pavel.czech@company.com this week.", "labels": ["pii.email"]}
+{"id": "h311", "text": "Jenny Holloway will lead the design review next Tuesday afternoon.", "labels": ["pii.person"]}
+{"id": "h312", "text": "Production incident closed by amir.bourbouhakis@company.com after the canary rollback.", "labels": ["pii.email"]}
+{"id": "h313", "text": "Lucia Conti pushed the hotfix tag earlier today; awaiting CI confirmation.", "labels": ["pii.person"]}
+{"id": "h314", "text": "Please CC oncall+platform@company.com on any blocking incident comms.", "labels": ["pii.email"]}
+{"id": "h315", "text": "Dimitri Vlachos signed off on the audit-log retention policy change.", "labels": ["pii.person"]}
+{"id": "h316", "text": "If you spot a regression, ping rotation-lead+gateway@company.com for triage.", "labels": ["pii.email"]}
+{"id": "h317", "text": "Owen Pritchard approved the policy bundle update; tagged commit is in the release notes.", "labels": ["pii.person"]}
+{"id": "h318", "text": "FYI the new code owner of the parser is nia.eastwood@company.com effective Monday.", "labels": ["pii.email"]}
+{"id": "h319", "text": "Pablo Salgado is leading the migration from the legacy queue this quarter.", "labels": ["pii.person"]}
+{"id": "h320", "text": "Please confirm the merge schedule with ines.barreto@company.com before tagging.", "labels": ["pii.email"]}
+{"id": "h321", "text": "Carter the file owner is also Carter, but he goes by his middle name Bishop here.", "labels": ["pii.person"]}
+{"id": "h322", "text": "Reed approved the change; this is Reed Brennan, not the older Reed Carter from last year.", "labels": ["pii.person"]}
+{"id": "h323", "text": "Cleveland is the team lead now — Cleveland Foster, not the city.", "labels": ["pii.person"]}
+{"id": "h324", "text": "spelled-out: alice at example dot com — should not match as an email.", "labels": []}
+{"id": "h325", "text": "ping me at bob dot harrison at company dot io when you have a sec.", "labels": []}
+{"id": "h326", "text": "my contact is carmen at example dot org, only spelled out for safety.", "labels": []}
+{"id": "h327", "text": "Card 4111.1111.1111.1111 with period separators may bypass the standard regex.", "labels": ["financial.credit_card"]}
+{"id": "h328", "text": "Adjusted card number 5500/0000/0000/0004 with slash separators in the legacy data export.", "labels": ["financial.credit_card"]}
+{"id": "h329", "text": "Customer paid with card number 4485-0123-4567-8901 (hyphenated) last week.", "labels": ["financial.credit_card"]}
+{"id": "h330", "text": "Test data shows 4111\t1111\t1111\t1111 with tab separators in legacy files.", "labels": ["financial.credit_card"]}
+{"id": "h331", "text": "Carter, the new program manager, is taking over from Bishop next quarter.", "labels": ["pii.person"]}
+{"id": "h332", "text": "Reed Hastings is a real person, but please don't reach out via this thread.", "labels": ["pii.person"]}
+{"id": "h333", "text": "Cleveland Williams, our intern, will be helping with the documentation.", "labels": ["pii.person"]}
+{"id": "h334", "text": "Sandy Carter from the partner team will be joining the call Thursday.", "labels": ["pii.person"]}
+{"id": "h335", "text": "Glen Holland approved the new vendor onboarding policy yesterday afternoon.", "labels": ["pii.person"]}
+{"id": "h336", "text": "Email address vivian at startup dot ai — spelled out to avoid auto-detection.", "labels": []}
+{"id": "h337", "text": "Patient Frances Carter (DOB 1959-11-22) was readmitted for fluid management.", "labels": ["pii.person", "pii.date"]}
+{"id": "h338", "text": "Dr. Liang Wei (NPI 1399280561) discussed the imaging findings with the medical team.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h339", "text": "Patient Karim Demir's labs from 2025-04-11 returned within expected ranges.", "labels": ["pii.person", "pii.date"]}
+{"id": "h340", "text": "Dr. Sasha Vincent (license MD110023) authorized the home oxygen continuation.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h341", "text": "Counsel Marisol Vega filed a brief on behalf of Defendant Highland Trust Holdings.", "labels": ["pii.person", "pii.organization"]}
+{"id": "h342", "text": "Plaintiff Elias Hartman alleges breach of contract by Goldenrod Industries Inc.", "labels": ["pii.person", "pii.organization"]}
+{"id": "h343", "text": "Pretrial conference rescheduled to 2025-05-22 before Judge Wallace Hughes.", "labels": ["pii.date", "pii.person"]}
+{"id": "h344", "text": "Defendant Atlas Energy Holdings disputed the standing of the lead plaintiff.", "labels": ["pii.organization"]}
+{"id": "h345", "text": "Customer Frederic Augustin's card 4929 9876 5432 1098 was used at the airport kiosk.", "labels": ["pii.person", "financial.credit_card"]}
+{"id": "h346", "text": "Wire transfer to AL47 2121 1009 0000 0002 3569 8741 cleared per the morning batch.", "labels": ["financial.iban"]}
+{"id": "h347", "text": "Charge of $1,200 on card 5454 5454 5454 5454 was flagged as out-of-pattern by the bank.", "labels": ["financial.credit_card"]}
+{"id": "h348", "text": "International settlement to BA39 1290 0794 0102 8494 confirmed by finance.", "labels": ["financial.iban"]}
+{"id": "h349", "text": "Customer Naomi Schreiber updated card on file to 4485 9871 1234 5678 last evening.", "labels": ["pii.person", "financial.credit_card"]}
+{"id": "h350", "text": "Vendor IBAN MC58 1122 2000 0101 2345 6789 030 confirmed and added to the file.", "labels": ["financial.iban"]}
+{"id": "h351", "text": "Hi all, my updated contact is olu.adekunle@example.com / +234 80 5555 0142, dob 1992-04-30.", "labels": ["pii.email", "pii.phone", "pii.date"]}
+{"id": "h352", "text": "I'm Marek Nowicki, marek.nowicki@example.pl, mobile +48 600 555 142.", "labels": ["pii.person", "pii.email", "pii.phone"]}
+{"id": "h353", "text": "FYI: christine.fairbanks@example.com, born 1977-08-04, please update vendor records.", "labels": ["pii.email", "pii.date"]}
+{"id": "h354", "text": "Reach me at +1 720 555 0177 or alessio.romano@example.com any time today.", "labels": ["pii.phone", "pii.email"]}
+{"id": "h355", "text": "Hi team, I'm Inara Joshi, inara.joshi@example.in, mobile +91 98 5555 0142.", "labels": ["pii.person", "pii.email", "pii.phone"]}
+{"id": "h356", "text": "Please use diana.kowalski@example.com going forward, dob 1984-06-19.", "labels": ["pii.email", "pii.date"]}
+{"id": "h357", "text": "Owner of the streaming pipeline is now ethan.pritchard@company.com after the team move.", "labels": ["pii.email"]}
+{"id": "h358", "text": "Carlos Mendoza approved the policy rollback ahead of the maintenance window.", "labels": ["pii.person"]}
+{"id": "h359", "text": "Reviewer for the SDK PR is annika.berg@company.com — minor nits, otherwise good.", "labels": ["pii.email"]}
+{"id": "h360", "text": "Talia Beckett shipped the test-coverage improvement earlier this morning.", "labels": ["pii.person"]}
+{"id": "h361", "text": "Patient Beatriz Olivetti's outpatient follow-up is on 2025-05-09 with primary care.", "labels": ["pii.person", "pii.date"]}
+{"id": "h362", "text": "Dr. Robert Penberthy (NPI 1559922084) reviewed the EKG and recommended a stress test.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h363", "text": "Patient Nora Stewart-Lin (DOB 1971-03-09) tolerated the chemo infusion well.", "labels": ["pii.person", "pii.date"]}
+{"id": "h364", "text": "Dr. Olivia McGowan (license MD667740) signed the discharge summary at 1730.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h365", "text": "Counsel for plaintiff Wallace Ekstrom filed a motion regarding the protective order scope.", "labels": ["pii.person"]}
+{"id": "h366", "text": "Defendant Hawksridge Holdings entered into a tolling agreement effective 2025-01-04.", "labels": ["pii.organization", "pii.date"]}
+{"id": "h367", "text": "Witness deposition of Yuna Park rescheduled to 2025-04-18 by stipulation.", "labels": ["pii.person", "pii.date"]}
+{"id": "h368", "text": "Attorney Pradeep Mahesh filed a notice of appearance for the new lead counsel role.", "labels": ["pii.person"]}
+{"id": "h369", "text": "Card 4111 2222 3333 4444 was tested in the new authentication regression suite.", "labels": ["financial.credit_card"]}
+{"id": "h370", "text": "International payable to KZ75 125K ZT20 6910 0100 cleared overnight per treasury.", "labels": ["financial.iban"]}
+{"id": "h371", "text": "Customer Helene Beaumont updated her billing card to 4485 0000 1234 5678 yesterday.", "labels": ["pii.person", "financial.credit_card"]}
+{"id": "h372", "text": "Wire to GE29 NB75 0000 0001 0190 49 confirmed by the partner bank this morning.", "labels": ["financial.iban"]}
+{"id": "h373", "text": "Hi everyone, I'm Soren Larsen, soren.larsen@example.dk, +45 30 12 34 56.", "labels": ["pii.person", "pii.email", "pii.phone"]}
+{"id": "h374", "text": "Updated contact: jelena.markovic@example.rs, dob 1994-11-28, please confirm.", "labels": ["pii.email", "pii.date"]}
+{"id": "h375", "text": "Code review pinged ben.fairweather@company.com for a second pass.", "labels": ["pii.email"]}
+{"id": "h376", "text": "Roxana Petrescu is the new lead on the analytics service this sprint.", "labels": ["pii.person"]}
+{"id": "h377", "text": "Patient Adrian Cole (DOB 1968-02-14) was scheduled for a colonoscopy on 2025-06-04.", "labels": ["pii.person", "pii.date"]}
+{"id": "h378", "text": "Dr. Sara Eklund (NPI 1234118822) discussed risks with the family at length.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h379", "text": "Counsel for defendant Whitman, Hayes and Co. argued the limitations issue at length.", "labels": ["pii.organization"]}
+{"id": "h380", "text": "Plaintiff Renata Ostrowski seeks injunctive relief and damages for the alleged breach.", "labels": ["pii.person"]}
+{"id": "h381", "text": "Customer Diego Salvatori paid using card 4485 1234 5678 9012 for the renewal charge.", "labels": ["pii.person", "financial.credit_card"]}
+{"id": "h382", "text": "Wire to IBAN AZ21 NABZ 0000 0000 1370 1000 1944 cleared per banking confirmation.", "labels": ["financial.iban"]}
+{"id": "h383", "text": "FYI: alessandra.bianchi@example.com, mobile +39 333 555 0142, dob 1985-09-09.", "labels": ["pii.email", "pii.phone", "pii.date"]}
+{"id": "h384", "text": "Owen Pemberton approved the new build cache strategy in the engineering RFC.", "labels": ["pii.person"]}
+{"id": "h385", "text": "Patient Theodore Larkin (DOB 1955-12-08) was advised to follow up with cardiology.", "labels": ["pii.person", "pii.date"]}
+{"id": "h386", "text": "Dr. Camille Devereux (license MD443201) signed off on the imaging report this morning.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h387", "text": "Counsel Imran Chaudhry filed a motion regarding the deposition transcript objections.", "labels": ["pii.person"]}
+{"id": "h388", "text": "Defendant Skyharbor Logistics LLC moved to dismiss the negligence count as time-barred.", "labels": ["pii.organization"]}
+{"id": "h389", "text": "Customer Rebecca Tan paid via card 4485 2025 1234 5678 for the upgrade tier.", "labels": ["pii.person", "financial.credit_card"]}
+{"id": "h390", "text": "Settlement account QA58 DOHB 0000 1234 5678 90AB CDEF G confirmed by finance.", "labels": ["financial.iban"]}
+{"id": "h391", "text": "Hi all, please use john.harrington@example.com, dob 1979-07-25, going forward.", "labels": ["pii.email", "pii.date"]}
+{"id": "h392", "text": "Engineering owner of the build cache is jordan.ito@company.com per the wiki.", "labels": ["pii.email"]}
+{"id": "h393", "text": "Patient Lillian Whitford was admitted on 2025-02-04 via the urgent care referral.", "labels": ["pii.person", "pii.date"]}
+{"id": "h394", "text": "Dr. Magnus Olafsson (NPI 1773928844) reviewed the case at the morning huddle.", "labels": ["pii.person", "healthcare.medical_license"]}
+{"id": "h395", "text": "Plaintiff Tatiana Andreescu filed a motion in limine ahead of trial.", "labels": ["pii.person"]}
+{"id": "h396", "text": "Defendant Polar Star Holdings Inc. disputed the calculation of compensatory damages.", "labels": ["pii.organization"]}
+{"id": "h397", "text": "Customer Sebastian Vladimirov updated his billing card to 4485 7777 0000 1234.", "labels": ["pii.person", "financial.credit_card"]}
+{"id": "h398", "text": "International wire to SC18 SSCB 1101 0000 0000 0000 1497 USD confirmed.", "labels": ["financial.iban"]}
+{"id": "h399", "text": "Hi, I'm Constance Pelletier, my email is constance.pelletier@example.fr, dob 1987-10-23.", "labels": ["pii.person", "pii.email", "pii.date"]}
+{"id": "h400", "text": "Code owner for the audit pipeline is sloane.mcadams@company.com after the team rotation.", "labels": ["pii.email"]}

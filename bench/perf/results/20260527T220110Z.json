@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "started_utc": "2026-05-27T22:01:10.145188+00:00",
+  "target": "asgi",
+  "target_url": null,
+  "requests_per_scenario": 50,
+  "concurrency": 4,
+  "python": "3.12.12",
+  "platform": "win32",
+  "scenarios": {
+    "short_32tok": {
+      "count": 50,
+      "errors": 0,
+      "p50_ms": 15.26,
+      "p90_ms": 27.45,
+      "p95_ms": 28.475,
+      "p99_ms": 29.481,
+      "mean_ms": 17.936,
+      "max_ms": 29.95,
+      "throughput_rps": 198.62,
+      "ttfb_p50_ms": null,
+      "ttfb_p95_ms": null
+    },
+    "long_1k_tok": {
+      "count": 50,
+      "errors": 0,
+      "p50_ms": 27.105,
+      "p90_ms": 37.298,
+      "p95_ms": 39.026,
+      "p99_ms": 41.179,
+      "mean_ms": 27.797,
+      "max_ms": 42.155,
+      "throughput_rps": 136.5,
+      "ttfb_p50_ms": null,
+      "ttfb_p95_ms": null
+    },
+    "stream_1k_tok": {
+      "count": 50,
+      "errors": 0,
+      "p50_ms": 27.376,
+      "p90_ms": 41.457,
+      "p95_ms": 44.559,
+      "p99_ms": 47.123,
+      "mean_ms": 29.612,
+      "max_ms": 47.656,
+      "throughput_rps": 126.24,
+      "ttfb_p50_ms": 27.362,
+      "ttfb_p95_ms": 44.542
+    }
+  }
+}

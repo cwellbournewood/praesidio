@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>ChatGPT (fixture)</title>
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 24px; max-width: 720px; }
+      textarea { width: 100%; min-height: 80px; padding: 8px; font: 14px ui-sans-serif, sans-serif; }
+      button { margin-top: 8px; padding: 6px 14px; font: 13px ui-sans-serif, sans-serif; }
+      .response { margin-top: 24px; padding: 12px; border: 1px solid #aaa; min-height: 48px; }
+    </style>
+  </head>
+  <body>
+    <h1>ChatGPT (offline fixture)</h1>
+    <p>A minimal DOM that mimics the chatgpt.com composer shape so the
+       extension's content script can be exercised without hitting the
+       real site.</p>
+    <textarea id="prompt-textarea" placeholder="Message ChatGPT…"></textarea>
+    <button data-testid="send-button" aria-label="Send prompt">Send</button>
+    <div class="response" id="response"
+         aria-label="Assistant response"></div>
+
+    <script>
+      // Fake "submit" handler — appends the textarea content to the
+      // response div so the test can verify the intercept + sanitised
+      // text path. A 200ms delay simulates the network round-trip.
+      const ta = document.getElementById('prompt-textarea');
+      const btn = document.querySelector('[data-testid="send-button"]');
+      const out = document.getElementById('response');
+      btn.addEventListener('click', (e) => {
+        // The extension may intercept and resubmit; both paths land here.
+        setTimeout(() => {
+          out.textContent = `Assistant: I received ${ta.value}`;
+        }, 200);
+      });
+    </script>
+  </body>
+</html>

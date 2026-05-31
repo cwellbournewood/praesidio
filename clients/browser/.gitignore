@@ -1,0 +1,11 @@
+node_modules/
+dist/
+dist-zip/
+*.crx
+*.pem
+playwright-report/
+.playwright-output/
+test-results/
+coverage/
+.eslintcache
+*.tsbuildinfo

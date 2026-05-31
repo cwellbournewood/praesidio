@@ -1,0 +1,33 @@
+apiVersion: section/v1
+kind: Bundle
+metadata:
+  name: section-default
+  version: 0.1.0
+spec:
+  # The default bundle is intentionally industry-agnostic. Every tenant
+  # gets the universal policy first; the legacy PII / code policies remain
+  # to demonstrate narrower overlays and back-compat with older audit
+  # references.
+  #
+  # Vertical overlays (healthcare, vectors) live in policies/ but are NOT
+  # bundled by default — operators add them via `includes` only when their
+  # observed traffic warrants the extra retention / routing constraints.
+  # The Recommendations page in the UI surfaces this choice based on
+  # detector evidence, not on the tenant's industry self-declaration.
+  catalogue: detectors.yaml
+  includes:
+    - policies/0000-universal-default.yaml
+    - policies/0001-pii-strict.yaml
+    - policies/0002-code-protection.yaml
+  optional_overlays:
+    - path: policies/0100-healthcare.yaml
+      recommend_when: "any(findings, .family == 'health_data')"
+      adds:
+        - "Longer retention for PHI (2555d)"
+        - "Routing to BAA-covered model only"
+    - path: policies/0005-vectors.yaml
+      recommend_when: "any(findings, .label in ['code.block','code.dense']) and route matches '/embeddings'"
+      adds:
+        - "Block PII before vector storage"
+  models: models.yaml
+  routes: routes.yaml

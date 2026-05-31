@@ -1,0 +1,258 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+  packages: write
+  id-token: write   # cosign keyless OIDC
+  attestations: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_GATEWAY: ${{ github.repository_owner }}/gateway
+  IMAGE_UI: ${{ github.repository_owner }}/ui
+
+jobs:
+  images:
+    name: build, sign, sbom (${{ matrix.component }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    outputs:
+      # Surface the per-component digests so downstream SLSA generation
+      # can pin attestations to immutable image references.
+      digest-gateway: ${{ steps.collect.outputs.digest-gateway }}
+      digest-ui: ${{ steps.collect.outputs.digest-ui }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - component: gateway
+            context: services/gateway
+            image: gateway
+          - component: ui
+            context: services/ui
+            image: ui
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Tags
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.image }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,format=long
+
+      - name: Build & push
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          provenance: true
+          sbom: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
+        with:
+          cosign-release: v2.4.0
+
+      - name: Cosign sign (keyless)
+        env:
+          DIGEST: ${{ steps.build.outputs.digest }}
+          TAGS: ${{ steps.meta.outputs.tags }}
+        run: |
+          for tag in $TAGS; do
+            ref="${tag}@${DIGEST}"
+            echo "Signing $ref"
+            cosign sign --yes "$ref"
+          done
+
+      - name: Install syft
+        uses: anchore/sbom-action/download-syft@v0.17.2
+
+      - name: Generate CycloneDX SBOM
+        env:
+          REF: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.image }}@${{ steps.build.outputs.digest }}
+        run: |
+          mkdir -p dist
+          syft "$REF" -o cyclonedx-json="dist/sbom-${{ matrix.component }}.cdx.json"
+
+      - name: Cosign attest SBOM
+        env:
+          REF: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.image }}@${{ steps.build.outputs.digest }}
+        run: |
+          cosign attest --yes --predicate "dist/sbom-${{ matrix.component }}.cdx.json" --type cyclonedx "$REF"
+
+      - name: Upload SBOM as workflow artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-${{ matrix.component }}
+          path: dist/sbom-${{ matrix.component }}.cdx.json
+
+      - name: Collect digest output
+        id: collect
+        run: |
+          echo "digest-${{ matrix.component }}=${{ steps.build.outputs.digest }}" >> "$GITHUB_OUTPUT"
+
+  # ---------------------------------------------------------------------------
+  # SLSA-3 provenance for each image. The OIDC token issued to this workflow
+  # is used by the generator to mint a verifiable provenance attestation that
+  # cosign can later check via certificate-identity-regexp.
+  # ---------------------------------------------------------------------------
+  provenance:
+    needs: images
+    permissions:
+      actions: read
+      id-token: write
+      packages: write
+    strategy:
+      matrix:
+        include:
+          - component: gateway
+          - component: ui
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v2.0.0
+    with:
+      image: ghcr.io/${{ github.repository_owner }}/${{ matrix.component }}
+      digest: ${{ needs.images.outputs[format('digest-{0}', matrix.component)] }}
+      registry-username: ${{ github.actor }}
+    secrets:
+      registry-password: ${{ secrets.GITHUB_TOKEN }}
+
+  chart:
+    name: helm chart sign + publish
+    needs: images
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.15.4
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
+        with:
+          cosign-release: v2.4.0
+
+      - name: Package chart
+        id: pkg
+        run: |
+          mkdir -p dist
+          helm package deploy/helm/section --destination dist
+          chart=$(ls dist/section-*.tgz | head -1)
+          echo "chart=${chart}" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to GHCR (OCI chart push)
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io \
+              --username "${{ github.actor }}" --password-stdin
+
+      - name: Push chart to GHCR (OCI)
+        id: push
+        env:
+          CHART: ${{ steps.pkg.outputs.chart }}
+        run: |
+          out=$(helm push "$CHART" "oci://ghcr.io/${{ github.repository_owner }}/charts")
+          echo "$out"
+          # Capture the pushed digest for cosign signing.
+          digest=$(echo "$out" | awk -F'Digest: ' 'NF>1{print $2}' | tr -d '\r')
+          echo "digest=${digest}" >> "$GITHUB_OUTPUT"
+          version=$(basename "$CHART" .tgz | sed 's/^section-//')
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+
+      - name: Cosign sign chart (keyless)
+        if: steps.push.outputs.digest != ''
+        env:
+          REF: ghcr.io/${{ github.repository_owner }}/charts/section@${{ steps.push.outputs.digest }}
+        run: cosign sign --yes "$REF"
+
+      - name: Upload chart tarball
+        uses: actions/upload-artifact@v4
+        with:
+          name: helm-chart
+          path: dist/*.tgz
+
+  release:
+    name: github release
+    needs: [images, chart, provenance]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
+        with:
+          cosign-release: v2.4.0
+
+      - name: Download SBOMs
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          pattern: sbom-*
+          merge-multiple: true
+
+      - name: Download chart
+        uses: actions/download-artifact@v4
+        with:
+          name: helm-chart
+          path: dist
+
+      - name: Compute checksums
+        working-directory: dist
+        run: |
+          sha256sum section-*.tgz sbom-*.cdx.json > section-release.sha256
+
+      - name: Cosign sign checksums (blob, keyless)
+        working-directory: dist
+        run: |
+          cosign sign-blob --yes --output-signature section-release.sha256.sig \
+              --output-certificate section-release.sha256.pem \
+              section-release.sha256
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            dist/section-*.tgz
+            dist/sbom-gateway.cdx.json
+            dist/sbom-ui.cdx.json
+            dist/section-release.sha256
+            dist/section-release.sha256.sig
+            dist/section-release.sha256.pem

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" fill="#EFEAE0"/>
+  <!-- 3x3 grid of squares, 12px each with 4px gaps, centred -->
+  <g>
+    <rect x="14" y="14" width="12" height="12" fill="#0F0F0E"/>
+    <rect x="30" y="14" width="12" height="12" fill="#0F0F0E"/>
+    <rect x="46" y="14" width="2"  height="12" fill="#0F0F0E" opacity="0"/>
+    <rect x="46" y="14" width="12" height="12" fill="#0F0F0E"/>
+
+    <rect x="14" y="30" width="12" height="12" fill="#0F0F0E"/>
+    <rect x="30" y="30" width="12" height="12" fill="#D14B2C"/>
+    <rect x="46" y="30" width="12" height="12" fill="#0F0F0E"/>
+
+    <rect x="14" y="46" width="12" height="12" fill="#0F0F0E"/>
+    <rect x="30" y="46" width="12" height="12" fill="#0F0F0E"/>
+    <rect x="46" y="46" width="12" height="12" fill="#0F0F0E"/>
+  </g>
+</svg>

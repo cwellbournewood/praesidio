@@ -1,0 +1,94 @@
+name: rls
+
+# Exercises the Postgres-only Row-Level Security tests against a real
+# postgres-16 service container. Skipped under the standard CI matrix
+# because those run on SQLite.
+
+on:
+  pull_request:
+    paths:
+      - "services/gateway/migrations/**"
+      - "services/gateway/alembic/**"
+      - "services/gateway/section_gateway/audit/**"
+      - "services/gateway/tests/test_rls_postgres.py"
+      - ".github/workflows/rls.yml"
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: rls-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  postgres-rls:
+    name: postgres RLS isolation
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: section
+          POSTGRES_PASSWORD: section
+          POSTGRES_DB: section
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U section"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: services/gateway/uv.lock
+
+      - name: Install gateway with dev deps
+        working-directory: services/gateway
+        run: uv sync --extra dev
+
+      - name: Apply schema via Alembic
+        working-directory: services/gateway
+        env:
+          SECTION_DATABASE_URL: postgresql+psycopg://section:section@localhost:5432/section
+        run: uv run alembic upgrade head
+
+      - name: Provision app role for "no setting -> no rows" test
+        env:
+          PGPASSWORD: section
+        run: |
+          psql -h localhost -U section -d section <<'SQL'
+              -- App role exercises the policy without owner bypass.
+              CREATE ROLE section_app_test NOLOGIN;
+              GRANT SELECT, INSERT, UPDATE, DELETE
+                  ON audit_events, lineage_nodes, lineage_edges
+                  TO section_app_test;
+              -- Allow the test connection (which logs in as section) to
+              -- SET ROLE section_app_test.
+              GRANT section_app_test TO section;
+          SQL
+
+      - name: Run RLS tests
+        working-directory: services/gateway
+        env:
+          SECTION_PG_DSN: postgresql+asyncpg://section:section@localhost:5432/section
+          DATABASE_URL: postgresql+asyncpg://section:section@localhost:5432/section
+          SECTION_ENV: development
+          SECTION_VAULT_KEY: ""
+          SECTION_FPE_KEY: ""
+        run: uv run pytest -m postgres -v tests/test_rls_postgres.py

@@ -1,0 +1,73 @@
+{{- if .Values.postgres.embedded }}
+# !!! DEV / DEMO ONLY. !!!
+# In production, disable this and point DATABASE_URL at a managed Postgres
+# (RDS Multi-AZ, Cloud SQL HA, Azure Flexible Server with HA).
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "section.componentName" (dict "ctx" . "component" "postgres") }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "section.componentLabels" (dict "ctx" . "component" "postgres") | nindent 4 }}
+spec:
+  serviceName: {{ include "section.componentName" (dict "ctx" . "component" "postgres") }}
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "section.componentSelectorLabels" (dict "ctx" . "component" "postgres") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "section.componentSelectorLabels" (dict "ctx" . "component" "postgres") | nindent 8 }}
+    spec:
+      securityContext:
+        fsGroup: 999
+      containers:
+        - name: postgres
+          image: {{ .Values.postgres.image | quote }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: postgres
+              containerPort: 5432
+              protocol: TCP
+          env:
+            - name: POSTGRES_USER
+              value: section
+            - name: POSTGRES_PASSWORD
+              value: section
+            - name: POSTGRES_DB
+              value: section
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "section"]
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "section"]
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        {{- with .Values.postgres.storage.storageClassName }}
+        storageClassName: {{ . | quote }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.postgres.storage.size }}
+{{- end }}

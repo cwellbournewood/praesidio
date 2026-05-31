@@ -1,0 +1,57 @@
+apiVersion: section/v1
+kind: ModelRegistry
+spec:
+  models:
+    - id: openai/gpt-4o-mini
+      provider: openai
+      endpoint_ref: openai-prod
+      jurisdiction: US
+      privacy: "no-train"
+      safety_certifications: ["SOC2", "ISO27001"]
+      risk_tier: medium
+
+    - id: openai/gpt-4o
+      provider: openai
+      endpoint_ref: openai-prod
+      jurisdiction: US
+      privacy: "no-train"
+      safety_certifications: ["SOC2", "ISO27001"]
+      risk_tier: medium
+
+    - id: anthropic/claude-3-5-sonnet
+      provider: anthropic
+      endpoint_ref: anthropic-prod
+      jurisdiction: US
+      privacy: "no-train"
+      safety_certifications: ["SOC2", "ISO27001", "HIPAA"]
+      risk_tier: medium
+
+    - id: azure/gpt-4o-eu
+      provider: azure-openai
+      endpoint_ref: azure-westeurope
+      jurisdiction: EU
+      privacy: "no-train, data residency EU"
+      safety_certifications: ["SOC2", "ISO27001", "C5", "HDS", "BAA"]
+      risk_tier: low
+
+    - id: ollama/llama3.1-70b
+      provider: ollama
+      endpoint_ref: ollama-onprem
+      jurisdiction: on-prem
+      privacy: "fully local"
+      risk_tier: low
+
+  endpoints:
+    - id: openai-prod
+      base_url: https://api.openai.com/v1
+      auth: { type: env, var: OPENAI_API_KEY }
+    - id: anthropic-prod
+      base_url: https://api.anthropic.com
+      auth: { type: env, var: ANTHROPIC_API_KEY }
+    - id: azure-westeurope
+      base_url_env: AZURE_OPENAI_ENDPOINT
+      auth: { type: env, var: AZURE_OPENAI_API_KEY }
+      api_version: "2024-10-21"
+    - id: ollama-onprem
+      base_url_env: OLLAMA_BASE_URL
+      auth: { type: none }

@@ -1,0 +1,44 @@
+{
+  "name": "@section/browser-extension",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Section browser extension (MV3) — scan + mask prompts for consumer AI sites before they leave the browser.",
+  "license": "Apache-2.0",
+  "scripts": {
+    "dev": "vite build --watch --mode development",
+    "build": "tsc --noEmit && vite build",
+    "build:zip": "npm run build && node scripts/build-zip.mjs",
+    "build:crx": "npm run build && node scripts/build-crx.mjs",
+    "build:release": "npm run build && node scripts/build-zip.mjs && node scripts/build-crx.mjs && node scripts/build-release.mjs",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint --max-warnings=0 \"src/**/*.{ts,tsx}\" \"tests/**/*.ts\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "e2e": "playwright test"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "@types/chrome": "^0.0.278",
+    "@types/node": "^20.16.11",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^8.10.0",
+    "@typescript-eslint/parser": "^8.10.0",
+    "@vitejs/plugin-react": "^4.3.3",
+    "crx3": "^1.1.3",
+    "eslint": "^9.13.0",
+    "globals": "^15.11.0",
+    "happy-dom": "^15.7.4",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10",
+    "vitest": "^2.1.3"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}

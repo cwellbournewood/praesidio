@@ -1,0 +1,61 @@
+# Gatekeeper ConstraintTemplate variant for clusters still on OPA Gatekeeper
+# (Kubernetes <1.30 or operator preference). Mirrors the
+# ValidatingAdmissionPolicy in validating-admission-policy.yaml.
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: sectionllmegressguard
+spec:
+  crd:
+    spec:
+      names:
+        kind: SectionLlmEgressGuard
+      validation:
+        openAPIV3Schema:
+          type: object
+          properties:
+            llmHosts:
+              type: array
+              items: {type: string}
+            credentialSecretPatterns:
+              type: array
+              items: {type: string}
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package sectionllmegressguard
+
+        default mounts_cloud_creds := false
+        default has_direct_llm_host := false
+
+        mounts_cloud_creds {
+          some i
+          v := input.review.object.spec.volumes[i]
+          name := v.secret.secretName
+          some j
+          contains(name, input.parameters.credentialSecretPatterns[j])
+        }
+
+        has_direct_llm_host {
+          containers := array.concat(
+            input.review.object.spec.containers,
+            object.get(input.review.object.spec, "initContainers", [])
+          )
+          some i
+          c := containers[i]
+          some j
+          e := c.env[j]
+          some k
+          contains(e.value, input.parameters.llmHosts[k])
+        }
+
+        has_bypass {
+          input.review.object.metadata.annotations["section.dev/admission-bypass"] == "true"
+        }
+
+        violation[{"msg": msg}] {
+          not has_bypass
+          mounts_cloud_creds
+          has_direct_llm_host
+          msg := "Pod mounts cloud credentials and connects directly to an LLM provider; route through section-gateway."
+        }

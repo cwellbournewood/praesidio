@@ -1,0 +1,26 @@
+{{- if eq .Values.policyBundle.source "configmap" }}
+# Self-contained policy bundle ConfigMap.
+# Sourced from `files/policies/**` shipped with the chart, which mirror the
+# canonical examples/policies/ in the repo. Override by setting
+# `policyBundle.source` to `http`, `s3`, or `git` and configuring the
+# corresponding block in values.yaml.
+#
+# ConfigMap keys cannot contain '/', so we encode subdirectories by
+# replacing '/' with '__'. The gateway deployment uses `items:` with
+# `path:` to project them back onto the original layout at mount time.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "section.policyConfigMapName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "section.componentLabels" (dict "ctx" . "component" "gateway") | nindent 4 }}
+data:
+  {{- $root := . }}
+  {{- range $path, $_ := .Files.Glob "files/policies/**.yaml" }}
+  {{- $rel := trimPrefix "files/policies/" $path }}
+  {{- $key := $rel | replace "/" "__" }}
+  {{ $key }}: |-
+    {{- $root.Files.Get $path | nindent 4 }}
+  {{- end }}
+{{- end }}

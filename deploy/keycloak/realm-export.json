@@ -1,0 +1,156 @@
+{
+  "realm": "section",
+  "enabled": true,
+  "displayName": "Section (dev)",
+  "displayNameHtml": "<em>Section</em>",
+  "loginTheme": "section",
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": true,
+  "accessTokenLifespan": 1800,
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 36000,
+  "defaultRoles": ["offline_access", "uma_authorization"],
+  "requiredCredentials": ["password"],
+  "groups": [
+    { "name": "section-admins" },
+    { "name": "section-ops" },
+    { "name": "section-auditors" },
+    { "name": "section-viewers" }
+  ],
+  "clientScopes": [
+    {
+      "name": "groups",
+      "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "true",
+        "display.on.consent.screen": "true"
+      },
+      "protocolMappers": [
+        {
+          "name": "groups",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-group-membership-mapper",
+          "config": {
+            "claim.name": "groups",
+            "full.path": "false",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "name": "tenant",
+      "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "true",
+        "display.on.consent.screen": "false"
+      },
+      "protocolMappers": [
+        {
+          "name": "tenant_id",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "config": {
+            "user.attribute": "tenant_id",
+            "claim.name": "tenant_id",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "defaultDefaultClientScopes": [
+    "role_list",
+    "profile",
+    "email",
+    "groups",
+    "tenant",
+    "web-origins"
+  ],
+  "defaultOptionalClientScopes": ["offline_access", "address", "phone"],
+  "clients": [
+    {
+      "clientId": "section",
+      "name": "Section",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "section-demo-secret",
+      "redirectUris": [
+        "http://localhost:3000/*",
+        "http://localhost:3010/*",
+        "http://localhost:8080/*"
+      ],
+      "webOrigins": [
+        "http://localhost:3000",
+        "http://localhost:3010",
+        "http://localhost:8080"
+      ],
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "fullScopeAllowed": true,
+      "defaultClientScopes": ["profile", "email", "groups", "tenant"],
+      "attributes": {
+        "post.logout.redirect.uris": "http://localhost:3000/*##http://localhost:3010/*"
+      }
+    }
+  ],
+  "users": [
+    {
+      "username": "alice",
+      "email": "alice@section.dev",
+      "firstName": "Alice",
+      "lastName": "Admin",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [{ "type": "password", "value": "alice", "temporary": false }],
+      "groups": ["section-admins"],
+      "attributes": { "tenant_id": ["default"] }
+    },
+    {
+      "username": "bob",
+      "email": "bob@section.dev",
+      "firstName": "Bob",
+      "lastName": "Operator",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [{ "type": "password", "value": "bob", "temporary": false }],
+      "groups": ["section-ops"],
+      "attributes": { "tenant_id": ["default"] }
+    },
+    {
+      "username": "carol",
+      "email": "carol@section.dev",
+      "firstName": "Carol",
+      "lastName": "Auditor",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [{ "type": "password", "value": "carol", "temporary": false }],
+      "groups": ["section-auditors"],
+      "attributes": { "tenant_id": ["default"] }
+    },
+    {
+      "username": "dan",
+      "email": "dan@section.dev",
+      "firstName": "Dan",
+      "lastName": "Viewer",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [{ "type": "password", "value": "dan", "temporary": false }],
+      "groups": ["section-viewers"],
+      "attributes": { "tenant_id": ["acme"] }
+    }
+  ]
+}

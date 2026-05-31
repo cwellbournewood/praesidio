@@ -1,0 +1,150 @@
+{"id": "c001", "text": "Here's the helper:\n```python\ndef parse_csv(path: str) -> list[dict]:\n    with open(path) as f:\n        return list(csv.DictReader(f))\n```\nLet me know if it works.", "labels": ["code.block"]}
+{"id": "c002", "text": "Quick fix:\n```js\nfunction debounce(fn, ms) {\n  let t;\n  return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };\n}\n```", "labels": ["code.block"]}
+{"id": "c003", "text": "Go version of the handler:\n```go\nfunc handle(w http.ResponseWriter, r *http.Request) {\n    w.WriteHeader(http.StatusOK)\n    fmt.Fprintln(w, \"ok\")\n}\n```", "labels": ["code.block"]}
+{"id": "c004", "text": "Rust signature:\n```rust\nfn parse(input: &str) -> Result<Config, ParseError> {\n    toml::from_str(input).map_err(Into::into)\n}\n```", "labels": ["code.block"]}
+{"id": "c005", "text": "Java snippet:\n```java\npublic Optional<User> findById(long id) {\n    return repo.findById(id);\n}\n```", "labels": ["code.block"]}
+{"id": "c006", "text": "SQL for the migration:\n```sql\nCREATE TABLE events (\n    id UUID PRIMARY KEY,\n    payload JSONB NOT NULL,\n    created_at TIMESTAMPTZ DEFAULT now()\n);\n```", "labels": ["code.block"]}
+{"id": "c007", "text": "Bash one-liner for cleanup:\n```bash\nfind /tmp -type f -mtime +7 -delete\n```", "labels": ["code.block"]}
+{"id": "c008", "text": "YAML config:\n```yaml\nserver:\n  port: 8080\n  read_timeout: 30s\nlogging:\n  level: info\n```", "labels": ["code.block"]}
+{"id": "c009", "text": "TypeScript helper:\n```ts\nexport const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));\n```", "labels": ["code.block"]}
+{"id": "c010", "text": "Quick C example:\n```c\nint main(int argc, char **argv) {\n    printf(\"hello\\n\");\n    return 0;\n}\n```", "labels": ["code.block"]}
+{"id": "c011", "text": "Ruby:\n```ruby\nclass User < ApplicationRecord\n  validates :email, presence: true, uniqueness: true\nend\n```", "labels": ["code.block"]}
+{"id": "c012", "text": "PHP fragment:\n```php\nfunction slugify(string $s): string {\n    return preg_replace('/[^a-z0-9]+/', '-', strtolower(trim($s)));\n}\n```", "labels": ["code.block"]}
+{"id": "c013", "text": "Kotlin:\n```kotlin\nfun greet(name: String) = \"Hello, $name!\"\n```", "labels": ["code.block"]}
+{"id": "c014", "text": "Swift:\n```swift\nstruct Point { let x: Double; let y: Double }\nlet p = Point(x: 1.0, y: 2.0)\n```", "labels": ["code.block"]}
+{"id": "c015", "text": "Elixir:\n```elixir\ndefmodule Greeter do\n  def hello(name), do: \"Hello, #{name}!\"\nend\n```", "labels": ["code.block"]}
+{"id": "c016", "text": "Haskell:\n```haskell\nfactorial :: Integer -> Integer\nfactorial 0 = 1\nfactorial n = n * factorial (n - 1)\n```", "labels": ["code.block"]}
+{"id": "c017", "text": "Scala:\n```scala\ndef sum(xs: List[Int]): Int = xs.foldLeft(0)(_ + _)\n```", "labels": ["code.block"]}
+{"id": "c018", "text": "Clojure:\n```clojure\n(defn average [xs] (/ (reduce + xs) (count xs)))\n```", "labels": ["code.block"]}
+{"id": "c019", "text": "Dockerfile snippet:\n```dockerfile\nFROM python:3.11-slim\nWORKDIR /app\nCOPY . .\nRUN pip install -e .\nCMD [\"python\", \"-m\", \"app\"]\n```", "labels": ["code.block"]}
+{"id": "c020", "text": "Makefile target:\n```make\nbuild:\n\tgo build -o bin/server ./cmd/server\n\nclean:\n\trm -rf bin/\n```", "labels": ["code.block"]}
+{"id": "c021", "text": "Updated regex:\n```python\nIPV4_RE = re.compile(r'\\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b')\n```", "labels": ["code.block"]}
+{"id": "c022", "text": "Nginx config:\n```nginx\nlocation /api/ {\n    proxy_pass http://backend;\n    proxy_set_header Host $host;\n}\n```", "labels": ["code.block"]}
+{"id": "c023", "text": "Terraform module call:\n```hcl\nmodule \"vpc\" {\n  source = \"./modules/vpc\"\n  cidr   = \"10.0.0.0/16\"\n  azs    = [\"us-east-1a\", \"us-east-1b\"]\n}\n```", "labels": ["code.block"]}
+{"id": "c024", "text": "Kubernetes manifest:\n```yaml\napiVersion: v1\nkind: Service\nmetadata:\n  name: gateway\nspec:\n  selector:\n    app: gateway\n  ports:\n    - port: 80\n      targetPort: 8080\n```", "labels": ["code.block"]}
+{"id": "c025", "text": "GraphQL query:\n```graphql\nquery GetUser($id: ID!) {\n  user(id: $id) { id name email }\n}\n```", "labels": ["code.block"]}
+{"id": "c026", "text": "JSON schema:\n```json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"name\": {\"type\": \"string\"},\n    \"age\": {\"type\": \"integer\", \"minimum\": 0}\n  }\n}\n```", "labels": ["code.block"]}
+{"id": "c027", "text": "Caddyfile:\n```caddy\nexample.com {\n  reverse_proxy localhost:8080\n  encode gzip\n}\n```", "labels": ["code.block"]}
+{"id": "c028", "text": "Powershell:\n```powershell\nGet-Process | Where-Object { $_.CPU -gt 100 } | Select-Object Name, CPU\n```", "labels": ["code.block"]}
+{"id": "c029", "text": "Lua:\n```lua\nlocal function sum(t)\n  local s = 0\n  for _, v in ipairs(t) do s = s + v end\n  return s\nend\n```", "labels": ["code.block"]}
+{"id": "c030", "text": "Erlang:\n```erlang\nstart() ->\n    Pid = spawn(fun loop/0),\n    Pid.\n```", "labels": ["code.block"]}
+{"id": "c031", "text": "{\"event\":{\"id\":\"abc-123\",\"ts\":1730543210,\"meta\":{\"ip\":\"203.0.113.10\",\"ua\":\"Mozilla/5.0\",\"tags\":[\"x\",\"y\"]},\"payload\":{\"a\":1,\"b\":2,\"c\":[3,4,5]}}}", "labels": ["code.dense"]}
+{"id": "c032", "text": "[{\"id\":1,\"t\":\"a\",\"v\":[1,2,3]},{\"id\":2,\"t\":\"b\",\"v\":[4,5,6]},{\"id\":3,\"t\":\"c\",\"v\":[7,8,9]},{\"id\":4,\"t\":\"d\",\"v\":[10,11,12]}]", "labels": ["code.dense"]}
+{"id": "c033", "text": "[2024-11-02T14:32:11Z][gateway][info] req=/v1/chat status=200 dur=82ms upstream=openai-proxy:443 retries=0", "labels": ["code.dense"]}
+{"id": "c034", "text": "{config:{server:{port:8080,host:'0.0.0.0',ssl:{cert:'/etc/ssl/c.pem',key:'/etc/ssl/k.pem'}},db:{url:'pg://x',pool:10}}}", "labels": ["code.dense"]}
+{"id": "c035", "text": "re.compile(r'(?P<ip>\\d{1,3}(?:\\.\\d{1,3}){3})\\s+(?P<user>\\S+)\\s+\\[(?P<ts>[^\\]]+)\\]\\s+\"(?P<req>[^\"]+)\"\\s+(?P<status>\\d+)')", "labels": ["code.dense"]}
+{"id": "c036", "text": "header: { 'x-req-id': 'a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'content-type': 'application/json', 'authorization': 'Bearer ...' }", "labels": ["code.dense"]}
+{"id": "c037", "text": "<root><node id='1' type='x'><meta k='a' v='1'/><meta k='b' v='2'/></node><node id='2' type='y'><meta k='c' v='3'/></node></root>", "labels": ["code.dense"]}
+{"id": "c038", "text": "trace=[{step:'auth',ms:12},{step:'lookup',ms:8},{step:'render',ms:45},{step:'commit',ms:30}], total=95ms, errs=0", "labels": ["code.dense"]}
+{"id": "c039", "text": "obj := map[string]any{\"k1\": \"v1\", \"k2\": 2, \"k3\": []int{1, 2, 3}, \"k4\": map[string]bool{\"a\": true, \"b\": false}}", "labels": ["code.dense"]}
+{"id": "c040", "text": "stack=[main:42, http_server:108, route_dispatch:67, handler_v1:34, db_query:128, conn_pool:55, network:21]", "labels": ["code.dense"]}
+{"id": "c041", "text": "tokens=[{t:1,p:0.41},{t:2,p:0.32},{t:3,p:0.15},{t:4,p:0.08},{t:5,p:0.04}], temp=0.7, top_p=0.9, top_k=40", "labels": ["code.dense"]}
+{"id": "c042", "text": "GET /v1/users?limit=50&offset=0&sort=created_at&order=desc&fields=id,name,email,role HTTP/1.1\\r\\nHost: api.example.com", "labels": ["code.dense"]}
+{"id": "c043", "text": "spans=[{name:'parse',dur:12.4},{name:'plan',dur:5.1},{name:'exec',dur:88.2},{name:'serialize',dur:9.7}], total=115.4", "labels": ["code.dense"]}
+{"id": "c044", "text": "evt = Event(id=42, type='dlp.scan', meta={'src':'gw','dst':'audit','sev':'med'}, ts=1730543000, payload=b'...')", "labels": ["code.dense"]}
+{"id": "c045", "text": "diff --git a/svc.py b/svc.py @@ -42,7 +42,7 @@ -    return None +    return {} return cache.get(k, default={'a':1,'b':2,'c':3})", "labels": ["code.dense"]}
+{"id": "c046", "text": "metrics: {req_total:14321, req_5xx:42, req_4xx:118, p50:38ms, p95:412ms, p99:982ms, mem:341MB, cpu:0.42}", "labels": ["code.dense"]}
+{"id": "c047", "text": "{\"trace\":{\"id\":\"7e7b\",\"parent\":\"3a9c\",\"span\":\"f1e2\",\"name\":\"db.query\",\"start\":1730543210123,\"end\":1730543210210}}", "labels": ["code.dense"]}
+{"id": "c048", "text": "cfg.set('db.host', 'pg-primary'); cfg.set('db.port', 5432); cfg.set('db.user', 'app'); cfg.set('db.pass', '***')", "labels": ["code.dense"]}
+{"id": "c049", "text": "audit_event: { actor: 'svc-acct/release-bot', op: 'deploy.push', resource: 'gw:v1.2.3', result: 'ok', sig: 'aa:bb:cc' }", "labels": ["code.dense"]}
+{"id": "c050", "text": "[{\"k\":\"alpha\",\"v\":1.234},{\"k\":\"beta\",\"v\":5.678},{\"k\":\"gamma\",\"v\":9.012},{\"k\":\"delta\",\"v\":3.456},{\"k\":\"epsilon\",\"v\":7.89}]", "labels": ["code.dense"]}
+{"id": "c051", "text": "This file is marked Acme Confidential — please do not distribute outside the company.", "labels": ["code.proprietary_marker"]}
+{"id": "c052", "text": "Page footer: Internal Use Only — Acme Engineering, do not share externally.", "labels": ["code.proprietary_marker"]}
+{"id": "c053", "text": "CONFIDENTIAL — Do Not Distribute. This document is for internal review only.", "labels": ["code.proprietary_marker"]}
+{"id": "c054", "text": "Proprietary and Confidential — Reproduction prohibited without written consent.", "labels": ["code.proprietary_marker"]}
+{"id": "c055", "text": "Header watermark: COMPANY CONFIDENTIAL, do not screenshot or forward.", "labels": ["code.proprietary_marker"]}
+{"id": "c056", "text": "Internal Use Only — distribution limited to the platform engineering team.", "labels": ["code.proprietary_marker"]}
+{"id": "c057", "text": "RESTRICTED — Internal Distribution Only. External sharing requires legal review.", "labels": ["code.proprietary_marker"]}
+{"id": "c058", "text": "Acme Proprietary Information — Do Not Distribute beyond the named recipients.", "labels": ["code.proprietary_marker"]}
+{"id": "c059", "text": "Notice: Trade Secret — disclosure prohibited without prior written consent.", "labels": ["code.proprietary_marker"]}
+{"id": "c060", "text": "Footer: For internal review only. Not for distribution outside Acme Corp.", "labels": ["code.proprietary_marker"]}
+{"id": "c061", "text": "All content herein is Confidential and Proprietary to Acme Holdings, Inc.", "labels": ["code.proprietary_marker"]}
+{"id": "c062", "text": "Document classification: COMPANY RESTRICTED — share only with named approvers.", "labels": ["code.proprietary_marker"]}
+{"id": "c063", "text": "Header: COMMERCIAL IN CONFIDENCE — not for external publication.", "labels": ["code.proprietary_marker"]}
+{"id": "c064", "text": "Acme Internal Document — Confidential and Proprietary. Reproduction prohibited.", "labels": ["code.proprietary_marker"]}
+{"id": "c065", "text": "Watermark on every page: PROPRIETARY AND CONFIDENTIAL — do not share.", "labels": ["code.proprietary_marker"]}
+{"id": "c066", "text": "Notice on the cover sheet: Subject to Non-Disclosure Agreement — internal only.", "labels": ["code.proprietary_marker"]}
+{"id": "c067", "text": "All material in this folder is Acme Confidential and Proprietary Information.", "labels": ["code.proprietary_marker"]}
+{"id": "c068", "text": "Restricted Use — Authorized Personnel Only. Do not duplicate or forward.", "labels": ["code.proprietary_marker"]}
+{"id": "c069", "text": "Marketing draft watermark: ACME CONFIDENTIAL — preliminary, do not distribute.", "labels": ["code.proprietary_marker"]}
+{"id": "c070", "text": "Cover sheet: ACME INTERNAL USE ONLY. External disclosure requires VP approval.", "labels": ["code.proprietary_marker"]}
+{"id": "c071", "text": "// Copyright 2024 Acme Inc. Licensed under the Apache License, Version 2.0.", "labels": ["code.proprietary_marker"]}
+{"id": "c072", "text": "# SPDX-License-Identifier: MIT — see LICENSE for the full text.", "labels": ["code.proprietary_marker"]}
+{"id": "c073", "text": "/* Copyright (c) 2025 Northwind LLC. All rights reserved. Licensed under BSD-3-Clause. */", "labels": ["code.proprietary_marker"]}
+{"id": "c074", "text": "// Copyright 2023 Globex Corp. Distributed under the GPL v3 with classpath exception.", "labels": ["code.proprietary_marker"]}
+{"id": "c075", "text": "# Copyright 2026 Section Authors — Apache-2.0. See LICENSE for the full notice.", "labels": ["code.proprietary_marker"]}
+{"id": "c076", "text": "/* MIT License — Copyright (c) 2022 Polaris Systems. Permission is hereby granted... */", "labels": ["code.proprietary_marker"]}
+{"id": "c077", "text": "// SPDX-FileCopyrightText: 2024 Helix Labs <legal@helix.example> SPDX-License-Identifier: Apache-2.0", "labels": ["code.proprietary_marker"]}
+{"id": "c078", "text": "/* Source code header: Copyright (c) 2025 Vanguard Systems — Proprietary, all rights reserved. */", "labels": ["code.proprietary_marker"]}
+{"id": "c079", "text": "# This file is licensed under BSD-3-Clause. Copyright 2023 Crescent Engineering Inc.", "labels": ["code.proprietary_marker"]}
+{"id": "c080", "text": "// (c) 2024 Sterling Labs. Distributed under the terms of the LGPL 2.1 or later.", "labels": ["code.proprietary_marker"]}
+{"id": "c081", "text": "Fenced internal sample:\n```python\n# ACME CONFIDENTIAL — internal helper, do not distribute\ndef secret_path(x):\n    return f\"/internal/{x}\"\n```", "labels": ["code.block", "code.proprietary_marker"]}
+{"id": "c082", "text": "Snippet from internal repo:\n```go\n// Proprietary and Confidential — Acme Engineering\nfunc lookup(key string) (string, error) { return store[key], nil }\n```", "labels": ["code.block", "code.proprietary_marker"]}
+{"id": "c083", "text": "Internal helper:\n```ts\n// Internal Use Only — do not share outside the platform team\nexport function flag(name: string) { return process.env[name] === 'on'; }\n```", "labels": ["code.block", "code.proprietary_marker"]}
+{"id": "c084", "text": "Sample from RFC draft:\n```js\n// CONFIDENTIAL DRAFT — Acme Inc, not for distribution\nconst plan = { name: 'rollout', steps: ['canary', 'staged', 'full'] };\n```", "labels": ["code.block", "code.proprietary_marker"]}
+{"id": "c085", "text": "Sketch:\n```python\n# Acme Proprietary — internal review only\nclass Pipeline:\n    def run(self, batch):\n        return [self.step(x) for x in batch]\n```", "labels": ["code.block", "code.proprietary_marker"]}
+{"id": "c086", "text": "Quick draft (do not redistribute):\n```rust\n// Proprietary Acme code — restricted use only\nfn audit(event: Event) -> Result<()> { sink.send(event) }\n```", "labels": ["code.block", "code.proprietary_marker"]}
+{"id": "c087", "text": "Snippet:\n```yaml\n# COMPANY CONFIDENTIAL — operational secrets here intentionally redacted\nserver:\n  upstream: ACME_INTERNAL\n```", "labels": ["code.block", "code.proprietary_marker"]}
+{"id": "c088", "text": "From the internal repo:\n```bash\n# Confidential and Proprietary — Acme Tools team\nfor h in $HOSTS; do ssh $h \"systemctl reload acme-gw\"; done\n```", "labels": ["code.block", "code.proprietary_marker"]}
+{"id": "c089", "text": "Draft helper:\n```java\n// INTERNAL USE ONLY — Acme Inc, do not share externally\nclass InternalCache { Map<String,Object> entries = new ConcurrentHashMap<>(); }\n```", "labels": ["code.block", "code.proprietary_marker"]}
+{"id": "c090", "text": "From the engineering wiki:\n```sql\n-- Acme Confidential — operational query, do not share\nSELECT id, status FROM tenants WHERE plan='enterprise';\n```", "labels": ["code.block", "code.proprietary_marker"]}
+{"id": "c091", "text": "I refactored the auth module last week to remove some duplication.", "labels": []}
+{"id": "c092", "text": "We replaced the legacy serializer with a streaming variant for large payloads.", "labels": []}
+{"id": "c093", "text": "I cleaned up the retry helper so callers don't need to thread context explicitly.", "labels": []}
+{"id": "c094", "text": "The validator was rewritten in a more functional style — easier to extend now.", "labels": []}
+{"id": "c095", "text": "I extracted the connection pool setup into a small initialization helper.", "labels": []}
+{"id": "c096", "text": "The hash chain logic was simplified by removing an unused branch.", "labels": []}
+{"id": "c097", "text": "I split the writer module into a synchronous and asynchronous version.", "labels": []}
+{"id": "c098", "text": "Renamed the cache module to make the layering more explicit for new readers.", "labels": []}
+{"id": "c099", "text": "I added a small adapter so the SDK can be used from both sync and async code.", "labels": []}
+{"id": "c100", "text": "The middleware now short-circuits if the request lacks a trace identifier header.", "labels": []}
+{"id": "c101", "text": "We removed the dead config flag that no environment had set in over a year.", "labels": []}
+{"id": "c102", "text": "I tightened the timeouts on the upstream client to fail faster under pressure.", "labels": []}
+{"id": "c103", "text": "The new error mapping makes the API responses much easier to consume downstream.", "labels": []}
+{"id": "c104", "text": "I migrated the legacy JSON encoder to the new orjson-based one for a perf bump.", "labels": []}
+{"id": "c105", "text": "The retry policy is now exponential with jitter, capped at five attempts.", "labels": []}
+{"id": "c106", "text": "I added a small fuzz harness around the parser to surface boundary issues.", "labels": []}
+{"id": "c107", "text": "The new schema validation pass catches several common misconfigurations early.", "labels": []}
+{"id": "c108", "text": "I rewired the tracer to use the new context propagation library.", "labels": []}
+{"id": "c109", "text": "The build cache now keys on the lock file hash, which made CI noticeably faster.", "labels": []}
+{"id": "c110", "text": "I added a small graceful-shutdown helper so the server drains in-flight requests.", "labels": []}
+{"id": "c111", "text": "This is a description of the algorithm in plain English, no code attached.", "labels": []}
+{"id": "c112", "text": "The pipeline reads events from a queue and writes summaries to a separate sink.", "labels": []}
+{"id": "c113", "text": "The cache layer keeps the hottest entries in memory and the rest on disk.", "labels": []}
+{"id": "c114", "text": "The encoder uses a small dictionary to compress common keys before transmission.", "labels": []}
+{"id": "c115", "text": "Records are partitioned by tenant identifier to keep query latency predictable.", "labels": []}
+{"id": "c116", "text": "The system uses a simple leader election to decide which node runs the batch job.", "labels": []}
+{"id": "c117", "text": "The plan is to ingest in batches, score them, then write the results to storage.", "labels": []}
+{"id": "c118", "text": "Each scan publishes an event that downstream services subscribe to selectively.", "labels": []}
+{"id": "c119", "text": "The matcher walks the document once and emits findings in order of position.", "labels": []}
+{"id": "c120", "text": "When a node loses its lease, it stops processing and waits for re-election.", "labels": []}
+{"id": "c121", "text": "The dashboard groups events by category and shows the top tenants by volume.", "labels": []}
+{"id": "c122", "text": "The audit module flushes its buffer on a timer or when the queue is full.", "labels": []}
+{"id": "c123", "text": "Each tenant has its own quota for tokens per minute, refilled on a schedule.", "labels": []}
+{"id": "c124", "text": "Detection results are summarized into a short risk score for operator review.", "labels": []}
+{"id": "c125", "text": "Configuration changes propagate through a watcher that reloads in the background.", "labels": []}
+{"id": "c126", "text": "The (recently launched) product is gaining traction with mid-market customers.", "labels": []}
+{"id": "c127", "text": "Some folks prefer fenced code blocks; I lean toward inline citations for clarity.", "labels": []}
+{"id": "c128", "text": "We considered (and rejected) a few alternatives before settling on this design.", "labels": []}
+{"id": "c129", "text": "The (very modest) gains were enough to justify shipping the change to production.", "labels": []}
+{"id": "c130", "text": "I think (with some confidence) that the regression is in the validator layer.", "labels": []}
+{"id": "c131", "text": "Going to spend the morning sketching the data model for the new dashboard.", "labels": []}
+{"id": "c132", "text": "The team agreed to defer the parser cleanup until the next planning cycle.", "labels": []}
+{"id": "c133", "text": "We landed the schema-versioning work — happy to walk through the design.", "labels": []}
+{"id": "c134", "text": "Quick design note before we sketch the endpoints: the contract should be small.", "labels": []}
+{"id": "c135", "text": "The system as designed should fit within our existing operational footprint.", "labels": []}
+{"id": "c136", "text": "Most of the refactor was rename-only; the behavioural change is in the writer.", "labels": []}
+{"id": "c137", "text": "I split the migration into two reversible steps to reduce the rollout risk.", "labels": []}
+{"id": "c138", "text": "Took another pass at the error taxonomy — should be easier for operators to map.", "labels": []}
+{"id": "c139", "text": "Spent some time on the dashboards; the operator view is much more readable now.", "labels": []}
+{"id": "c140", "text": "The audit chain verification logic was extracted into its own small utility module.", "labels": []}
+{"id": "c141", "text": "First-pass review notes are in the ticket — nothing blocking, a few stylistic nits.", "labels": []}
+{"id": "c142", "text": "Looked at the perf numbers; the new path is about thirty percent faster on average.", "labels": []}
+{"id": "c143", "text": "The architecture review covered the new ingestion pipeline at a high level.", "labels": []}
+{"id": "c144", "text": "Spent the afternoon writing up the design doc for the policy reload path.", "labels": []}
+{"id": "c145", "text": "I added a small note in the readme so new contributors can ramp up faster.", "labels": []}
+{"id": "c146", "text": "Description of the algorithm: walk the tree, mark each node, then collect results.", "labels": []}
+{"id": "c147", "text": "A few thoughts on the data flow — happy to chat through them whenever.", "labels": []}
+{"id": "c148", "text": "Going to revisit the streaming logic after we land the storage refactor.", "labels": []}
+{"id": "c149", "text": "Some early thoughts on the redesign: simpler interfaces, fewer global helpers.", "labels": []}
+{"id": "c150", "text": "Wrapping up the migration notes; will share them in the shared doc shortly.", "labels": []}

@@ -1,0 +1,16 @@
+{
+  "name": "Re-identification denied when TPO purpose not declared",
+  "description": "vault.profile.yaml requires require_purpose: true. A clinician without a declared purpose must be denied.",
+  "input": {
+    "principal": {
+      "user_id": "dr-watson",
+      "groups": ["clinician"]
+    },
+    "operation": "reidentify",
+    "token": "MRN_xyz789"
+  },
+  "expected": {
+    "action": "block",
+    "reason_contains": "purpose"
+  }
+}

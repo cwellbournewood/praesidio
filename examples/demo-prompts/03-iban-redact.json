@@ -1,0 +1,10 @@
+{
+  "_purpose": "Contains an IBAN-shaped string; expects 200 with the IBAN redacted on the way to upstream and the response returned to the user.",
+  "model": "gpt-4o-mini",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Please format this bank transfer notice: send EUR 1,200 to GB29 NWBK 6016 1331 9268 19 by Friday."
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "name": "openai-chat-pii",
+  "description": "OpenAI chat.completions: user request containing an email + phone; gateway tokenises before upstream; upstream returns text echoing the placeholders; gateway restores on the way back.",
+  "provider": "openai",
+  "route": "/v1/chat/completions",
+  "upstream": {
+    "method": "POST",
+    "url": "https://api.openai.com/v1/chat/completions"
+  },
+  "client_request": {
+    "headers": {
+      "x-api-key": "test-key",
+      "x-section-tenant": "default",
+      "content-type": "application/json"
+    },
+    "body": {
+      "model": "gpt-4o-mini",
+      "messages": [
+        {"role": "user", "content": "Email alice@example.com about invoice 4471."}
+      ]
+    }
+  },
+  "upstream_response": {
+    "status": 200,
+    "headers": {"content-type": "application/json"},
+    "body_template": {
+      "id": "chatcmpl-cassette-001",
+      "object": "chat.completion",
+      "created": 1716800000,
+      "model": "gpt-4o-mini",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "Acknowledged. I will draft an email to {EMAIL_PLACEHOLDER} regarding invoice 4471 shortly."
+          },
+          "finish_reason": "stop"
+        }
+      ],
+      "usage": {"prompt_tokens": 18, "completion_tokens": 24, "total_tokens": 42}
+    }
+  },
+  "policy": "pii_tokenise_email",
+  "expectations": {
+    "status_code": 200,
+    "upstream_must_not_contain": ["alice@example.com"],
+    "upstream_must_contain": ["<EMAIL_"],
+    "client_must_contain": ["alice@example.com"],
+    "client_must_not_contain": ["<EMAIL_"],
+    "audit_decision": "transform"
+  }
+}

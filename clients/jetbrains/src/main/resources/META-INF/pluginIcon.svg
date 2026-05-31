@@ -1,0 +1,8 @@
+<!--
+  Section plugin icon — 40x40 indigo "P" on ivory.
+  JetBrains Marketplace requires a 40x40 SVG for the listing.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40">
+  <rect width="40" height="40" rx="8" fill="#FAFAF7"/>
+  <path d="M11.5 28V11.7h8.6q3.55 0 5.45 1.6 1.9 1.55 1.9 4.4 0 2.85-1.95 4.5-1.95 1.6-5.5 1.6h-4.3V28zm4.2-7.95h3.8q1.7 0 2.55-.65.85-.7.85-1.95 0-1.3-.85-1.95-.85-.7-2.55-.7h-3.8z" fill="#4F46E5"/>
+</svg>

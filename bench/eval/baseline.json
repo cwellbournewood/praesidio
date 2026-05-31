@@ -1,0 +1,354 @@
+{
+  "schema": 1,
+  "captured_utc": "2026-05-27T22:10:15.793588+00:00",
+  "corpora": {
+    "presidio_sample": {
+      "sha256": "3b5e74b97eddc27c289179d067d651a140922836118f8d40b03721501bdc3191",
+      "n_examples": 150,
+      "micro": {
+        "tp": 180,
+        "fp": 74,
+        "fn": 15,
+        "precision": 0.7087,
+        "recall": 0.9231,
+        "f1": 0.8018
+      },
+      "per_label": {
+        "financial.credit_card": {
+          "tp": 11,
+          "fp": 2,
+          "fn": 1,
+          "support": 12,
+          "precision": 0.8462,
+          "recall": 0.9167,
+          "f1": 0.88
+        },
+        "pii.date": {
+          "tp": 26,
+          "fp": 42,
+          "fn": 0,
+          "support": 26,
+          "precision": 0.3824,
+          "recall": 1.0,
+          "f1": 0.5532
+        },
+        "pii.email": {
+          "tp": 9,
+          "fp": 0,
+          "fn": 3,
+          "support": 12,
+          "precision": 1.0,
+          "recall": 0.75,
+          "f1": 0.8571
+        },
+        "financial.iban": {
+          "tp": 9,
+          "fp": 0,
+          "fn": 2,
+          "support": 11,
+          "precision": 1.0,
+          "recall": 0.8182,
+          "f1": 0.9
+        },
+        "network.ip_address": {
+          "tp": 11,
+          "fp": 0,
+          "fn": 0,
+          "support": 11,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "pii.location": {
+          "tp": 16,
+          "fp": 3,
+          "fn": 1,
+          "support": 17,
+          "precision": 0.8421,
+          "recall": 0.9412,
+          "f1": 0.8889
+        },
+        "healthcare.medical_license": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "support": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "pii.person": {
+          "tp": 17,
+          "fp": 5,
+          "fn": 1,
+          "support": 18,
+          "precision": 0.7727,
+          "recall": 0.9444,
+          "f1": 0.85
+        },
+        "pii.phone": {
+          "tp": 11,
+          "fp": 3,
+          "fn": 1,
+          "support": 12,
+          "precision": 0.7857,
+          "recall": 0.9167,
+          "f1": 0.8462
+        },
+        "pii.us_ssn": {
+          "tp": 6,
+          "fp": 0,
+          "fn": 3,
+          "support": 9,
+          "precision": 1.0,
+          "recall": 0.6667,
+          "f1": 0.8
+        },
+        "financial.credit_card": {
+          "tp": 11,
+          "fp": 0,
+          "fn": 1,
+          "support": 12,
+          "precision": 1.0,
+          "recall": 0.9167,
+          "f1": 0.9565
+        },
+        "pii.email": {
+          "tp": 12,
+          "fp": 0,
+          "fn": 0,
+          "support": 12,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "financial.iban": {
+          "tp": 11,
+          "fp": 0,
+          "fn": 0,
+          "support": 11,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "network.ipv4": {
+          "tp": 11,
+          "fp": 0,
+          "fn": 0,
+          "support": 11,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "pii.phone": {
+          "tp": 11,
+          "fp": 19,
+          "fn": 1,
+          "support": 12,
+          "precision": 0.3667,
+          "recall": 0.9167,
+          "f1": 0.5238
+        },
+        "pii.us_ssn": {
+          "tp": 8,
+          "fp": 0,
+          "fn": 1,
+          "support": 9,
+          "precision": 1.0,
+          "recall": 0.8889,
+          "f1": 0.9412
+        }
+      }
+    },
+    "secrets": {
+      "sha256": "e6688f361f12b96d86f14bf40aa41dc53a0531433bad5f9120f488c599c11a31",
+      "n_examples": 50,
+      "micro": {
+        "tp": 34,
+        "fp": 5,
+        "fn": 2,
+        "precision": 0.8718,
+        "recall": 0.9444,
+        "f1": 0.9067
+      },
+      "per_label": {
+        "credential.jwt": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "credential.anthropic_api_key": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "support": 3,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "credential.aws_access_key": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 2,
+          "support": 7,
+          "precision": 1.0,
+          "recall": 0.7143,
+          "f1": 0.8333
+        },
+        "credential.aws_secret_key": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "credential.azure_storage_key": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "support": 1,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "credential.gcp_service_account": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "credential.generic_high_entropy": {
+          "tp": 2,
+          "fp": 2,
+          "fn": 0,
+          "support": 2,
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.6667
+        },
+        "credential.github_pat": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0,
+          "support": 4,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "credential.openai_api_key": {
+          "tp": 3,
+          "fp": 3,
+          "fn": 0,
+          "support": 3,
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.6667
+        },
+        "credential.private_key": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "support": 3,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "credential.slack_bot_token": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "support": 3,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "credential.stripe_api_key": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0,
+          "support": 4,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        }
+      }
+    },
+    "redteam": {
+      "sha256": "1f7ad9355f27b54beb65e19dd2f764c08c8a51d780c746db2a7fea7115a5e270",
+      "n_examples": 60,
+      "micro": {
+        "tp": 34,
+        "fp": 1,
+        "fn": 10,
+        "precision": 0.9714,
+        "recall": 0.7727,
+        "f1": 0.8608
+      },
+      "per_label": {
+        "behavior.injection_jailbreak": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0,
+          "support": 5,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "behavior.injection_prompt_exfil": {
+          "tp": 8,
+          "fp": 0,
+          "fn": 3,
+          "support": 11,
+          "precision": 1.0,
+          "recall": 0.7273,
+          "f1": 0.8421
+        },
+        "behavior.injection_ignore_previous": {
+          "tp": 8,
+          "fp": 0,
+          "fn": 3,
+          "support": 11,
+          "precision": 1.0,
+          "recall": 0.7273,
+          "f1": 0.8421
+        },
+        "behavior.injection_system_override": {
+          "tp": 4,
+          "fp": 1,
+          "fn": 3,
+          "support": 7,
+          "precision": 0.8,
+          "recall": 0.5714,
+          "f1": 0.6667
+        },
+        "behavior.injection_base64_tool_abuse": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 1,
+          "support": 4,
+          "precision": 1.0,
+          "recall": 0.75,
+          "f1": 0.8571
+        },
+        "behavior.injection_role_swap": {
+          "tp": 6,
+          "fp": 0,
+          "fn": 0,
+          "support": 6,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        }
+      }
+    }
+  }
+}

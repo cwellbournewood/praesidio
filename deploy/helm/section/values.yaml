@@ -1,0 +1,355 @@
+# =============================================================================
+# Section Helm values
+# -----------------------------------------------------------------------------
+# Production-shaped defaults. See README.md and values.schema.json for the
+# authoritative reference. Anything under `postgres.embedded` / `redis.embedded`
+# is for dev / demo only — in production, point at a managed database and
+# managed Redis (RDS, Cloud SQL, ElastiCache, Memorystore, Azure Cache).
+# =============================================================================
+
+# -- Override the Helm release name suffix (chart fullname).
+nameOverride: ""
+fullnameOverride: ""
+
+# -- Cluster-wide common labels merged into every rendered object.
+commonLabels: {}
+# -- Cluster-wide annotations merged into every rendered object.
+commonAnnotations: {}
+
+# -----------------------------------------------------------------------------
+# Container images
+# -----------------------------------------------------------------------------
+image:
+  gateway:
+    repository: ghcr.io/section/gateway
+    # If left empty, the chart appVersion is used.
+    tag: ""
+    pullPolicy: IfNotPresent
+  ui:
+    repository: ghcr.io/section/ui
+    tag: ""
+    pullPolicy: IfNotPresent
+  # Optional pull secrets for private registries.
+  pullSecrets: []
+  # - name: ghcr-pull
+
+# -----------------------------------------------------------------------------
+# Replica counts (ignored if autoscaling is enabled for that component)
+# -----------------------------------------------------------------------------
+replicas:
+  gateway: 3
+  ui: 2
+
+# -----------------------------------------------------------------------------
+# Resource requests / limits
+# -----------------------------------------------------------------------------
+resources:
+  gateway:
+    requests:
+      cpu: 500m
+      memory: 768Mi
+    limits:
+      cpu: "2"
+      memory: 2Gi
+  ui:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+# -----------------------------------------------------------------------------
+# Horizontal Pod Autoscaling
+# -----------------------------------------------------------------------------
+autoscaling:
+  gateway:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 50
+    targetCPUUtilizationPercentage: 65
+    targetMemoryUtilizationPercentage: 80
+  ui:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 6
+    targetCPUUtilizationPercentage: 70
+
+# -----------------------------------------------------------------------------
+# PodDisruptionBudget
+# -----------------------------------------------------------------------------
+podDisruptionBudget:
+  gateway:
+    enabled: true
+    minAvailable: 2
+  ui:
+    enabled: true
+    minAvailable: 1
+
+# -----------------------------------------------------------------------------
+# Service accounts
+# -----------------------------------------------------------------------------
+serviceAccount:
+  create: true
+  # If empty, name is derived from the chart fullname.
+  name: ""
+  # Annotations for IRSA / Workload Identity / Azure AD Pod Identity.
+  annotations: {}
+  # e.g.:
+  # eks.amazonaws.com/role-arn: arn:aws:iam::<acct>:role/section-gateway
+  # iam.gke.io/gcp-service-account: section-gateway@<project>.iam.gserviceaccount.com
+
+# -----------------------------------------------------------------------------
+# Pod security
+# -----------------------------------------------------------------------------
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  fsGroup: 10001
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+# -----------------------------------------------------------------------------
+# Service
+# -----------------------------------------------------------------------------
+service:
+  gateway:
+    type: ClusterIP
+    port: 8080
+    annotations: {}
+  ui:
+    type: ClusterIP
+    port: 3000
+    annotations: {}
+
+# -----------------------------------------------------------------------------
+# Ingress (optional, single ingress fanning out to both services)
+# -----------------------------------------------------------------------------
+ingress:
+  enabled: false
+  className: nginx
+  annotations: {}
+  # cert-manager.io/cluster-issuer: letsencrypt-prod
+  # nginx.ingress.kubernetes.io/proxy-body-size: "8m"
+  hosts:
+    gateway: gateway.section.example
+    ui: ui.section.example
+  tls: []
+  # - secretName: section-tls
+  #   hosts:
+  #     - gateway.section.example
+  #     - ui.section.example
+
+# -----------------------------------------------------------------------------
+# Gateway-specific configuration
+# -----------------------------------------------------------------------------
+gateway:
+  env: production
+  logLevel: INFO
+  failMode: closed  # "open" or "closed" — see docs/architecture/02-gateway.md
+  host: 0.0.0.0
+  port: 8080
+
+  # Extra env vars merged into the container env (non-secret).
+  extraEnv: []
+  # - name: SECTION_FEATURE_X
+  #   value: "true"
+
+  # Additional volume mounts (e.g., for CA bundles).
+  extraVolumes: []
+  extraVolumeMounts: []
+
+  # Liveness / readiness probe customisation.
+  probes:
+    liveness:
+      path: /healthz
+      initialDelaySeconds: 10
+      periodSeconds: 15
+      timeoutSeconds: 3
+      failureThreshold: 3
+    readiness:
+      path: /readyz
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      timeoutSeconds: 3
+      failureThreshold: 3
+
+  # Upstream LLM provider FQDNs allowed for egress in the NetworkPolicy.
+  # Used only when networkPolicy.enabled = true.
+  upstreamFQDNs:
+    - api.openai.com
+    - api.anthropic.com
+
+# -----------------------------------------------------------------------------
+# UI-specific configuration
+# -----------------------------------------------------------------------------
+ui:
+  brand: Section
+  publicGatewayUrl: ""        # e.g., https://gateway.section.example
+  extraEnv: []
+
+# -----------------------------------------------------------------------------
+# Policy bundle delivery
+# -----------------------------------------------------------------------------
+policyBundle:
+  # One of: configmap | http | s3 | git
+  source: configmap
+
+  # Mount path inside the gateway pod.
+  mountPath: /etc/section/policies
+
+  # Cosign signature verification of the bundle. Even when source=configmap,
+  # we recommend signing in CI and verifying at sync time. The chart simply
+  # advertises the verification mode and publicKeyRef to the gateway via env.
+  signatureVerification: cosign        # cosign | none
+  publicKeyRef: section-bundle-signing-pubkey
+
+  # source=http
+  http:
+    url: ""
+    intervalSeconds: 60
+    # Bearer token for auth, sourced via secrets.externalSecrets or values.secrets.
+    bearerTokenSecretRef:
+      name: ""
+      key: token
+
+  # source=s3
+  s3:
+    bucket: ""
+    key: section/bundles/latest.tgz
+    region: us-east-1
+    intervalSeconds: 60
+
+  # source=git
+  git:
+    url: ""
+    ref: main
+    path: examples/policies
+    intervalSeconds: 60
+    sshKeySecretRef:
+      name: ""
+      key: id_rsa
+
+# -----------------------------------------------------------------------------
+# Secrets
+# -----------------------------------------------------------------------------
+secrets:
+  # When true, the chart emits ExternalSecret resources instead of inline
+  # Secrets. Requires external-secrets-operator + a SecretStore named below.
+  externalSecrets: true
+
+  # Reference to the ClusterSecretStore / SecretStore.
+  secretStore:
+    name: section
+    kind: ClusterSecretStore
+
+  # KMS key reference (informational — surfaced in audit headers).
+  kmsRef: ""
+  # e.g.: arn:aws:kms:us-east-1:123456789012:key/abcd-...
+
+  # Remote keys to pull when externalSecrets=true.
+  # The chart will create ExternalSecret entries with these remoteRef.key.
+  remoteKeys:
+    vaultKey: section/gateway/vault-key
+    fpeKey: section/gateway/fpe-key
+    fpeTweak: section/gateway/fpe-tweak
+    openaiApiKey: section/upstream/openai
+    anthropicApiKey: section/upstream/anthropic
+    azureOpenaiApiKey: section/upstream/azure-openai
+    apiKeys: section/gateway/api-keys
+
+  # When externalSecrets=false, the chart will create a Secret from these
+  # values. !!! DEV / DEMO ONLY — do not commit real values to Git. !!!
+  values:
+    vaultKey: ""
+    fpeKey: ""
+    fpeTweak: ""
+    openaiApiKey: ""
+    anthropicApiKey: ""
+    azureOpenaiApiKey: ""
+    apiKeys: section-demo-key
+
+# -----------------------------------------------------------------------------
+# NetworkPolicy
+# -----------------------------------------------------------------------------
+networkPolicy:
+  enabled: true
+  # When true, allow DNS egress on UDP/53 from all gateway pods.
+  allowDnsEgress: true
+  # Additional allowed egress CIDRs (e.g., for private VPC endpoints).
+  extraEgressCIDRs: []
+  # - 10.0.0.0/16
+
+# -----------------------------------------------------------------------------
+# Prometheus scrape
+# -----------------------------------------------------------------------------
+metrics:
+  enabled: true
+  path: /metrics
+  port: 8080
+  # ServiceMonitor is only created if your cluster has prometheus-operator.
+  serviceMonitor:
+    enabled: false
+    interval: 30s
+    scrapeTimeout: 10s
+    labels: {}
+
+# -----------------------------------------------------------------------------
+# Scheduling
+# -----------------------------------------------------------------------------
+nodeSelector: {}
+tolerations: []
+affinity: {}
+# Topology spread is recommended for HA; not enabled by default to avoid
+# scheduling failures on small clusters.
+topologySpreadConstraints: []
+
+# -----------------------------------------------------------------------------
+# Embedded Postgres — DEV / DEMO ONLY.
+# In production: disable and point DATABASE_URL at a managed Postgres
+# (RDS Multi-AZ, Cloud SQL HA, Azure Flexible Server with HA).
+# -----------------------------------------------------------------------------
+postgres:
+  embedded: false
+  image: postgres:16-alpine
+  storage:
+    size: 20Gi
+    storageClassName: ""
+  # External DSN used when embedded=false. Should reference a secret in
+  # production via secrets.externalSecrets.
+  externalDSN: ""
+
+# -----------------------------------------------------------------------------
+# Embedded Redis — DEV / DEMO ONLY.
+# In production: disable and point REDIS_URL at a managed Redis
+# (ElastiCache, Memorystore, Azure Cache for Redis).
+# -----------------------------------------------------------------------------
+redis:
+  embedded: false
+  image: redis:7-alpine
+  storage:
+    size: 5Gi
+    storageClassName: ""
+  externalURL: ""
+
+# -----------------------------------------------------------------------------
+# Migrations job (Helm pre-upgrade hook)
+# -----------------------------------------------------------------------------
+migrations:
+  enabled: true
+  image:
+    repository: postgres
+    tag: 16-alpine
+  backoffLimit: 3
+  activeDeadlineSeconds: 600
